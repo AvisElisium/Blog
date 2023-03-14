@@ -1,0 +1,23 @@
+bin/
+obj/
+/packages/
+riderModule.iml
+/_ReSharper.Caches/
+.idea/
+create/
+Api/appsettings.Development.json
+Api/appsettings.json
+
+# Logs
+client/logs
+client/*.log
+client/npm-debug.log*
+client/yarn-debug.log*
+client/yarn-error.log*
+client/pnpm-debug.log*
+*/lerna-debug.log*
+
+client/node_modules
+client/dist
+client/dist-ssr
+client/*.local
