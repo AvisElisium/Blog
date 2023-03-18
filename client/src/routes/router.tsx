@@ -2,6 +2,7 @@
 import AuthPage from "./auth/AuthPage";
 import LoginForm from "../components/auth/LoginForm";
 import RegisterForm from "../components/auth/RegisterForm";
+import HomePage from "./homepage/HomePage";
 
 
 const router = createBrowserRouter([
@@ -12,6 +13,7 @@ const router = createBrowserRouter([
             {path: "/register", element: <RegisterForm />},
         ]
     },
+    {element: <HomePage />, path: "/"}
 ])
 
 export default router;
