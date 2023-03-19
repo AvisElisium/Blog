@@ -6,7 +6,7 @@ import {useMutation} from "react-query";
 import axios, {AxiosError, AxiosResponse} from "axios";
 import {ErrorResponse} from "../../types/errors/errorResponse";
 import LoadingButton from "../shared/LoadingButton";
-import {useContext} from "react";
+import {useContext, useState} from "react";
 import {AuthContext} from "../../context/AuthContext";
 import {useNavigate} from "react-router-dom";
 
@@ -26,7 +26,9 @@ type LoginUserSchema = z.infer<typeof loginUserSchema>;
 
 const LoginForm = () => {
     
-    const {control, handleSubmit, formState: {errors, isDirty, isValid, isSubmitting}, setError} = useForm<LoginUserSchema>({
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    
+    const {control, handleSubmit, formState: {errors, isDirty, isValid}, setError} = useForm<LoginUserSchema>({
         mode: "onTouched",
         resolver: zodResolver(loginUserSchema),
     });
@@ -39,6 +41,8 @@ const LoginForm = () => {
         return axios.post<User>("/account/login", data, {withCredentials: true});
     }, {
         mutationKey: "login",
+        
+        onMutate: () => setIsSubmitting(true),
 
         onSuccess: (response: AxiosResponse<User>) => {
             login(response.data);
@@ -50,7 +54,9 @@ const LoginForm = () => {
                 message: error.response!.data.message,
                 type: "custom",
             })
-        }
+        },
+        
+        onSettled: () => setIsSubmitting(false),
     });
 
     const onSubmit = async (data: any) => {

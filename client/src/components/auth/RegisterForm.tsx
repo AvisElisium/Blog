@@ -7,6 +7,8 @@ import axios, {AxiosError} from "axios";
 import {ValidationErrorResponse} from "../../types/errors/validationErrorResponse";
 import LoadingButton from "../shared/LoadingButton";
 import {useNavigate} from "react-router-dom";
+import useValidationErrors from "../../hooks/UseValidationErrors";
+import {useState} from "react";
 
 
 
@@ -23,12 +25,16 @@ const RegisterUserSchema = z.object({
 type RegisterUserSchema = z.infer<typeof RegisterUserSchema>;
 
 const RegisterForm = () => {
+    
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
-    const {control, handleSubmit, formState: {errors, isValid, isDirty, isSubmitting}, setError} = useForm<RegisterUserSchema>({
+    const {control, handleSubmit, formState: {errors, isValid, isDirty}, setError} = useForm<RegisterUserSchema>({
         mode: "onChange",
         resolver: zodResolver(RegisterUserSchema),
         delayError: 750,
     });
+    
+    const setValidationErrors = useValidationErrors<RegisterUserSchema>(setError);
     
     const onSubmit = async (data: RegisterUserSchema) => {
         await mutation.mutateAsync(data);
@@ -41,24 +47,18 @@ const RegisterForm = () => {
     }, {
         mutationKey: "register",
         
+        onMutate: () => setIsSubmitting(true),
+        
         onSuccess: () => {
             navigate("/login")
         },
 
-        onError: async (error: AxiosError<ValidationErrorResponse<Omit<RegisterUserSchema, "confirmPassword">>>) => {
-            console.log(error.response);
-            const validationErrors = error.response!.data.validationErrors;
-            
-            for (const [key, value] of Object.entries(validationErrors)) {
-                const fieldKey = key.toLowerCase() as keyof RegisterUserSchema;
-                value.forEach((err) => {
-                    setError(fieldKey, {
-                        type: "custom",
-                        message: err,
-                    })
-                })
-            }
+        onError: (error: AxiosError<ValidationErrorResponse<Omit<RegisterUserSchema, "confirmPassword">>>) => {
+            setValidationErrors(error.response!.data);
         },
+        
+        onSettled: () => setIsSubmitting(false),
+        
     });
 
     return (
