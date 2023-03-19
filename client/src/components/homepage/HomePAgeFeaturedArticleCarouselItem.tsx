@@ -1,4 +1,4 @@
-﻿import {Card, CardActionArea, CardContent, CardHeader, Grid, Paper, Skeleton, Typography} from "@mui/material";
+﻿import {Card, CardActionArea, CardContent, CardHeader, Grid, Paper, Skeleton, Stack, Typography} from "@mui/material";
 import {Article} from "../../types/articles/article";
 import moment from "moment";
 
@@ -8,7 +8,10 @@ interface Props {
 
 const HomePAgeFeaturedArticleCarouselItem = ({article}: Props) => {
     return (
-        <Grid container item xs={12}>
+        <Grid container item component={Stack} direction={{
+            xs: "column-reverse",
+            md: "row",
+        }} xs={12}>
             <Grid item xs={4}>
                 <Card sx={{
                     height: "100%",
