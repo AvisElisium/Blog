@@ -1,10 +1,22 @@
-﻿import {Box, Divider, Grid, Paper, Typography} from "@mui/material";
+﻿import {Box, Card, CardContent, CardHeader, Grid, Paper, Skeleton, Stack} from "@mui/material";
 import Carousel from "react-material-ui-carousel";
 import {Article} from "../../types/articles/article";
 import {useQuery} from "react-query";
 import axios from "axios";
-import HomePageArticleListItem from "./HomePageArticleListItem";
 import HomePAgeFeaturedArticleCarouselItem from "./HomePAgeFeaturedArticleCarouselItem";
+import moment from "moment";
+
+
+const CarouselSkeleton = () => {
+    return (
+        <Box height={{
+            xs: 550,
+            md: 400,
+        }}>
+            <Skeleton variant={"rectangular"} width={"100%"} height={"100%"}/>
+        </Box>
+    )
+}
 
 
 const HomePageFeaturedArticlesCarousel = () => {
@@ -23,9 +35,11 @@ const HomePageFeaturedArticlesCarousel = () => {
     return (
         <Paper component={Grid} container elevation={0}>
             <Grid item xs={12}>
-                <Carousel>
-                    {data && data.map((article) => <HomePAgeFeaturedArticleCarouselItem article={article} />)}
-                </Carousel>
+                {isLoading && <CarouselSkeleton />}
+                {data &&
+                    <Carousel>
+                        {data.map((article) => <HomePAgeFeaturedArticleCarouselItem key={article.id} article={article} />)}
+                    </Carousel>}
             </Grid>
         </Paper>
     )
