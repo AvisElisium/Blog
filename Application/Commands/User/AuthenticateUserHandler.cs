@@ -37,21 +37,18 @@ public class AuthenticateUserHandler : IRequestHandler<AuthenticateUser, UserDto
 
         if (result is false) throw new NotFoundException("User with this Username and password combination was not found");
 
-        if (!user.RefreshTokens.Any(x => x.IsActive))
+        var refreshToken = _tokenService.GenerateRefreshToken();
+        user.RefreshTokens.Add(refreshToken);
+        await _userManager.UpdateAsync(user);
+        _httpContextAccessor.HttpContext!.Response.Cookies.Append("refreshToken", refreshToken.Value, new CookieOptions()
         {
-            var refreshToken = _tokenService.GenerateRefreshToken();
-            user.RefreshTokens.Add(refreshToken);
-            await _userManager.UpdateAsync(user);
-            _httpContextAccessor.HttpContext!.Response.Cookies.Append("refreshToken", refreshToken.Value, new CookieOptions()
-            {
-                HttpOnly = true,
-                Expires = DateTime.UtcNow.AddDays(7),
-                Secure = false,
-                SameSite = SameSiteMode.Lax,
-                Domain = "localhost",
-                Path = "/",
-            });
-        }
+            HttpOnly = true,
+            Expires = DateTime.UtcNow.AddDays(7),
+            Secure = true,
+            SameSite = SameSiteMode.Lax,
+            Domain = "localhost",
+            Path = "/",
+        });
 
         var userDto = _mapper.Map<Domain.Entities.User, UserDto>(user);
 
