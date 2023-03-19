@@ -1,4 +1,4 @@
-﻿import {Box, Grid, Typography} from "@mui/material";
+﻿import {Box, Grid, Typography, useTheme} from "@mui/material";
 import {useQuery, useQueryClient} from "react-query";
 import {Article} from "../../types/articles/article";
 import axios, {AxiosError} from "axios";
@@ -21,10 +21,12 @@ const HomePageArticleList = () => {
         }
     });
     
+    const {spacing} = useTheme();
+    
     return (
-        <Grid container item xs={12} md={6} lg={4} rowSpacing={{xs: 2}} columnSpacing={{
-            md: 4,
-            lg: 6,
+        <Grid container item xs={12} md={6} lg={4} rowSpacing={{xs: spacing(6)}} columnSpacing={{
+            md: spacing(4),
+            lg: spacing(6),
         }}>
             {data && data.map((article) => <HomePageArticleListItem key={article.id} article={article} />)}
         </Grid>
