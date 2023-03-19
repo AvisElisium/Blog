@@ -1,6 +1,7 @@
-﻿import {createContext, FC, PropsWithChildren, useState} from "react";
+﻿import {createContext, FC, PropsWithChildren, useEffect, useState} from "react";
 import {User} from "../components/auth/LoginForm";
-import {useQueryClient} from "react-query";
+import {useQuery, useQueryClient} from "react-query";
+import axios from "axios";
 
 interface AuthContext {
     currentUser: User | null,
@@ -39,6 +40,20 @@ const AuthContextProvider: FC<PropsWithChildren> = ({children}) => {
         setUser(null);
     }
     
+    const {} = useQuery({
+        queryKey: "refresh",
+        queryFn: async () => {
+            const res = await axios.get("/account/refreshJwt")
+            return res.data;
+        },
+        onSuccess: (data: User) => {
+            handleLogin(data);
+        },
+        
+        staleTime: 480000,
+        cacheTime: 600000,
+        enabled: !!user,
+    })
     return (
         <AuthContext.Provider value={{
             currentUser: user,
