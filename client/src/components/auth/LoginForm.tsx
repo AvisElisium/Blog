@@ -1,14 +1,16 @@
-﻿import {Alert, Button, Container, createStyles, Grid, Stack, TextField} from "@mui/material";
+﻿import {Alert, Stack, TextField} from "@mui/material";
 import {z} from "zod";
-import {Control, Controller, SubmitHandler, useForm} from "react-hook-form";
+import {Controller, useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
-import {useMutation, useQueryClient} from "react-query";
+import {useMutation} from "react-query";
 import axios, {AxiosError, AxiosResponse} from "axios";
 import {ErrorResponse} from "../../types/errors/errorResponse";
 import LoadingButton from "../shared/LoadingButton";
-import {useState} from "react";
+import {useContext} from "react";
+import {AuthContext} from "../../context/AuthContext";
+import {useNavigate} from "react-router-dom";
 
-interface User {
+export interface User {
     username: string,
     jwtToken: string,
 }
@@ -22,39 +24,36 @@ type LoginUserSchema = z.infer<typeof loginUserSchema>;
 
 const LoginForm = () => {
     
-    const {control, handleSubmit, formState: {errors, isDirty, isValid}, setError} = useForm<LoginUserSchema>({
+    const {control, handleSubmit, formState: {errors, isDirty, isValid, isSubmitting}, setError} = useForm<LoginUserSchema>({
         mode: "onTouched",
         resolver: zodResolver(loginUserSchema),
     });
 
-    const onSubmit = async (data: LoginUserSchema) => {
-        await mutation.mutateAsync(data);
-    };
+    const {login} = useContext(AuthContext);
     
-    const [isSubmitting, setIsSubmitting] = useState(false);
+    const navigate = useNavigate();
     
-    const queryClient = useQueryClient();
-    const mutation = useMutation("login", {
-        onMutate: (data: LoginUserSchema) =>  {
-            setIsSubmitting(true);
-            return axios.post("/account/login", data);
+    const mutation = useMutation((data:  LoginUserSchema) => {
+        return axios.post<User>("/account/login", data);
+    }, {
+        mutationKey: "login",
+
+        onSuccess: (response: AxiosResponse<User>) => {
+            login(response.data);
+            navigate("/");
         },
-        
-        onSuccess: (data: User) => {
-            
-        },
-        
+
         onError: (error: AxiosError<ErrorResponse>) => {
             setError("root", {
                 message: error.response!.data.message,
                 type: "custom",
             })
-        },
-        
-        onSettled: () => {
-            setIsSubmitting(false);
         }
     });
+
+    const onSubmit = async (data: any) => {
+        await mutation.mutateAsync(data);
+    };
     
     return (
         <form onSubmit={handleSubmit(onSubmit)}>

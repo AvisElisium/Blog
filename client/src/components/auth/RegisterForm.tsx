@@ -1,12 +1,12 @@
-﻿import {Alert, Button, Container, Grid, Stack, TextField} from "@mui/material";
+﻿import {Stack, TextField} from "@mui/material";
 import {z} from "zod";
-import {Controller, SubmitHandler, useForm} from "react-hook-form";
+import {Controller, useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
-import {useMutation, useQueryClient} from "react-query";
+import {useMutation} from "react-query";
 import axios, {AxiosError} from "axios";
 import {ValidationErrorResponse} from "../../types/errors/validationErrorResponse";
 import LoadingButton from "../shared/LoadingButton";
-import {useState} from "react";
+import {useNavigate} from "react-router-dom";
 
 
 
@@ -24,27 +24,25 @@ type RegisterUserSchema = z.infer<typeof RegisterUserSchema>;
 
 const RegisterForm = () => {
 
-    const {control, handleSubmit, formState: {errors, isValid, isDirty, isSubmitted}, setError} = useForm<RegisterUserSchema>({
+    const {control, handleSubmit, formState: {errors, isValid, isDirty, isSubmitting}, setError} = useForm<RegisterUserSchema>({
         mode: "onChange",
         resolver: zodResolver(RegisterUserSchema),
         delayError: 750,
     });
     
-    const [isSubmitting, setIsSubmitting] = useState(false);
-    
     const onSubmit = async (data: RegisterUserSchema) => {
         await mutation.mutateAsync(data);
     };
-
-    const queryClient = useQueryClient();
-    const mutation = useMutation("register", {
-        onMutate: async (data: RegisterUserSchema) =>  {
-            setIsSubmitting(true);
-            return axios.post("/account/register", data);
-        },
-
-        onSuccess: (data) => {
-
+    
+    const navigate = useNavigate();
+    
+    const mutation = useMutation((data: RegisterUserSchema) => {
+        return axios.post("/account/register", data);
+    }, {
+        mutationKey: "register",
+        
+        onSuccess: () => {
+            navigate("/login")
         },
 
         onError: async (error: AxiosError<ValidationErrorResponse<Omit<RegisterUserSchema, "confirmPassword">>>) => {
@@ -61,10 +59,6 @@ const RegisterForm = () => {
                 })
             }
         },
-        
-        onSettled: () => {
-            setIsSubmitting(false);
-        }
     });
 
     return (

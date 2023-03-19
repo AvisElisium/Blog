@@ -3,17 +3,23 @@ import AuthPage from "./auth/AuthPage";
 import LoginForm from "../components/auth/LoginForm";
 import RegisterForm from "../components/auth/RegisterForm";
 import HomePage from "./homepage/HomePage";
+import AppRoot from "../AppRoot";
 
 
 const router = createBrowserRouter([
     {
-        element: <AuthPage />,
+        element: <AppRoot />,
         children: [
-            {path: "/login", element: <LoginForm />},
-            {path: "/register", element: <RegisterForm />},
+            {
+                element: <AuthPage />,
+                children: [
+                    {path: "/login", element: <LoginForm />},
+                    {path: "/register", element: <RegisterForm />},
+                ]
+            },
+            {element: <HomePage />, path: "/"}
         ]
-    },
-    {element: <HomePage />, path: "/"}
+    }
 ])
 
 export default router;

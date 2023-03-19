@@ -1,9 +1,13 @@
-﻿import {Outlet} from "react-router-dom";
-import Grid2 from "@mui/material/Unstable_Grid2";
-import {Container, createTheme, Grid} from "@mui/material";
+﻿import {Navigate, Outlet} from "react-router-dom";
+import {Grid} from "@mui/material";
+import {useContext} from "react";
+import {AuthContext} from "../../context/AuthContext";
 
 
 const AuthPage = () => {
+    const {currentUser} = useContext(AuthContext);
+    
+    if (currentUser !== null) return <Navigate to={"/"} />;
     
     return (
         <Grid container justifyContent={"center"} alignItems={"center"} sx={{
