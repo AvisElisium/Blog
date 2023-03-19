@@ -46,6 +46,10 @@ public class AuthenticateUserHandler : IRequestHandler<AuthenticateUser, UserDto
             {
                 HttpOnly = true,
                 Expires = DateTime.UtcNow.AddDays(7),
+                Secure = false,
+                SameSite = SameSiteMode.Lax,
+                Domain = "localhost",
+                Path = "/",
             });
         }
 

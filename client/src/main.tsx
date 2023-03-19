@@ -7,17 +7,20 @@ import {QueryClient, QueryClientProvider} from "react-query";
 import AuthContextProvider from "./context/AuthContext";
 import {ThemeProvider} from "@mui/material";
 import theme from "./theme";
+import {SnackbarProvider} from "notistack";
 
 const queryClient = new QueryClient();
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
     <ThemeProvider theme={theme}>
-        <AuthContextProvider>
+        <SnackbarProvider>
             <QueryClientProvider client={queryClient}>
-                <RouterProvider router={router} />
+                <AuthContextProvider>
+                    <RouterProvider router={router} />
+                </AuthContextProvider>
             </QueryClientProvider>
-        </AuthContextProvider>
+        </SnackbarProvider>
     </ThemeProvider>
   </React.StrictMode>,
 )

@@ -4,4 +4,6 @@ public class UserDto
 {
     public string Username { get; set; }
     public string JwtToken { get; set; }
+    public bool IsAdmin { get; set; }
+    public bool IsAuthor { get; set; }
 }

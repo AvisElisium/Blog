@@ -1,5 +1,6 @@
 ﻿import {createContext, FC, PropsWithChildren, useState} from "react";
 import {User} from "../components/auth/LoginForm";
+import {useQueryClient} from "react-query";
 
 interface AuthContext {
     currentUser: User | null,
@@ -17,6 +18,8 @@ export const AuthContext = createContext<AuthContext>({
 const AuthContextProvider: FC<PropsWithChildren> = ({children}) => {
     const [user, setUser] = useState<User | null>(getUserFromLocalStorage());
     
+    const queryClient = useQueryClient();
+    
     function getUserFromLocalStorage() {
         const user = localStorage.getItem("user");
         
@@ -30,8 +33,9 @@ const AuthContextProvider: FC<PropsWithChildren> = ({children}) => {
         setUser(userData);
     }
     
-    const handleLogout = () => {
+    const handleLogout = async () => {
         localStorage.removeItem("user");
+        await queryClient.invalidateQueries("login");
         setUser(null);
     }
     

@@ -11,8 +11,10 @@ import {AuthContext} from "../../context/AuthContext";
 import {useNavigate} from "react-router-dom";
 
 export interface User {
-    username: string,
-    jwtToken: string,
+    username: string;
+    jwtToken: string;
+    isAdmin: boolean;
+    isAuthor: boolean;
 }
 
 const loginUserSchema = z.object({
@@ -34,7 +36,7 @@ const LoginForm = () => {
     const navigate = useNavigate();
     
     const mutation = useMutation((data:  LoginUserSchema) => {
-        return axios.post<User>("/account/login", data);
+        return axios.post<User>("/account/login", data, {withCredentials: true});
     }, {
         mutationKey: "login",
 

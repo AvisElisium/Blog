@@ -4,6 +4,7 @@ import LoginForm from "../components/auth/LoginForm";
 import RegisterForm from "../components/auth/RegisterForm";
 import HomePage from "./homepage/HomePage";
 import AppRoot from "../AppRoot";
+import AuthorPanel from "./AuthorPanel/AuthorPanel";
 
 
 const router = createBrowserRouter([
@@ -17,7 +18,8 @@ const router = createBrowserRouter([
                     {path: "/register", element: <RegisterForm />},
                 ]
             },
-            {element: <HomePage />, path: "/"}
+            {element: <HomePage />, path: "/"},
+            {element: <AuthorPanel />, path: "/authorPanel"}
         ]
     }
 ])

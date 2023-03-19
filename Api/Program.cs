@@ -33,11 +33,11 @@ builder.Services.AddCors(options =>
     options.AddPolicy("StandardPolicy", policy =>
     {
         policy
-            .AllowCredentials()
-            .AllowAnyHeader()
             .AllowAnyMethod()
-            .WithOrigins("http://localhost:3000", "https://localhost:3000")
-            .WithExposedHeaders("Pagination");
+            .AllowAnyHeader()
+            .AllowCredentials()
+            .WithExposedHeaders("Pagination")
+            .WithOrigins("http://localhost:3000", "https://localhost:3000");
     });
 });
 
@@ -60,20 +60,18 @@ catch (Exception e)
     logger.LogError(e, "An error occured during migration");
 }
 
+app.UseCors("StandardPolicy");
+
+app.UseHttpsRedirection();
+
 app.UseCustomMiddleware();
 
-app.UseCors("StandardPolicy");
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
-}
-
-if (app.Environment.IsProduction())
-{
-    app.UseHttpsRedirection();
 }
 
 app.UseAuthentication();

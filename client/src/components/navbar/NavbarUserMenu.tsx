@@ -3,7 +3,7 @@
     ClickAwayListener,
     Container,
     Grid,
-    Grow,
+    Grow, Link,
     Menu,
     MenuItem,
     MenuList,
@@ -11,17 +11,17 @@
     Popper,
     Typography
 } from "@mui/material";
-import {useContext, useState, MouseEvent} from "react";
+import {useContext, useState, MouseEvent, useRef} from "react";
 import {AuthContext} from "../../context/AuthContext";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import {useNavigate} from "react-router-dom";
+import {useNavigate, Link as RouterLink} from "react-router-dom";
 
 
 const NavbarUserMenu = () => {
     
     const {currentUser, logout} = useContext(AuthContext);
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-    const navigate = useNavigate();
+    const authorPanelRef = useRef<HTMLAnchorElement | null>(null);
     
     const open = Boolean(anchorEl);
     
@@ -72,6 +72,17 @@ const NavbarUserMenu = () => {
                                     onKeyDown={() => {}}
                                     autoFocusItem={open}
                                 >
+                                    {[currentUser?.isAuthor, currentUser?.isAdmin].some((x) => x === true) &&
+                                        <MenuItem onClick={() => {
+                                            if (authorPanelRef !== null) {
+                                                authorPanelRef.current?.click();
+                                            }
+                                        }}>
+                                            <Link ref={authorPanelRef} underline={"none"} color={"inherit"} component={RouterLink} to={"/authorPanel"}>
+                                                Author Panel
+                                            </Link>
+                                        </MenuItem>
+                                    }
                                     <MenuItem onClick={() => {
                                         logout();
                                         handleClose();

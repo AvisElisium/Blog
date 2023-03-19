@@ -3,6 +3,7 @@ using Application.Models.Pagination;
 using Application.Models.User;
 using AutoMapper;
 using Domain.Entities;
+using Domain.Enums;
 
 namespace Application.MappingProfiles;
 
@@ -12,7 +13,11 @@ public class MappingProfiles : Profile
     {
         CreateMap<CreateUserDto, User>();
 
-        CreateMap<User, UserDto>();
+        CreateMap<User, UserDto>()
+            .ForMember(d => d.IsAuthor, o =>
+                o.MapFrom(s => s.UserType == UserTypes.Author || s.UserType == UserTypes.Admin))
+            .ForMember(d => d.IsAdmin, o => 
+                o.MapFrom(s => s.UserType == UserTypes.Admin));
 
         CreateMap<CreateArticleDto, Article>();
 

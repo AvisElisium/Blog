@@ -16,14 +16,16 @@ const Navbar = () => {
                 <Grid container alignItems={"center"} display={"flex"}>
                     <Grid item xs={0} md={4} />
                     <Grid item xs={8} md={4}>
-                        <Typography noWrap fontWeight={700} variant={"h2"} variantMapping={{
-                            h2: "h1",
-                        }} sx={{userSelect: "none"}} display={"flex"} justifyContent={{
-                            xs: "flex-start",
-                            md: "center",
-                        }} >
-                            Blog
-                        </Typography>
+                        <Link component={RouterLink} to={"/"} color={"inherit"} underline={"none"}>
+                            <Typography noWrap fontWeight={700} variant={"h2"} variantMapping={{
+                                h2: "h1",
+                            }} sx={{userSelect: "none"}} display={"flex"} justifyContent={{
+                                xs: "flex-start",
+                                md: "center",
+                            }} >
+                                Blog
+                            </Typography>
+                        </Link>
                     </Grid>
                     <Grid item xs={4} display={"flex"} justifyContent={"flex-end"} alignItems={"center"}>
                         {currentUser === null &&
