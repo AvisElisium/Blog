@@ -20,6 +20,7 @@ const AppRoot = () => {
     const authContext = useContext(AuthContext);
     const navigate = useNavigate();
     const {enqueueSnackbar} = useSnackbar();
+    const queryClient = useQueryClient();
     
     
     axios.interceptors.request.use((config) => {
@@ -44,7 +45,6 @@ const AppRoot = () => {
             await sleep(100);
         }
         
-        const queryClient = useQueryClient();
 
         if (!error.response) return Promise.reject(error);
 
