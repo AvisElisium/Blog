@@ -5,6 +5,8 @@ import RegisterForm from "../components/auth/RegisterForm";
 import HomePage from "./homepage/HomePage";
 import AppRoot from "../AppRoot";
 import AuthorPanel from "./AuthorPanel/AuthorPanel";
+import ArticlePage from "./articlePage/ArticlePage";
+import ArticlePost from "../components/article/ArticlePost";
 
 
 const router = createBrowserRouter([
@@ -19,7 +21,13 @@ const router = createBrowserRouter([
                 ]
             },
             {element: <HomePage />, path: "/"},
-            {element: <AuthorPanel />, path: "/authorPanel"}
+            {element: <AuthorPanel />, path: "/authorPanel"},
+            {
+                element: <ArticlePage />,
+                path: "/article",
+                children: [
+                    {element: <ArticlePost />, path: ":id"}
+                ]}
         ]
     }
 ])
