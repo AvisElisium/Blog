@@ -8,7 +8,7 @@ import {ErrorResponse} from "../../types/errors/errorResponse";
 import LoadingButton from "../shared/LoadingButton";
 import {useContext, useState} from "react";
 import {AuthContext} from "../../context/AuthContext";
-import {useNavigate} from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
 
 export interface User {
     username: string;
@@ -35,6 +35,8 @@ const LoginForm = () => {
 
     const {login} = useContext(AuthContext);
     
+    const {state} = useLocation();
+    
     const navigate = useNavigate();
     
     const mutation = useMutation((data:  LoginUserSchema) => {
@@ -46,7 +48,7 @@ const LoginForm = () => {
 
         onSuccess: (response: AxiosResponse<User>) => {
             login(response.data);
-            navigate("/");
+            navigate(state.from ?? "/");
         },
 
         onError: (error: AxiosError<ErrorResponse>) => {
