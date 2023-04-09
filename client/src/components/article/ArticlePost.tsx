@@ -1,4 +1,16 @@
-﻿import {Button, Container, Link, MenuItem, MenuList, Popover, Skeleton, Stack, Typography} from "@mui/material";
+﻿import {
+    Button, ButtonGroup,
+    Container,
+    Link,
+    MenuItem,
+    MenuList,
+    Modal,
+    Paper,
+    Popover,
+    Skeleton,
+    Stack,
+    Typography
+} from "@mui/material";
 import {useNavigate, useParams} from "react-router-dom";
 import {useQuery} from "react-query";
 import axios, {AxiosError} from "axios";
@@ -11,6 +23,8 @@ import {Interweave} from "interweave";
 import {AuthContext} from "../../context/AuthContext";
 import ArticlePostSkeleton from "./ArticlePostSkeleton";
 import ArticleEditForm from "./ArticleEditForm";
+import LoadingButton from "../shared/LoadingButton";
+import ArticleDeleteModal from "./ArticleDeleteModal";
 
 const ArticlePost = () => {
     
@@ -18,6 +32,7 @@ const ArticlePost = () => {
     const navigate = useNavigate();
     const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
     const [editMode, setEditMode] = useState(false);
+    const [deleteMode, setDeleteMode] = useState(false);
 
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
         setAnchorEl(event.currentTarget);
@@ -47,6 +62,10 @@ const ArticlePost = () => {
     
     const handleCloseEditMode = () => {
         setEditMode(false);
+    }
+    
+    const handleCloseDeleteMode = () => {
+        setDeleteMode(false)
     }
     
     if (editMode) return <ArticleEditForm initialHeadline={data.headline} initialContent={data.content} id={id as string} closeEditMode={handleCloseEditMode} />
@@ -88,13 +107,23 @@ const ArticlePost = () => {
                     autoFocusItem={open}
                 >
                     <MenuItem onClick={() => {
+                        handleClose();
                         setEditMode(true);
                     }}>
                         Edit
                     </MenuItem>
+
+                    <MenuItem onClick={() => {
+                        handleClose()
+                        setDeleteMode(true);
+                    }}>
+                        Delete
+                    </MenuItem>
+                    
                 </MenuList>
             </Popover>
             
+            <ArticleDeleteModal open={deleteMode} id={id as string} handleClose={handleCloseDeleteMode} />
         </Stack>
     )
 }
