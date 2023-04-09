@@ -27,6 +27,11 @@ public class ArticleListQueryHandler : IRequestHandler<ArticleListQuery, PagedLi
             .ProjectTo<ArticleDto>(_mapper.ConfigurationProvider)
             .AsQueryable();
 
+        if (request.ArticleListQueryParams?.CreatedBy is not null)
+        {
+            articles = articles.Where(x => x.Author.Username == request.ArticleListQueryParams.CreatedBy).AsQueryable();
+        }
+
         var pagedArticles = await PagedList<ArticleDto>.CreateAsync(articles, pageNumber, pageSize);
 
         return pagedArticles;

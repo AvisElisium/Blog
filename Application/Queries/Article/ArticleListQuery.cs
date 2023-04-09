@@ -5,6 +5,6 @@ using MediatR;
 
 namespace Application.Queries.Article;
 
-public record ArticleListQuery(PaginationParams PaginationParams) : IRequest<PagedList<ArticleDto>>
+public record ArticleListQuery(PaginationParams PaginationParams, ArticleListQueryParams? ArticleListQueryParams) : IRequest<PagedList<ArticleDto>>
 {
 }

@@ -23,9 +23,9 @@ public class ArticleController : ControllerBase
     }
     
     [HttpGet]
-    public async Task<ActionResult<PagedList<ArticleDto>>> GetArticleList([FromQuery] PaginationParams paginationParams)
+    public async Task<ActionResult<PagedList<ArticleDto>>> GetArticleList([FromQuery] PaginationParams paginationParams, [FromQuery] ArticleListQueryParams? articleListQueryParams)
     {
-        var list = await _mediator.Send(new ArticleListQuery(paginationParams));
+        var list = await _mediator.Send(new ArticleListQuery(paginationParams, articleListQueryParams));
         Response.AddPaginationHeader(list);
         return Ok(list);
     }
