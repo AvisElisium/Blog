@@ -1,0 +1,17 @@
+﻿.ProseMirror p {
+    margin: 1em .5em;
+}
+
+.ProseMirror {
+    min-height: 20em;
+    padding: 0.2em;
+}
+
+.ProseMirror-focused:focus-visible {
+    outline: none;
+}
+
+.editorContainer {
+    border: 2px black solid;
+    margin: 1em 0;
+}

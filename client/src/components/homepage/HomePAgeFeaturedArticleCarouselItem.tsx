@@ -20,7 +20,12 @@ const HomePAgeFeaturedArticleCarouselItem = ({article}: Props) => {
                     whiteSpace: "nowrap",
                 }}>
                     <CardHeader title={article.headline} subheader={moment.utc(article.createdAt).format("DD MMM YYYY")} />
-                    <CardContent>
+                    <CardContent sx={{
+                        maxWidth: "100%",
+                        whiteSpace: "nowrap",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis"
+                    }}>
                         {article.content}
                     </CardContent>
                 </Card>

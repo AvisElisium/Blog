@@ -25,7 +25,7 @@ const HomePageArticleListItem = ({article}: Props) => {
                 <CardMedia>
                     <Skeleton variant={"rectangular"} height={352} />
                 </CardMedia>
-                <CardHeader title={article.content} subheader={`${article.author.username} at ${moment.utc(article.createdAt).format("DD MMM YYYY")}`} />
+                <CardHeader title={article.headline} subheader={`${article.author.username} at ${moment.utc(article.createdAt).format("DD MMM YYYY")}`} />
                 <CardActions disableSpacing>
                     <Link component={RouterLink} to={`/article/${article.id}`}>
                         Go to article
