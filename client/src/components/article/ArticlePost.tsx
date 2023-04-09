@@ -1,4 +1,4 @@
-﻿import {Button, Container, Link, Popover, Skeleton, Stack, Typography} from "@mui/material";
+﻿import {Button, Container, Link, MenuItem, MenuList, Popover, Skeleton, Stack, Typography} from "@mui/material";
 import {useNavigate, useParams} from "react-router-dom";
 import {useQuery} from "react-query";
 import axios, {AxiosError} from "axios";
@@ -9,44 +9,15 @@ import {Link as RouterLink} from "react-router-dom";
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import {Interweave} from "interweave";
 import {AuthContext} from "../../context/AuthContext";
-
-
-const ArticlePostSkeleton = () => {
-    return (
-        <Stack spacing={5} sx={{
-            marginTop: "2em",
-        }}>
-            <Skeleton variant={"rectangular"} animation={"wave"} height={40} width={"20%"} />
-            
-            <Stack spacing={2}>
-                <Skeleton variant={"rectangular"} height={20} width={"100%"} />
-                <Skeleton variant={"rectangular"} height={20} width={"100%"} />
-                <Skeleton variant={"rectangular"} height={20} width={"100%"} />
-                <Skeleton variant={"rectangular"} height={20} width={"100%"} />
-            </Stack>
-
-            <Stack spacing={2}>
-                <Skeleton variant={"rectangular"} height={20} width={"100%"} />
-                <Skeleton variant={"rectangular"} height={20} width={"100%"} />
-                <Skeleton variant={"rectangular"} height={20} width={"100%"} />
-                <Skeleton variant={"rectangular"} height={20} width={"100%"} />
-            </Stack>
-
-            <Stack spacing={2}>
-                <Skeleton variant={"rectangular"} height={20} width={"100%"} />
-                <Skeleton variant={"rectangular"} height={20} width={"100%"} />
-                <Skeleton variant={"rectangular"} height={20} width={"100%"} />
-                <Skeleton variant={"rectangular"} height={20} width={"100%"} />
-            </Stack>
-        </Stack>
-    )
-}
+import ArticlePostSkeleton from "./ArticlePostSkeleton";
+import ArticleEditForm from "./ArticleEditForm";
 
 const ArticlePost = () => {
     
     const {id} = useParams();
     const navigate = useNavigate();
     const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
+    const [editMode, setEditMode] = useState(false);
 
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
         setAnchorEl(event.currentTarget);
@@ -74,13 +45,19 @@ const ArticlePost = () => {
     
     if (isLoading || data === null || data === undefined) return <ArticlePostSkeleton />;
     
+    const handleCloseEditMode = () => {
+        setEditMode(false);
+    }
+    
+    if (editMode) return <ArticleEditForm initialHeadline={data.headline} initialContent={data.content} id={id as string} closeEditMode={handleCloseEditMode} />
+    
     return (
         <Stack spacing={2} component={"article"} sx={{
             marginTop: "2em",
         }}>
             <header>
                 <Typography variant={"h2"}>
-                    {data!.headline} {currentUser?.isAdmin && <Button onClick={handleClick}>Manage</Button>}
+                    {data!.headline} {currentUser?.isAdmin && !editMode && <Button onClick={handleClick}>Manage</Button>}
                 </Typography>
                 <Typography>
                     <Link component={RouterLink} to={`/profile/${data!.author.username}`} underline={"hover"}>
@@ -92,7 +69,7 @@ const ArticlePost = () => {
                 </Typography>
             </header>
             
-            <Typography id={"article-content"}>
+            <Typography component={"div"}>
                 <Interweave content={data.content} />
             </Typography>
 
@@ -106,8 +83,16 @@ const ArticlePost = () => {
                     horizontal: 'left',
                 }}
             >
-                <Typography sx={{ p: 2 }}>Edit</Typography>
-                <Typography sx={{ p: 2 }}>Delete</Typography>
+                <MenuList
+                    onKeyDown={() => {}}
+                    autoFocusItem={open}
+                >
+                    <MenuItem onClick={() => {
+                        setEditMode(true);
+                    }}>
+                        Edit
+                    </MenuItem>
+                </MenuList>
             </Popover>
             
         </Stack>

@@ -31,7 +31,7 @@ public class UpdateArticleHandler : IRequestHandler<UpdateArticle>
         
         if (!result) throw new ForbiddenException($"You don't have permission to delete Article {request.Id}");
 
-        _mapper.Map<CreateArticleDto, Domain.Entities.Article>(request.Dto);
+        _mapper.Map<CreateArticleDto, Domain.Entities.Article>(request.Dto, article);
 
         await _context.SaveChangesAsync(cancellationToken);
     }

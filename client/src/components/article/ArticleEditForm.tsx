@@ -1,59 +1,58 @@
-﻿import {useForm, Controller} from "react-hook-form";
-import {z} from "zod";
+﻿import {Controller, useForm} from "react-hook-form";
+import {createArticleSchema, CreateArticleSchema} from "../authorpanel/CreateArticleForm";
 import {zodResolver} from "@hookform/resolvers/zod";
-import {Container, Stack, TextField, Typography} from "@mui/material";
-import 'react-quill/dist/quill.snow.css';
-import LoadingButton from "../shared/LoadingButton";
-import {useMutation, useQueryClient} from "react-query";
-import axios, {AxiosError, AxiosResponse} from "axios";
-import {useSnackbar} from "notistack";
-import useValidationErrors from "../../hooks/UseValidationErrors";
-import {ValidationErrorResponse} from "../../types/errors/validationErrorResponse";
-import React, {useRef, useState} from "react";
-import {Editor, EditorContent, useEditor} from "@tiptap/react";
-import StarterKit from '@tiptap/starter-kit';
-import ListItem from '@tiptap/extension-list-item';
+import React, {FC, useRef, useState} from "react";
 import TextEditor, {TipTapMethods} from "../shared/TextEditor";
-import "./styles.css";
+import useValidationErrors from "../../hooks/UseValidationErrors";
+import {useSnackbar} from "notistack";
+import {useMutation} from "react-query";
+import axios, {AxiosError, AxiosResponse} from "axios";
+import {ValidationErrorResponse} from "../../types/errors/validationErrorResponse";
+import {useParams} from "react-router-dom";
+import {Container, Stack, TextField} from "@mui/material";
+import LoadingButton from "../shared/LoadingButton";
 
 
-export const createArticleSchema = z.object({
-    headline: z.string(),
-    content: z.string(),
-})
+interface Props {
+    initialHeadline: string;
+    initialContent: string;
+    id: string;
+    closeEditMode: () => void;
+}
 
-export type CreateArticleSchema = z.infer<typeof createArticleSchema>;
+const ArticleEditForm: FC<Props> = ({initialHeadline, initialContent, id, closeEditMode}) => {
 
-const CreateArticleForm = () => {
     const {control,
-        handleSubmit, 
+        handleSubmit,
         formState: {errors, isDirty, isValid},
         setValue,
         setError, reset} = useForm<CreateArticleSchema>({
         mode: "onSubmit",
         resolver: zodResolver(createArticleSchema),
+        defaultValues: {
+            headline: initialHeadline,
+            content: initialContent,
+        }
     });
-    
+
     const editorRef = useRef<TipTapMethods>();
-
     const [isSubmitting, setIsSubmitting] = useState(false);
-
     const setValidationErrors = useValidationErrors<CreateArticleSchema>(setError);
-
     const {enqueueSnackbar} = useSnackbar();
 
     const mutation = useMutation((data: CreateArticleSchema) => {
-        return axios.post<string>("/article", data);
+        return axios.put<string>(`/article/${id}`, data);
     }, {
-        mutationKey: "articles",
+        mutationKey: ["article", id],
 
         onMutate: () => setIsSubmitting(true),
 
         onSuccess: async (response: AxiosResponse<string>) => {
             reset();
             editorRef.current?.clearContent();
-            
-            enqueueSnackbar(`Created article ${response.data}`, {
+            closeEditMode()
+
+            enqueueSnackbar(`Edited article ${response.data}`, {
                 variant: "success",
                 preventDuplicate: true,
             })
@@ -69,6 +68,7 @@ const CreateArticleForm = () => {
     const onSubmit = async (data: any) => {
         await mutation.mutateAsync(data);
     }
+    
     return (
         <Container sx={{
             marginTop: 4,
@@ -93,10 +93,8 @@ const CreateArticleForm = () => {
                     <LoadingButton type={"submit"} variant={"contained"} text={"Create"} isLoading={isSubmitting} disabled={!isValid && isDirty} />
                 </Stack>
             </form>
-
         </Container>
     )
 }
 
-
-export default CreateArticleForm;
+export default ArticleEditForm;
