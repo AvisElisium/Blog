@@ -4,20 +4,23 @@ import {useQuery, useQueryClient} from "react-query";
 import axios from "axios";
 
 interface AuthContext {
-    currentUser: User | null,
-    login: (user: User) => void,
-    logout: () => void,
+    currentUser: User | null;
+    login: (user: User) => void;
+    logout: () => void;
+    setHasError: (value: boolean) => void;
 }
 
 export const AuthContext = createContext<AuthContext>({
     currentUser: null,
     login: () => {},
     logout: () => {},
+    setHasError: () => {}
 });
 
 
 const AuthContextProvider: FC<PropsWithChildren> = ({children}) => {
     const [user, setUser] = useState<User | null>(getUserFromLocalStorage());
+    const [hasError, setHasError] = useState(false);
     
     const queryClient = useQueryClient();
     
@@ -32,12 +35,17 @@ const AuthContextProvider: FC<PropsWithChildren> = ({children}) => {
     const handleLogin = (userData: User) => {
         localStorage.setItem("user", JSON.stringify(userData));
         setUser(userData);
+        setHasError(false);
     }
     
     const handleLogout = async () => {
         localStorage.removeItem("user");
         await queryClient.invalidateQueries("login");
         setUser(null);
+    }
+
+    const handleSetHasError = (v: boolean) => {
+        setHasError(v);
     }
     
     const {} = useQuery({
@@ -50,15 +58,21 @@ const AuthContextProvider: FC<PropsWithChildren> = ({children}) => {
             handleLogin(data);
         },
         
+        onError: () => {
+            setHasError(true);
+        },
+        
         staleTime: 480000,
         cacheTime: 600000,
-        enabled: !!user,
+        enabled: !!user && !hasError,
+        retry: false,
     })
     return (
         <AuthContext.Provider value={{
             currentUser: user,
             login: handleLogin,
             logout: handleLogout,
+            setHasError: handleSetHasError,
         }}>
             {children}
         </AuthContext.Provider>
