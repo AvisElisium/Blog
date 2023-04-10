@@ -10,6 +10,7 @@ public class AppDbContext : IdentityDbContext<User>
     public DbSet<Article> Articles { get; set; }
     public DbSet<RefreshToken> RefreshTokens { get; set; }
     public DbSet<Image> Images { get; set; }
+    public DbSet<Comment> Comments { get; set; }
 
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
     {

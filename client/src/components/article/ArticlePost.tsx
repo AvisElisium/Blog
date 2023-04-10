@@ -25,6 +25,8 @@ import ArticlePostSkeleton from "./ArticlePostSkeleton";
 import ArticleEditForm from "./ArticleEditForm";
 import LoadingButton from "../shared/LoadingButton";
 import ArticleDeleteModal from "./ArticleDeleteModal";
+import CreateCommentForm from "./comments/CreateCommentForm";
+import CommentsSection from "./comments/CommentsSection";
 
 const ArticlePost = () => {
     
@@ -71,26 +73,33 @@ const ArticlePost = () => {
     if (editMode) return <ArticleEditForm initialHeadline={data.headline} initialContent={data.content} id={id as string} closeEditMode={handleCloseEditMode} />
     
     return (
-        <Stack spacing={2} component={"article"} sx={{
-            marginTop: "2em",
-        }}>
-            <header>
-                <Typography variant={"h2"}>
-                    {data!.headline} {currentUser?.isAdmin && !editMode && <Button onClick={handleClick}>Manage</Button>}
+        <>
+            <Stack spacing={2} component={"article"} sx={{
+                marginTop: "2em",
+            }}>
+                <header>
+                    <Typography variant={"h2"}>
+                        {data!.headline} {currentUser?.isAdmin && !editMode && <Button onClick={handleClick}>Manage</Button>}
+                    </Typography>
+                    <Typography>
+                        <Link component={RouterLink} to={`/profile/${data!.author.username}`} underline={"hover"}>
+                            {data!.author.username}
+                        </Link>
+                    </Typography>
+                    <Typography>
+                        {moment.utc(data!.createdAt).format("DD MMMM YYYY")}
+                    </Typography>
+                </header>
+
+                <Typography component={"div"}>
+                    <Interweave content={data.content} />
                 </Typography>
-                <Typography>
-                    <Link component={RouterLink} to={`/profile/${data!.author.username}`} underline={"hover"}>
-                        {data!.author.username}
-                    </Link>
-                </Typography>
-                <Typography>
-                    {moment.utc(data!.createdAt).format("DD MMMM YYYY")}
-                </Typography>
-            </header>
+            </Stack>
             
-            <Typography component={"div"}>
-                <Interweave content={data.content} />
-            </Typography>
+            <Stack>
+                <CommentsSection articleId={id as string} />
+            </Stack>
+
 
             <Popover
                 id={open ? id : undefined}
@@ -119,12 +128,12 @@ const ArticlePost = () => {
                     }}>
                         Delete
                     </MenuItem>
-                    
+
                 </MenuList>
             </Popover>
-            
+
             <ArticleDeleteModal open={deleteMode} id={id as string} handleClose={handleCloseDeleteMode} />
-        </Stack>
+        </>
     )
 }
 

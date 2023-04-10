@@ -1,6 +1,7 @@
 using System.Text.Json;
 using Api.Configuration;
 using Api.Extensions;
+using Api.Hubs;
 using Api.Middleware;
 using Api.Services;
 using Application.Services;
@@ -80,6 +81,8 @@ if (app.Environment.IsDevelopment())
 app.UseAuthentication();
 
 app.UseAuthorization();
+
+app.MapHub<CommentHub>("/comments");
 
 app.MapControllers();
 

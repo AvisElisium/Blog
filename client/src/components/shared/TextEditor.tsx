@@ -63,10 +63,6 @@ const TextEditor: FC<Props> = forwardRef(({ description, onChange }, ref: Forwar
     }))
 
     useEffect(() => {
-
-        console.log("images", images);
-        console.log("images to delete", imagesForDelete);
-
         images.forEach((image) => {
 
             console.log(!description.includes(`title="${image.id}"`));
