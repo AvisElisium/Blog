@@ -15,3 +15,8 @@
     border: 2px black solid;
     margin: 1em 0;
 }
+
+.article-image {
+    aspect-ratio: initial;
+    max-width: 900px;
+}

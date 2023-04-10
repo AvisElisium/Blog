@@ -13,8 +13,10 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 var jwtConfig = new JwtConfiguration();
+var cloudinaryConfig = new CloudinaryConfiguration();
 
 builder.Configuration.GetSection("Jwt").Bind(jwtConfig);
+builder.Configuration.GetSection("Cloudinary").Bind(cloudinaryConfig);
 
 builder.Services.AddSingleton(jwtConfig);
 
@@ -25,6 +27,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddIdentity(jwtConfig);
+builder.Services.AddSingleton(cloudinaryConfig);
 builder.Services.AddTransient<ITokenService, TokenService>();
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddCustomMiddleware();

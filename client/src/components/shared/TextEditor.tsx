@@ -1,13 +1,31 @@
 ﻿import {Editor, EditorContent, PureEditorContent, useEditor} from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
-import TextEditorToolBar from "./TextEditorToolBar";
-import {ForwardedRef, forwardRef, MutableRefObject, SyntheticEvent, useImperativeHandle, useRef} from "react";
+import TextEditorToolBar, {ImageUploadResult} from "./TextEditorToolBar";
+import {
+    FC,
+    ForwardedRef,
+    forwardRef,
+    MutableRefObject,
+    SyntheticEvent,
+    useEffect,
+    useImperativeHandle,
+    useRef, useState
+} from "react";
+import Image from "@tiptap/extension-image";
+import {useMutation} from "react-query";
+import axios from "axios";
 
 export interface TipTapMethods {
     clearContent: () => void;
 }
 
-const TextEditor = forwardRef((props: {description: string, onChange: (e: any) => void}, ref: ForwardedRef<TipTapMethods>) => {
+interface Props {
+    description: string;
+    onChange: (e: any) => void;
+    id: string;
+}
+
+const TextEditor: FC<Props> = forwardRef(({ description, onChange }, ref: ForwardedRef<TipTapMethods>) => {
     const editor = useEditor({
         extensions: [
             StarterKit.configure({
@@ -20,12 +38,21 @@ const TextEditor = forwardRef((props: {description: string, onChange: (e: any) =
                     keepAttributes: false,
                 },
             }),
+            Image.configure({
+                inline: true,
+                HTMLAttributes: {
+                    class: "article-image"
+                }
+            })
         ],
-        content: props.description,
+        content: description,
         onUpdate({editor}) {
-            props.onChange(editor.getHTML())
+            onChange(editor.getHTML())
         },
     })
+
+    const [images, setImages] = useState<ImageUploadResult[]>([]);
+    const [imagesForDelete, setImagesForDelete] = useState<ImageUploadResult[]>([]);
 
     const editorRef: MutableRefObject<Editor | null> = useRef(null)
     
@@ -35,12 +62,41 @@ const TextEditor = forwardRef((props: {description: string, onChange: (e: any) =
         }
     }))
 
+    useEffect(() => {
+
+        console.log("images", images);
+        console.log("images to delete", imagesForDelete);
+
+        images.forEach((image) => {
+
+            console.log(!description.includes(`title="${image.id}"`));
+
+            if (!description.includes(`title="${image.id}"`)) {
+                setImagesForDelete((prevImagesForDelete) => [...prevImagesForDelete, image]);
+
+                setImages((prevImages) => prevImages.filter((_image) => _image.id !== image.id))
+            }
+        })
+    }, [description])
+    
+    const handleSetImages = (img: ImageUploadResult) => {
+        setImages((prevImages) => [...prevImages, img]);
+    }
+    
+    const {mutateAsync} = useMutation((image: ImageUploadResult) => axios.delete(`/image/${image.id}`));
+    
+    useEffect(() => {
+        imagesForDelete.forEach(async (image) => {
+            await mutateAsync(image);
+        })
+    }, [imagesForDelete])
+
     if (!editor) return null
     editorRef.current = editor
 
     return (
         <div className={"editorContainer"}>
-            <TextEditorToolBar editor={editor as Editor} />
+            <TextEditorToolBar editor={editor as Editor} description={description} handleSetImages={handleSetImages} />
             <EditorContent editor={editor} />
         </div>
     )
