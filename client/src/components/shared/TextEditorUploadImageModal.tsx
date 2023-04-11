@@ -2,7 +2,7 @@
 import {FC, useCallback, useState} from "react";
 import {useDropzone} from "react-dropzone";
 import {useMutation} from "react-query";
-import axios from "axios";
+import axios, {AxiosResponse} from "axios";
 import {ImageUploadResult} from "./TextEditorToolBar";
 import {Editor} from "@tiptap/react";
 
@@ -15,38 +15,32 @@ interface Props {
 
 const TextEditorUploadImageModal: FC<Props> = ({open, handleClose, handleSetImages, editor}) => {
     
-    const [files, setFiles] = useState<Blob[]>([]);
+    const {mutateAsync} = useMutation({
+           mutationFn: (file: Blob) => {
+               const formData = new FormData();
+               formData.append("file", file);
+               formData.append("alt", "test");
 
-    const {mutateAsync, data} = useMutation<ImageUploadResult>({
-        mutationFn: () => {
-
-            let formData = new FormData();
-            formData.append("file", files[0]);
-            formData.append("alt", "test");
-
-            return axios.post(`/image`, formData, {
-                headers: {"Content-Type": "multipart/form-data"}
-            }).then(res => res.data)
-        },
+               return axios.post<ImageUploadResult>(`/image`, formData, {
+                   headers: {"Content-Type": "multipart/form-data"},
+               }).then(res => res.data)
+           },
         
-        onSuccess: () => handleClose(),
+        onSuccess: () => {
+               handleClose();
+        }
     })
 
-    const handleFileUpload = async () => {
-
-        const data = await mutateAsync();
+    const onDrop = useCallback(async (acceptedFiles: Blob[]) => {
+        const data = await mutateAsync(acceptedFiles[0]);
 
         if (data) {
 
-            handleSetImages(data);
+            handleSetImages(data as unknown as ImageUploadResult);
 
             return editor.chain().focus().setImage({src: data.uri, alt: data.alt, title: data.id}).run();
         }
-    }
-
-    const onDrop = useCallback(async (acceptedFiles: Blob[]) => {
-        setFiles(acceptedFiles);
-        await handleFileUpload();
+        
     }, [])
 
     const {getRootProps, getInputProps, isDragActive} = useDropzone({onDrop})
