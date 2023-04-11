@@ -23,7 +23,7 @@ const HomePageArticleListItem = ({article}: Props) => {
         <Grid item xs={12} md={6} lg={4}>
             <Card>
                 <CardMedia>
-                    <Skeleton variant={"rectangular"} height={352} />
+                    <Skeleton sx={{zIndex: 0}} variant={"rectangular"} height={352} />
                 </CardMedia>
                 <CardHeader title={article.headline} subheader={`${article.author.username} at ${moment.utc(article.createdAt).format("DD MMM YYYY")}`} />
                 <CardActions disableSpacing>

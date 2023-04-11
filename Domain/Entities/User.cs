@@ -9,4 +9,5 @@ public class User : IdentityUser
     public UserTypes UserType { get; set; } = UserTypes.Member;
     public ICollection<RefreshToken> RefreshTokens { get; set; }
     public ICollection<Comment> Comments { get; set; }
+    public DateTime Joined { get; set; } = DateTime.UtcNow;
 }

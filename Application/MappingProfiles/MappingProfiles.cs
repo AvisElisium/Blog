@@ -1,6 +1,7 @@
 ﻿using Application.Models.Article;
 using Application.Models.Comments;
 using Application.Models.Pagination;
+using Application.Models.Profile;
 using Application.Models.User;
 using AutoMapper;
 using Domain.Entities;
@@ -33,5 +34,7 @@ public class MappingProfiles : Profile
                 o.MapFrom(s => s.Author.UserName))
             .ForMember(d => d.ArticleId, o => 
                 o.MapFrom(x => x.Article.Id));
+
+        CreateMap<User, UserProfileDto>();
     }
 }

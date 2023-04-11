@@ -7,6 +7,7 @@ import AppRoot from "../AppRoot";
 import AuthorPanel from "./AuthorPanel/AuthorPanel";
 import ArticlePage from "./articlePage/ArticlePage";
 import ArticlePost from "../components/article/ArticlePost";
+import ProfilePage from "./profilePage/ProfilePage";
 
 
 const router = createBrowserRouter([
@@ -27,7 +28,8 @@ const router = createBrowserRouter([
                 path: "/article",
                 children: [
                     {element: <ArticlePost />, path: ":id"}
-                ]}
+                ]},
+            {element: <ProfilePage />, path: "/profile/:username"}
         ]
     }
 ])

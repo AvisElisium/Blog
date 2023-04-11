@@ -1,5 +1,7 @@
 ﻿using Application.Commands.User;
+using Application.Models.Profile;
 using Application.Models.User;
+using Application.Queries.Account;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -39,5 +41,11 @@ public class AccountController : ControllerBase
     public async Task<ActionResult<UserDto>> RefreshJwt()
     {
         return Ok(await _mediator.Send(new RefreshJwt()));
+    }
+
+    [HttpGet("{username}")]
+    public async Task<ActionResult<UserProfileDto>> GetUserProfile([FromRoute] string username)
+    {
+        return Ok(await _mediator.Send(new GetUserProfile(username)));
     }
 }
