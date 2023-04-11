@@ -4,8 +4,10 @@ using Application.Queries.Comment;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
+using Api.Hubs.Filters;
 
 namespace Api.Hubs;
+
 
 public class CommentHub : Hub
 {
