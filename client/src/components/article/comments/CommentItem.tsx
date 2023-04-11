@@ -1,6 +1,8 @@
-import {Box, Grid, Paper} from "@mui/material";
+import {Box, Grid, Paper, Stack, Typography} from "@mui/material";
 import {FC} from "react";
 import {Interweave} from "interweave";
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import moment from "moment";
 
 
 interface Props {
@@ -12,22 +14,67 @@ interface Props {
 }
 
 const CommentItem: FC<Props> = ({ id, content, authorUsername, createdAt, articleId}) => {
+    const handleDate = () => {
+        const now = moment(new Date());
+        const createdAtMoment = moment(createdAt).utc();
+        
+        let timeDiff = now.diff(createdAtMoment, "hours");
+        let timespanString = "hours ago";
+        
+        if (timeDiff === 0) {
+            return "less than hour ago";
+        }
+
+        if (timeDiff > 48) {
+            timeDiff = createdAtMoment.diff(now, "days");
+            timespanString = "days ago";
+        }
+        
+        if (timeDiff > 24 * 30) {
+            return moment.utc(createdAt).format("DD MMMM YYYY")
+        }
+        
+        return `${timeDiff} ${timespanString}`
+    }
+    
     return (
-        <Box>
-            <Paper elevation={1}>
+        <Paper sx={{margin: "2em 0", padding: ".5em .25em"}}>
+            <Paper elevation={0}>
                 <Grid container xs={12}>
+                    <Grid item xs={1} sx={{
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center"
+                    }}>
+                        <AccountCircleIcon sx={{transform: "scale(1.5)"}}/>
+                    </Grid>
                     
-                    <Grid item xs={4}>
-                        {authorUsername}
+                    <Grid item xs={2}>
+                        <Stack>
+                            <Typography>
+                                {authorUsername}
+                            </Typography>
+                            
+                            <Typography>
+                                {handleDate()}
+                            </Typography>
+                        </Stack>
+                    </Grid>
+                </Grid>
+                
+                <Grid container xs={12}>
+                    <Grid item xs={1}>
+                        
                     </Grid>
 
-                    <Grid item xs={4}>
-                        <Interweave content={content} />
+                    <Grid item xs={11}>
+                        <Typography>
+                            <Interweave content={content} />
+                        </Typography>
                     </Grid>
-                    
                 </Grid>
             </Paper>
-        </Box>
+        </Paper>
     )
 }
 

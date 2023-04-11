@@ -5,6 +5,7 @@ import {User} from "../../auth/LoginForm";
 import CreateCommentForm from "./CreateCommentForm";
 import CommentItem from "./CommentItem";
 import useComments from "../../../hooks/useComments";
+import {Box, Stack, Typography} from "@mui/material";
 
 interface Props {
     articleId: string;
@@ -32,17 +33,25 @@ const CommentsSection: FC<Props> = ({ articleId }) => {
     
     
     return (
-        <>
-            <CreateCommentForm connection={connection} articleId={articleId} />
-            {comments.map((comment) => <CommentItem
-                id={comment.id} 
-                key={comment.id}
-                authorUsername={comment.authorUsername} 
-                articleId={comment.articleId} 
-                content={comment.content} 
-                createdAt={comment.createdAt} 
-            />)}
-        </>
+        <Box sx={{marginBottom: "2em"}}>
+            <Stack>
+                <Typography variant={"h4"}>
+                    Create Comment
+                </Typography>
+                <CreateCommentForm connection={connection} articleId={articleId} />
+            </Stack>
+            
+            <Stack spacing={1}>
+                {comments.map((comment) => <CommentItem
+                    id={comment.id}
+                    key={comment.id}
+                    authorUsername={comment.authorUsername}
+                    articleId={comment.articleId}
+                    content={comment.content}
+                    createdAt={comment.createdAt}
+                />)}
+            </Stack>
+        </Box>
     )
 }
 

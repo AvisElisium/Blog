@@ -18,7 +18,7 @@ public class CreateCommentValidator : AbstractValidator<CreateCommentDto>
                 var img = htmlDoc.DocumentNode.SelectNodes("//img");
                 
                 // check for text and presence of images
-                if (innerText.Length == 0 && img.Count == 0)
+                if (innerText?.Length == 0 && img?.Count == 0)
                 {
                     context.AddFailure("Comment can't be empty");
                 }
