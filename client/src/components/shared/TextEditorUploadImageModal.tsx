@@ -5,6 +5,7 @@ import {useMutation} from "react-query";
 import axios, {AxiosResponse} from "axios";
 import {ImageUploadResult} from "./TextEditorToolBar";
 import {Editor} from "@tiptap/react";
+import UploadImageWidget from "./UploadImageWidget";
 
 interface Props {
     open: boolean
@@ -58,16 +59,7 @@ const TextEditorUploadImageModal: FC<Props> = ({open, handleClose, handleSetImag
                 display: "flex",
                 justifyContent: "center",
             }}>
-                <Typography>
-                    <div {...getRootProps()}>
-                        <input {...getInputProps()} />
-                        {
-                            isDragActive ?
-                                <p>Drop the files here ...</p> :
-                                <p>Drag 'n' drop some files here, or click to select files</p>
-                        }
-                    </div>
-                </Typography>
+                <UploadImageWidget onDrop={onDrop} />
             </Box>
         </Modal>
     )
