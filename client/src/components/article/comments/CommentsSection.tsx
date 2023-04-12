@@ -6,6 +6,7 @@ import CreateCommentForm from "./CreateCommentForm";
 import CommentItem from "./CommentItem";
 import useComments from "../../../hooks/useComments";
 import {Box, Stack, Typography} from "@mui/material";
+import CommentList from "./CommentList";
 
 interface Props {
     articleId: string;
@@ -17,6 +18,7 @@ export interface Comment {
     content: string;
     createdAt: string;
     articleId: string;
+    authorProfilePicture: string | null;
 }
 
 const CommentsSection: FC<Props> = ({ articleId }) => {
@@ -41,16 +43,7 @@ const CommentsSection: FC<Props> = ({ articleId }) => {
                 <CreateCommentForm connection={connection} articleId={articleId} />
             </Stack>
             
-            <Stack spacing={1}>
-                {comments.map((comment) => <CommentItem
-                    id={comment.id}
-                    key={comment.id}
-                    authorUsername={comment.authorUsername}
-                    articleId={comment.articleId}
-                    content={comment.content}
-                    createdAt={comment.createdAt}
-                />)}
-            </Stack>
+            <CommentList comments={comments} />
         </Box>
     )
 }
