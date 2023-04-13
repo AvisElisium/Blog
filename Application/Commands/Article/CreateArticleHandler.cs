@@ -43,7 +43,7 @@ public class CreateArticleHandler : IRequestHandler<CreateArticle, Guid>
         var article = _mapper.Map<CreateArticleDto, Domain.Entities.Article>(request.Dto);
         article.Author = user;
 
-        var result = await _userService.AuthorizeUserAsync(article, Operations.Update);
+        var result = await _userService.AuthorizeUserAsync(article, Operations.Create);
         
         if (!result) throw new ForbiddenException($"You don't have permission to create Article");
 

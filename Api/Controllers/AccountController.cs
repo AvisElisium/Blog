@@ -48,4 +48,13 @@ public class AccountController : ControllerBase
     {
         return Ok(await _mediator.Send(new GetUserProfile(username)));
     }
+
+    [HttpPost("profilePicture")]
+    [Authorize]
+    public async Task<IActionResult> SetProfilePicture([FromForm] IFormFile file)
+    {
+        await _mediator.Send(new SetProfilePicture(file));
+            
+        return Ok();
+    }
 }
