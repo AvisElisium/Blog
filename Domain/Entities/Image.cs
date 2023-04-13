@@ -1,6 +1,6 @@
 ﻿namespace Domain.Entities;
 
-public class Image
+public abstract class Image
 {
     public Guid Id { get; set; }
     public string PublicId { get; set; }

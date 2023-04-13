@@ -1,5 +1,6 @@
 ﻿using Application.Exceptions;
 using Application.Models.Image;
+using Domain.Entities;
 using Infrastructure;
 using Infrastructure.services;
 using MediatR;
@@ -22,15 +23,16 @@ public class UploadImageHandler: IRequestHandler<UploadImage, UploadImageResult>
     {
         var result = await _imageService.UploadImage(request.File);
 
-        var image = new Domain.Entities.Image()
+        var image = new MediaImage()
         {
             Alt = request.Alt,
             Filename = request.File.FileName,
             PublicId = result.Item1,
             Uri = result.Item2,
         };
+        
 
-        _context.Add(image);
+        await _context.MediaImages.AddAsync(image, cancellationToken);
         await _context.SaveChangesAsync(cancellationToken);
 
         return new UploadImageResult()
