@@ -12,9 +12,10 @@ import ProfileTabPanel, {a11yProps} from "./ProfileTabPanel";
 import CommentItem from "../article/comments/CommentItem";
 import ArticlePost from "../article/ArticlePost";
 import {Link as RouterLink} from "react-router-dom";
+import ProfileHeader from "./ProfileHeader";
 
 
-interface ProfileDto {
+export interface ProfileDto {
     username: string;
     joined: string;
     userType: number;
@@ -44,46 +45,13 @@ const Profile = () => {
         },
     })
     
-    const handleRole = (r: number) => {
-        if (r === 0) return "User";
-        if (r === 1) return "Author";
-        if (r === 2) return "Admin";
-    }
-    
     if (data === undefined) return <Skeleton width={100} />
     
     return (
         <Box>
             <Grid container xs={12}>
                 <Grid item xs={12}>
-                    <Stack direction={"row"}>
-                        
-                        <Box
-                            sx={{
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            transform: "scale(4)",
-                            marginRight: 8,
-                            marginLeft: 8,
-                        }}>
-                            <AccountCircleIcon />
-                        </Box>
-                        
-                        <Stack>
-                            <Typography>
-                                {data.username}
-                            </Typography>
-
-                            <Typography>
-                                Member since: {moment.utc(data.joined).format("DD MMM YYYY")}
-                            </Typography>
-
-                            <Typography>
-                                Role: {handleRole(data.userType)}
-                            </Typography>
-                        </Stack>
-                    </Stack>
+                    <ProfileHeader profile={data} />
                 </Grid>
                 
                 <Grid item xs={12}>
