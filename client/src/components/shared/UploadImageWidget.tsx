@@ -1,7 +1,6 @@
 ﻿import {Box, Typography} from "@mui/material";
 import {useDropzone} from "react-dropzone";
-import {FC, useCallback} from "react";
-import {ImageUploadResult} from "./TextEditorToolBar";
+import {FC, useCallback, useEffect, useState} from "react";
 
 
 interface Props {
@@ -9,9 +8,7 @@ interface Props {
 }
 
 const UploadImageWidget: FC<Props> = ({ onDrop }) => {
-    
-    
-    const {getRootProps, getInputProps, isDragActive} = useDropzone({onDrop})
+    const {getRootProps, getInputProps, isDragActive, acceptedFiles} = useDropzone({onDrop})
     
     return (
         <Box sx={{
@@ -20,14 +17,27 @@ const UploadImageWidget: FC<Props> = ({ onDrop }) => {
             }
         }}>
             <Typography>
-                <div {...getRootProps()}>
+                <Box {...getRootProps()} sx={{
+                    border: "2px blue dashed",
+                    padding: "2em 0",
+                    display: "flex",
+                    justifyContent: "center"
+                }}>
                     <input {...getInputProps()} />
-                    {
-                        isDragActive ?
-                            <p>Drop the files here ...</p> :
-                            <p>Drag 'n' drop some files here, or click to select files</p>
+
+                    {acceptedFiles.length == 0 &&
+                        <Typography>
+                            Click or drop file here to upload
+                        </Typography>
                     }
-                </div>
+
+                    {acceptedFiles.length > 0 &&
+                        <Typography>
+                            {acceptedFiles[0].name} Uploaded
+                        </Typography>
+                    }
+                    
+                </Box>
             </Typography>
         </Box>
     )

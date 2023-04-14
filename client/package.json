@@ -29,6 +29,7 @@
     "react-dom": "^18.2.0",
     "react-dropzone": "^14.2.3",
     "react-hook-form": "^7.43.5",
+    "react-image-crop": "^10.0.9",
     "react-material-ui-carousel": "^3.4.2",
     "react-query": "^3.39.3",
     "react-quill": "^2.0.0",
