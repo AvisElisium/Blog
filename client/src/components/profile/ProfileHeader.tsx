@@ -43,7 +43,9 @@ const ProfileHeader: FC<Props> = ({ profile }) => {
                            <Button onClick={() => setUploadMode(true)} variant={"contained"} size={"small"}>Upload Image</Button>
                        }
 
-                       <Avatar sx={{
+                       <Avatar 
+                           src={profile.profilePicture || ""}
+                           sx={{
                            width: 80,
                            height: 80,
                            margin: "0em 1em"

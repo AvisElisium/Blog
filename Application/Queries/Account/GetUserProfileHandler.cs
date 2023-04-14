@@ -23,7 +23,9 @@ public class GetUserProfileHandler : IRequestHandler<GetUserProfile, UserProfile
     
     public async Task<UserProfileDto> Handle(GetUserProfile request, CancellationToken cancellationToken)
     {
-        var user = await _context.Users.SingleOrDefaultAsync(x => x.UserName == request.Username, cancellationToken: cancellationToken);
+        var user = await _context.Users
+            .Include(x => x.ProfilePicture)
+            .SingleOrDefaultAsync(x => x.UserName == request.Username, cancellationToken: cancellationToken);
             
         if (user is null) throw new NotFoundException($"User with username {request.Username} was not found");
 

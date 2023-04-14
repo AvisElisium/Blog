@@ -11,4 +11,5 @@ public class UserProfileDto
     public UserTypes UserType { get; set; }
     public List<CommentDto> LastComments { get; set; } = new List<CommentDto>();
     public List<ArticleDto> LastArticles { get; set; } = new List<ArticleDto>();
+    public Uri ProfilePicture { get; set; }
 }

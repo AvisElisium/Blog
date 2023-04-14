@@ -21,6 +21,7 @@ export interface ProfileDto {
     userType: number;
     lastComments: Comment[];
     lastArticles: Article[];
+    profilePicture: string | null;
 }
 
 const Profile = () => {
