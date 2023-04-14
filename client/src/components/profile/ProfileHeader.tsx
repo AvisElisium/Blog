@@ -60,7 +60,7 @@ const ProfileHeader: FC<Props> = ({ profile }) => {
                    </Typography>
 
                    <Typography>
-                       Member since: {moment.utc(profile.joined).format("DD MMM YYYY")}
+                       Member since: {moment(profile.joined, "DD.MM.YYYY HH:mm:SS").format("DD MMMM YYYY")}
                    </Typography>
 
                    <Typography>
