@@ -4,6 +4,7 @@ using Domain.Entities;
 using Infrastructure;
 using Infrastructure.services;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace Application.Commands.User;
 
@@ -23,7 +24,15 @@ public class SetProfilePictureHandler : IRequestHandler<SetProfilePicture>
     public async Task Handle(SetProfilePicture request, CancellationToken cancellationToken)
     {
         var username = _userService.GetCurrentUserUsername();
-        var user = _context.Users.FirstOrDefault(x => x.UserName == username);
+        var user = _context.Users
+            .Include(x => x.ProfilePicture)
+            .FirstOrDefault(x => x.UserName == username);
+
+        if (user?.ProfilePicture is not null)
+        {
+            await _imageService.DeleteImage(user.ProfilePicture.PublicId);
+            _context.ProfilePictures.Remove(user.ProfilePicture);
+        }
 
         if (user is null) throw new UnauthorizedException();
 

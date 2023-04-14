@@ -1,9 +1,10 @@
 ﻿import {Box, Modal} from "@mui/material";
-import {FC, useCallback} from "react";
+import {FC, useCallback, useContext} from "react";
 import {useDropzone} from "react-dropzone";
-import {useMutation, useQuery} from "react-query";
+import {useMutation, useQuery, useQueryClient} from "react-query";
 import axios from "axios";
 import UploadImageWidget from "../shared/UploadImageWidget";
+import {AuthContext} from "../../context/AuthContext";
 
 interface Props {
     open: boolean;
@@ -12,9 +13,11 @@ interface Props {
 
 const UpdateProfilePictureModal: FC<Props> = ({open, handleClose}) => {
     
+    const {currentUser} = useContext(AuthContext);
+    const client = useQueryClient();
+    
     const {mutateAsync} = useMutation({
         mutationFn: (file: Blob) => {
-            
             const formData = new FormData();
             formData.append("file", file);
             
@@ -26,6 +29,9 @@ const UpdateProfilePictureModal: FC<Props> = ({open, handleClose}) => {
     
     const onDrop = useCallback(async (acceptedFiles: Blob[]) => {
         await mutateAsync(acceptedFiles[0]);
+        await client.invalidateQueries(["profile", currentUser?.username]);
+        await client.invalidateQueries("refresh");
+        handleClose();
     }, [])
     const {getRootProps, getInputProps, isDragActive} = useDropzone({onDrop, maxFiles: 1})
     
