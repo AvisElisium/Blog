@@ -35,7 +35,6 @@ public class SetProfilePictureHandler : IRequestHandler<SetProfilePicture>
             PublicId = result.Item1,
             Uri = result.Item2,
             User = user,
-            UserUsername = username,
             Alt = $"{username}'s profile picture"
         };
 

@@ -10,4 +10,5 @@ public class User : IdentityUser
     public ICollection<RefreshToken> RefreshTokens { get; set; }
     public ICollection<Comment> Comments { get; set; }
     public DateTime Joined { get; set; } = DateTime.UtcNow;
+    public ProfilePicture ProfilePicture { get; set; }
 }

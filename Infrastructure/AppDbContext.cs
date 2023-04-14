@@ -22,15 +22,17 @@ public class AppDbContext : IdentityDbContext<User>
     {
         base.OnModelCreating(builder);
 
+        builder.Entity<User>().HasKey(x => x.Id);
         builder.Entity<User>()
             .HasMany(x => x.RefreshTokens)
             .WithOne(x => x.User)
             .OnDelete(DeleteBehavior.Cascade);
 
-        builder.Entity<Image>()
-            .HasDiscriminator<string>("image_type")
-            .HasValue<MediaImage>("media")
-            .HasValue<ProfilePicture>("pfp");
+        builder.Entity<Image>().UseTpcMappingStrategy();
 
+        builder.Entity<User>()
+            .HasOne(x => x.ProfilePicture)
+            .WithOne(x => x.User)
+            .HasForeignKey<ProfilePicture>(x => x.UserId);
     }
 }
