@@ -14,6 +14,8 @@ import {
 import Image from "@tiptap/extension-image";
 import {useMutation} from "react-query";
 import axios from "axios";
+import textEditorStore from "../../stores/textEditorStore";
+import useTextEditorStore from "../../stores/textEditorStore";
 
 export interface TipTapMethods {
     clearContent: () => void;
@@ -51,9 +53,9 @@ const TextEditor: FC<Props> = forwardRef(({ description, onChange }, ref: Forwar
         },
     })
 
-    const [images, setImages] = useState<ImageUploadResult[]>([]);
-    const [imagesForDelete, setImagesForDelete] = useState<ImageUploadResult[]>([]);
-
+    const images = useTextEditorStore((state) => state.images);
+    const deleteImage = useTextEditorStore((state) => state.deleteImage);
+    
     const editorRef: MutableRefObject<Editor | null> = useRef(null)
     
     useImperativeHandle(ref, () => ({
@@ -68,31 +70,17 @@ const TextEditor: FC<Props> = forwardRef(({ description, onChange }, ref: Forwar
             console.log(!description.includes(`title="${image.id}"`));
 
             if (!description.includes(`title="${image.id}"`)) {
-                setImagesForDelete((prevImagesForDelete) => [...prevImagesForDelete, image]);
-
-                setImages((prevImages) => prevImages.filter((_image) => _image.id !== image.id))
+                deleteImage(image);
             }
         })
     }, [description])
     
-    const handleSetImages = (img: ImageUploadResult) => {
-        setImages((prevImages) => [...prevImages, img]);
-    }
-    
-    const {mutateAsync} = useMutation((image: ImageUploadResult) => axios.delete(`/image/${image.id}`));
-    
-    useEffect(() => {
-        imagesForDelete.forEach(async (image) => {
-            await mutateAsync(image);
-        })
-    }, [imagesForDelete])
-
     if (!editor) return null
     editorRef.current = editor
 
     return (
         <div className={"editorContainer"}>
-            <TextEditorToolBar editor={editor as Editor} description={description} handleSetImages={handleSetImages} />
+            <TextEditorToolBar editor={editor as Editor} description={description} />
             <EditorContent editor={editor} />
         </div>
     )

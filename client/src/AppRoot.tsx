@@ -53,7 +53,7 @@ const AppRoot = () => {
             
             await queryClient.invalidateQueries("login");
             
-            const message = isErrorResponse(error) ? error.response.data.message : "Unauthorized";
+            const message = isErrorResponse(error) ? error.response.data.message : "Session has expired";
             
             enqueueSnackbar(message, {
                 variant: "error",
@@ -61,7 +61,8 @@ const AppRoot = () => {
             })
             authContext.setHasError(true);
             authContext.logout();
-            return navigate("/login", {
+            
+            navigate("/login", {
                 state: {
                     from: location.pathname,
                 }

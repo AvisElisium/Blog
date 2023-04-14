@@ -15,6 +15,8 @@ import StarterKit from '@tiptap/starter-kit';
 import ListItem from '@tiptap/extension-list-item';
 import TextEditor, {TipTapMethods} from "../shared/TextEditor";
 import "./styles.css";
+import {ImageUploadResult} from "../shared/TextEditorToolBar";
+import useTextEditorStore from "../../stores/textEditorStore";
 
 
 export const createArticleSchema = z.object({
@@ -35,7 +37,7 @@ const CreateArticleForm = () => {
     });
     
     const editorRef = useRef<TipTapMethods>();
-
+    
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     const setValidationErrors = useValidationErrors<CreateArticleSchema>(setError);
@@ -66,7 +68,15 @@ const CreateArticleForm = () => {
         onSettled: () => setIsSubmitting(true),
     })
 
+    const imageDeleteMutation = useMutation((image: ImageUploadResult) => axios.delete(`/image/${image.id}`));
+
+    const imagesForDelete = useTextEditorStore((state) => state.imagesForDelete);
+    
     const onSubmit = async (data: any) => {
+        imagesForDelete.forEach(async (image) => {
+            await imageDeleteMutation.mutateAsync(image);
+        })
+        
         await mutation.mutateAsync(data);
     }
     return (

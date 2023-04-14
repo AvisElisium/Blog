@@ -5,6 +5,10 @@ import {zodResolver} from "@hookform/resolvers/zod";
 import TextEditor, {TipTapMethods} from "../../shared/TextEditor";
 import React, {FC, useEffect, useRef} from "react";
 import {HubConnection} from "@microsoft/signalr";
+import {useMutation} from "react-query";
+import {ImageUploadResult} from "../../shared/TextEditorToolBar";
+import axios from "axios";
+import useTextEditorStore from "../../../stores/textEditorStore";
 
 
 const commentSchema = z.object({
@@ -33,8 +37,16 @@ const CreateCommentForm: FC<Props> = ({ articleId, connection }) => {
             content: "Write Comment"
         }
     });
+
+    const imageDeleteMutation = useMutation((image: ImageUploadResult) => axios.delete(`/image/${image.id}`));
+
+    const imagesForDelete = useTextEditorStore((state) => state.imagesForDelete);
     
     const onSubmit = async (data: Comment) => {
+        imagesForDelete.forEach(async (image) => {
+            await imageDeleteMutation.mutateAsync(image);
+        })
+        
         connection?.invoke("CreateComment", data);
     }
     

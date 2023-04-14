@@ -11,6 +11,8 @@ import {ValidationErrorResponse} from "../../types/errors/validationErrorRespons
 import {useParams} from "react-router-dom";
 import {Container, Stack, TextField} from "@mui/material";
 import LoadingButton from "../shared/LoadingButton";
+import useTextEditorStore from "../../stores/textEditorStore";
+import {ImageUploadResult} from "../shared/TextEditorToolBar";
 
 
 interface Props {
@@ -65,7 +67,15 @@ const ArticleEditForm: FC<Props> = ({initialHeadline, initialContent, id, closeE
         onSettled: () => setIsSubmitting(true),
     })
 
+    const imageDeleteMutation = useMutation((image: ImageUploadResult) => axios.delete(`/image/${image.id}`));
+
+    const imagesForDelete = useTextEditorStore((state) => state.imagesForDelete);
+    
     const onSubmit = async (data: any) => {
+        imagesForDelete.forEach(async (image) => {
+            await imageDeleteMutation.mutateAsync(image);
+        })
+        
         await mutation.mutateAsync(data);
     }
     

@@ -6,15 +6,15 @@ import axios, {AxiosResponse} from "axios";
 import {ImageUploadResult} from "./TextEditorToolBar";
 import {Editor} from "@tiptap/react";
 import UploadImageWidget from "./UploadImageWidget";
+import useTextEditorStore from "../../stores/textEditorStore";
 
 interface Props {
     open: boolean
     handleClose: () => void;
-    handleSetImages: (img: ImageUploadResult) => void;
     editor: Editor;
 }
 
-const TextEditorUploadImageModal: FC<Props> = ({open, handleClose, handleSetImages, editor}) => {
+const TextEditorUploadImageModal: FC<Props> = ({open, handleClose, editor}) => {
     
     const {mutateAsync} = useMutation({
            mutationFn: (file: Blob) => {
@@ -32,12 +32,14 @@ const TextEditorUploadImageModal: FC<Props> = ({open, handleClose, handleSetImag
         }
     })
 
+    const addImage = useTextEditorStore((state) => state.addImage);
+
     const onDrop = useCallback(async (acceptedFiles: Blob[]) => {
         const data = await mutateAsync(acceptedFiles[0]);
 
         if (data) {
 
-            handleSetImages(data as unknown as ImageUploadResult);
+            addImage(data);
 
             return editor.chain().focus().setImage({src: data.uri, alt: data.alt, title: data.id}).run();
         }

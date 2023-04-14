@@ -10,7 +10,7 @@ interface TextEditorState {
     deleteImage: (img: ImageUploadResult) => void;
 }
 
-const textEditorStore = createStore<TextEditorState>((set) => ({
+const useTextEditorStore = create<TextEditorState>((set) => ({
     images: [],
     imagesForDelete: [],
     
@@ -26,4 +26,4 @@ const textEditorStore = createStore<TextEditorState>((set) => ({
 }))
 
 
-export default textEditorStore;
+export default useTextEditorStore;

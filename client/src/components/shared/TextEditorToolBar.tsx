@@ -9,7 +9,6 @@ import TextEditorUploadImageModal from "./TextEditorUploadImageModal";
 interface Props {
     editor: Editor
     description: string;
-    handleSetImages: (img: ImageUploadResult) => void;
 }
 
 export interface ImageUploadResult {
@@ -19,7 +18,7 @@ export interface ImageUploadResult {
     uri: string;
 }
 
-const CreateArticleFormToolBar: FC<Props> = ({editor, description, handleSetImages}) => {
+const CreateArticleFormToolBar: FC<Props> = ({editor, description}) => {
     
     const [uploadMode, setUploadMode] = useState(false);
     
@@ -194,7 +193,7 @@ const CreateArticleFormToolBar: FC<Props> = ({editor, description, handleSetImag
                 Image
             </Button>
             
-            <TextEditorUploadImageModal handleClose={handleClose} open={uploadMode} handleSetImages={handleSetImages} editor={editor} />
+            <TextEditorUploadImageModal handleClose={handleClose} open={uploadMode} editor={editor} />
         </>
     )
 }
