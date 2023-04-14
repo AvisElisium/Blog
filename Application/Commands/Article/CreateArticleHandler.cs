@@ -2,8 +2,10 @@
 using Application.Models.Article;
 using Application.Services;
 using AutoMapper;
+using Domain.Entities;
 using FluentValidation;
 using Infrastructure;
+using Infrastructure.services;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -18,15 +20,17 @@ public class CreateArticleHandler : IRequestHandler<CreateArticle, Guid>
     private readonly IUserService _userService;
     private readonly IMapper _mapper;
     private readonly IValidator<CreateArticleDto> _validator;
+    private readonly IImageService _imageService;
 
     public CreateArticleHandler(AppDbContext context, UserManager<Domain.Entities.User> userManager, IUserService userService,
-        IMapper mapper, IValidator<CreateArticleDto> validator)
+        IMapper mapper, IValidator<CreateArticleDto> validator, IImageService imageService)
     {
         _context = context;
         _userManager = userManager;
         _userService = userService;
         _mapper = mapper;
         _validator = validator;
+        _imageService = imageService;
     }
     
     public async Task<Guid> Handle(CreateArticle request, CancellationToken cancellationToken)
@@ -42,6 +46,17 @@ public class CreateArticleHandler : IRequestHandler<CreateArticle, Guid>
 
         var article = _mapper.Map<CreateArticleDto, Domain.Entities.Article>(request.Dto);
         article.Author = user;
+
+        var imageResult = await _imageService.UploadImage(request.File);
+
+        var articleImage = new ArticleImage()
+        {
+            PublicId = imageResult.Item1,
+            Uri = imageResult.Item2,
+            Filename = request.File.FileName,
+        };
+
+        article.ArticleImage = articleImage;
 
         var result = await _userService.AuthorizeUserAsync(article, Operations.Create);
         

@@ -9,7 +9,7 @@ import axios, {AxiosError, AxiosResponse} from "axios";
 import {useSnackbar} from "notistack";
 import useValidationErrors from "../../hooks/UseValidationErrors";
 import {ValidationErrorResponse} from "../../types/errors/validationErrorResponse";
-import React, {useRef, useState} from "react";
+import React, {useCallback, useEffect, useRef, useState} from "react";
 import {Editor, EditorContent, useEditor} from "@tiptap/react";
 import StarterKit from '@tiptap/starter-kit';
 import ListItem from '@tiptap/extension-list-item';
@@ -17,6 +17,7 @@ import TextEditor, {TipTapMethods} from "../shared/TextEditor";
 import "./styles.css";
 import {ImageUploadResult} from "../shared/TextEditorToolBar";
 import useTextEditorStore from "../../stores/textEditorStore";
+import UploadImageWidget from "../shared/UploadImageWidget";
 
 
 export const createArticleSchema = z.object({
@@ -27,8 +28,12 @@ export const createArticleSchema = z.object({
 export type CreateArticleSchema = z.infer<typeof createArticleSchema>;
 
 const CreateArticleForm = () => {
+
+    const [image, setImage] = useState<Blob>(new Blob());
+    
     const {control,
-        handleSubmit, 
+        handleSubmit,
+        getValues,
         formState: {errors, isDirty, isValid},
         setValue,
         setError, reset} = useForm<CreateArticleSchema>({
@@ -45,7 +50,17 @@ const CreateArticleForm = () => {
     const {enqueueSnackbar} = useSnackbar();
 
     const mutation = useMutation((data: CreateArticleSchema) => {
-        return axios.post<string>("/article", data);
+        
+        const formData = new FormData()
+        const values = getValues();
+        
+        for (const [k, v] of Object.entries(values)) {
+            formData.append(k, v);
+        }
+        
+        formData.append("file", image);
+        
+        return axios.post<string>("/article", formData);
     }, {
         mutationKey: "articles",
 
@@ -79,12 +94,28 @@ const CreateArticleForm = () => {
         
         await mutation.mutateAsync(data);
     }
+
+    const onDrop = useCallback(async (acceptedFiles: Blob[]) => {
+        setImage(acceptedFiles[0]);
+    }, [])
+    
+    useEffect(() => {
+        console.log(errors);
+    }, [errors])
+    
+    
     return (
         <Container sx={{
             marginTop: 4,
         }}>
             <form onSubmit={handleSubmit(onSubmit)}>
                 <Stack spacing={2}>
+                    
+                    <Typography>
+                        Upload Article image
+                    </Typography>
+                    <UploadImageWidget onDrop={onDrop} />
+                    
                     <Controller
                         name={"headline"}
                         defaultValue={""}

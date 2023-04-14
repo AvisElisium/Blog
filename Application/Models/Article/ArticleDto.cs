@@ -9,4 +9,5 @@ public class ArticleDto
     public string Content { get; set; }
     public string CreatedAt { get; set; }
     public AuthorDto Author { get; set; }
+    public Uri  Image { get; set; }
 }

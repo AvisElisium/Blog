@@ -12,6 +12,7 @@ public class AppDbContext : IdentityDbContext<User>
     public DbSet<Image> Images { get; set; }
     public DbSet<ProfilePicture> ProfilePictures { get; set; }
     public DbSet<MediaImage> MediaImages { get; set; }
+    public DbSet<ArticleImage> ArticleImages { get; set; }
     public DbSet<Comment> Comments { get; set; }
 
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
@@ -34,5 +35,10 @@ public class AppDbContext : IdentityDbContext<User>
             .HasOne(x => x.ProfilePicture)
             .WithOne(x => x.User)
             .HasForeignKey<ProfilePicture>(x => x.UserId);
+
+        builder.Entity<Article>()
+            .HasOne(x => x.ArticleImage)
+            .WithOne(x => x.Article)
+            .HasForeignKey<ArticleImage>(x => x.ArticleId);
     }
 }

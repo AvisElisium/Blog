@@ -6,4 +6,5 @@ export interface Article {
     content: string;
     createdAt: string;
     author: Author;
+    image: string | null;
 }

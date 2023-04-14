@@ -32,9 +32,9 @@ public class ArticleController : ControllerBase
 
     [Authorize]
     [HttpPost]
-    public async Task<IActionResult> CreateArticle([FromBody] CreateArticleDto dto)
+    public async Task<IActionResult> CreateArticle([FromForm] CreateArticleDto dto, [FromForm] IFormFile file)
     {
-        var id = await _mediator.Send(new CreateArticle(dto));
+        var id = await _mediator.Send(new CreateArticle(dto, file));
 
         var url = $"{Request.Scheme}://{Request.Host}/api/article/{id}";
         

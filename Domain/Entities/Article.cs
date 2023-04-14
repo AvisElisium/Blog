@@ -8,4 +8,5 @@ public class Article
     public User Author { get; set; }
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public ICollection<Comment> Comments { get; set; }
+    public ArticleImage ArticleImage { get; set; }
 }
