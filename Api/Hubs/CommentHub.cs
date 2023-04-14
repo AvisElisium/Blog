@@ -25,6 +25,14 @@ public class CommentHub : Hub
         await Clients.Group(dto.ArticleId.ToString()).SendAsync("ReceiveComment", comment);
     }
 
+    [Authorize]
+    public async Task DeleteComment(DeleteCommentDto dto)
+    {
+        var id = await _mediator.Send(new DeleteComment(dto));
+
+        await Clients.Group(dto.ArticleId.ToString()).SendAsync("DeletedComment", id);
+    }
+
     public override async Task OnConnectedAsync()
     {
         var httpContext = Context.GetHttpContext();

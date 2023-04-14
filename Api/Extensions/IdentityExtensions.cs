@@ -67,6 +67,7 @@ public static class IdentityExtensions
         });
 
         services.AddSingleton<IAuthorizationHandler, IsAuthorRequirementHandler>();
+        services.AddSingleton<IAuthorizationHandler, IsCommentAuthorRequirementHandler>();
 
         return services;
     }

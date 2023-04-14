@@ -43,7 +43,7 @@ const CommentsSection: FC<Props> = ({ articleId }) => {
                 <CreateCommentForm connection={connection} articleId={articleId} />
             </Stack>
             
-            <CommentList comments={comments} />
+            <CommentList comments={comments} connection={connection} />
         </Box>
     )
 }

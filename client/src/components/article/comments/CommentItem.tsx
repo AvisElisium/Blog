@@ -1,8 +1,11 @@
-import {Avatar, Box, Grid, Paper, Stack, Typography} from "@mui/material";
-import {FC} from "react";
+import {Avatar, Box, Button, Grid, Paper, Stack, Typography} from "@mui/material";
+import {FC, useContext} from "react";
 import {Interweave} from "interweave";
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import moment from "moment";
+import {HubConnection} from "@microsoft/signalr";
+import {AuthContext} from "../../../context/AuthContext";
+import {useParams} from "react-router-dom";
 
 
 interface Props {
@@ -12,9 +15,10 @@ interface Props {
     content: string;
     createdAt: string;
     profilePicture: string | null;
+    connection: HubConnection
 }
 
-const CommentItem: FC<Props> = ({ id, content, authorUsername, createdAt, articleId, profilePicture}) => {
+const CommentItem: FC<Props> = ({ id: commentId, content, authorUsername, createdAt, articleId, profilePicture, connection}) => {
     const handleDate = () => {
         const now = moment(new Date());
         const createdAtMoment = moment(createdAt).utc();
@@ -38,6 +42,17 @@ const CommentItem: FC<Props> = ({ id, content, authorUsername, createdAt, articl
         return `${timeDiff} ${timespanString}`
     }
     
+    const handleDelete = async () => {
+        await connection.invoke("DeleteComment", {
+            commentId: commentId,
+            articleId: id,
+        });
+    }
+    
+    const {currentUser} = useContext(AuthContext);
+    
+    const {id} = useParams();
+    
     return (
         <Paper sx={{margin: "2em 0", padding: ".5em .25em"}}>
             <Paper elevation={0}>
@@ -50,16 +65,25 @@ const CommentItem: FC<Props> = ({ id, content, authorUsername, createdAt, articl
                         <Avatar src={profilePicture || ""} />
                     </Grid>
                     
-                    <Grid item xs={2}>
-                        <Stack>
-                            <Typography>
-                                {authorUsername}
-                            </Typography>
-                            
-                            <Typography>
-                                {handleDate()}
-                            </Typography>
-                        </Stack>
+                    <Grid item xs={11}>
+                        <Box sx={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                        }}>
+                            <Stack>
+                                <Typography>
+                                    {authorUsername}
+                                </Typography>
+
+                                <Typography>
+                                    {handleDate()}
+                                </Typography>
+                            </Stack>
+
+                            {currentUser?.username === authorUsername &&
+                                <Button onClick={handleDelete}>Delete</Button>
+                            }
+                        </Box>
                     </Grid>
                 </Grid>
                 

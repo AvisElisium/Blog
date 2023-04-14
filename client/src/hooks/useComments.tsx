@@ -42,6 +42,10 @@ const useComments = (articleId: string) => {
                 })
             })
             
+            connection.on("DeletedComment", (_commentId) => {
+                setComments((prevComments) => prevComments.filter(c => c.id !== _commentId));
+            })
+            
             connection.on("Error", ((error: {message: string}) => {
                 enqueueSnackbar(error.message, {
                     variant: "error",
