@@ -6,7 +6,7 @@ import {useMutation} from "react-query";
 import axios, {AxiosError, AxiosResponse} from "axios";
 import {ErrorResponse} from "../../types/errors/errorResponse";
 import LoadingButton from "../shared/LoadingButton";
-import {useContext, useState} from "react";
+import {useContext, useEffect, useState} from "react";
 import {AuthContext} from "../../context/AuthContext";
 import {useLocation, useNavigate} from "react-router-dom";
 
@@ -61,6 +61,10 @@ const LoginForm = () => {
         
         onSettled: () => setIsSubmitting(false),
     });
+    
+    useEffect(() => {
+        console.log(state);
+    }, [])
 
     const onSubmit = async (data: any) => {
         await mutation.mutateAsync(data);
