@@ -29,7 +29,9 @@ public class CreateCommentHandler : IRequestHandler<CreateComment, CommentDto>
     {
         // authenticate
         var authorUsername = _userService.GetCurrentUserUsername();
-        var author = await _context.Users.SingleOrDefaultAsync(x => x.UserName == authorUsername, cancellationToken: cancellationToken);
+        var author = await _context.Users
+            .Include(x => x.ProfilePicture)
+            .SingleOrDefaultAsync(x => x.UserName == authorUsername, cancellationToken: cancellationToken);
         if (author is null) throw new UnauthorizedException("You need to be logged in to create comments");
         
         // validate

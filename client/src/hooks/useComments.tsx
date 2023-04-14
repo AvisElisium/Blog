@@ -34,7 +34,7 @@ const useComments = (articleId: string) => {
 
             connection.on("ReceiveComment", (_comment: Comment) => {
                 setComments((prevComments) => {
-                    if (prevComments[0].id !== _comment.id) {
+                    if (prevComments[0]?.id !== _comment?.id) {
                         return [_comment, ...prevComments]
                     } else {
                         return  prevComments
