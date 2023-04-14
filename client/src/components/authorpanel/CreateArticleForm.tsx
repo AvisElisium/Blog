@@ -1,7 +1,17 @@
 ﻿import {useForm, Controller} from "react-hook-form";
 import {z} from "zod";
 import {zodResolver} from "@hookform/resolvers/zod";
-import {Container, Stack, TextField, Typography} from "@mui/material";
+import {
+    Checkbox,
+    Container,
+    FormControl,
+    FormControlLabel,
+    FormLabel, Radio,
+    RadioGroup,
+    Stack,
+    TextField,
+    Typography
+} from "@mui/material";
 import 'react-quill/dist/quill.snow.css';
 import LoadingButton from "../shared/LoadingButton";
 import {useMutation, useQueryClient} from "react-query";
@@ -23,6 +33,7 @@ import UploadImageWidget from "../shared/UploadImageWidget";
 export const createArticleSchema = z.object({
     headline: z.string(),
     content: z.string(),
+    isFeatured: z.boolean(),
 })
 
 export type CreateArticleSchema = z.infer<typeof createArticleSchema>;
@@ -39,6 +50,9 @@ const CreateArticleForm = () => {
         setError, reset} = useForm<CreateArticleSchema>({
         mode: "onSubmit",
         resolver: zodResolver(createArticleSchema),
+        defaultValues: {
+            isFeatured: false,
+        }
     });
     
     const editorRef = useRef<TipTapMethods>();
@@ -55,7 +69,7 @@ const CreateArticleForm = () => {
         const values = getValues();
         
         for (const [k, v] of Object.entries(values)) {
-            formData.append(k, v);
+            formData.append(k, v as string);
         }
         
         formData.append("file", image);
@@ -129,6 +143,17 @@ const CreateArticleForm = () => {
                         // todo remove ts-ignore
                         // @ts-ignore
                         render={({field}) => <TextEditor {...field} ref={editorRef} description={field.value} onChange={field.onChange} />}
+                    />
+                    
+                    <Controller 
+                        control={control} 
+                        name={"isFeatured"} 
+                        render={({field}) => (
+                            <FormControlLabel control={<Checkbox {...field} onChange={(e) => {
+                                setValue("isFeatured", e.currentTarget.checked);
+                            }} />} label="Featured" />
+                        )} 
+                    
                     />
 
                     <LoadingButton type={"submit"} variant={"contained"} text={"Create"} isLoading={isSubmitting} disabled={!isValid && isDirty} />

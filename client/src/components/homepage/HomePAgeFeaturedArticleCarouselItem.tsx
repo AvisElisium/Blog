@@ -1,6 +1,18 @@
-﻿import {Card, CardActionArea, CardContent, CardHeader, Grid, Paper, Skeleton, Stack, Typography} from "@mui/material";
+﻿import {
+    Box,
+    Card,
+    CardActionArea,
+    CardContent,
+    CardHeader,
+    Grid,
+    Paper,
+    Skeleton,
+    Stack,
+    Typography
+} from "@mui/material";
 import {Article} from "../../types/articles/article";
 import moment from "moment";
+import {Interweave} from "interweave";
 
 interface Props {
     article: Article;
@@ -26,12 +38,23 @@ const HomePAgeFeaturedArticleCarouselItem = ({article}: Props) => {
                         overflow: "hidden",
                         textOverflow: "ellipsis"
                     }}>
-                        {article.content}
+                        <Interweave content={article.content} blockList={["img"]} />
                     </CardContent>
                 </Card>
             </Grid>
             <Grid item xs={8}>
-                <Skeleton variant={"rectangular"} width={"100%"} height={400} />
+                {article.image === null ?
+                    <Skeleton variant={"rectangular"} width={"100%"} height={400} /> :
+                    <Box sx={{
+                        objectFit: "contain",
+                        objectPosition: "center",
+                        maxHeight: 500,
+                        display: "flex",
+                        justifyContent: "center"
+                    }}>
+                        <img src={article.image} />
+                    </Box>
+                }
             </Grid>
         </Grid>
     )

@@ -7,4 +7,5 @@ export interface Article {
     createdAt: string;
     author: Author;
     image: string | null;
+    isFeatured: boolean;
 }

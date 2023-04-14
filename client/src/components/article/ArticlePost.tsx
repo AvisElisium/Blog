@@ -71,7 +71,7 @@ const ArticlePost = () => {
         setDeleteMode(false)
     }
     
-    if (editMode) return <ArticleEditForm initialHeadline={data.headline} initialContent={data.content} id={id as string} closeEditMode={handleCloseEditMode} />
+    if (editMode) return <ArticleEditForm initialIsFeatured={data.isFeatured} initialHeadline={data.headline} initialContent={data.content} id={id as string} closeEditMode={handleCloseEditMode} />
     
     return (
         <>

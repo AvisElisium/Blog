@@ -10,4 +10,5 @@ public class ArticleDto
     public string CreatedAt { get; set; }
     public AuthorDto Author { get; set; }
     public Uri  Image { get; set; }
+    public bool IsFeatured { get; set; }
 }

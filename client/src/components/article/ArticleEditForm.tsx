@@ -9,7 +9,7 @@ import {useMutation} from "react-query";
 import axios, {AxiosError, AxiosResponse} from "axios";
 import {ValidationErrorResponse} from "../../types/errors/validationErrorResponse";
 import {useParams} from "react-router-dom";
-import {Container, Stack, TextField} from "@mui/material";
+import {Checkbox, Container, FormControlLabel, Stack, TextField} from "@mui/material";
 import LoadingButton from "../shared/LoadingButton";
 import useTextEditorStore from "../../stores/textEditorStore";
 import {ImageUploadResult} from "../shared/TextEditorToolBar";
@@ -19,21 +19,24 @@ interface Props {
     initialHeadline: string;
     initialContent: string;
     id: string;
+    initialIsFeatured: boolean;
     closeEditMode: () => void;
 }
 
-const ArticleEditForm: FC<Props> = ({initialHeadline, initialContent, id, closeEditMode}) => {
+const ArticleEditForm: FC<Props> = ({initialHeadline, initialContent, initialIsFeatured, id, closeEditMode}) => {
 
     const {control,
         handleSubmit,
         formState: {errors, isDirty, isValid},
         setValue,
+        getValues,
         setError, reset} = useForm<CreateArticleSchema>({
         mode: "onSubmit",
         resolver: zodResolver(createArticleSchema),
         defaultValues: {
             headline: initialHeadline,
             content: initialContent,
+            isFeatured: initialIsFeatured,
         }
     });
 
@@ -98,6 +101,17 @@ const ArticleEditForm: FC<Props> = ({initialHeadline, initialContent, id, closeE
                         // todo remove ts-ignore
                         // @ts-ignore
                         render={({field}) => <TextEditor {...field} ref={editorRef} description={field.value} onChange={field.onChange} />}
+                    />
+
+                    <Controller
+                        control={control}
+                        name={"isFeatured"}
+                        render={({field}) => (
+                            <FormControlLabel control={<Checkbox {...field} checked={getValues("isFeatured")} onChange={(e) => {
+                                setValue("isFeatured", e.currentTarget.checked);
+                            }} />} label="Featured" />
+                        )}
+
                     />
 
                     <LoadingButton type={"submit"} variant={"contained"} text={"Create"} isLoading={isSubmitting} disabled={!isValid && isDirty} />

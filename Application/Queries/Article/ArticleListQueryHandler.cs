@@ -32,6 +32,11 @@ public class ArticleListQueryHandler : IRequestHandler<ArticleListQuery, PagedLi
             articles = articles.Where(x => x.Author.Username == request.ArticleListQueryParams.CreatedBy).AsQueryable();
         }
 
+        if (request.ArticleListQueryParams?.featured is not null)
+        {
+            articles = articles.Where(x => x.IsFeatured == request.ArticleListQueryParams.featured).AsQueryable();
+        }
+
         var pagedArticles = await PagedList<ArticleDto>.CreateAsync(articles, pageNumber, pageSize);
 
         return pagedArticles;
