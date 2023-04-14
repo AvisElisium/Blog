@@ -1,4 +1,4 @@
-import {Box, Grid, Paper, Stack, Typography} from "@mui/material";
+import {Avatar, Box, Grid, Paper, Stack, Typography} from "@mui/material";
 import {FC} from "react";
 import {Interweave} from "interweave";
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
@@ -11,9 +11,10 @@ interface Props {
     articleId: string;
     content: string;
     createdAt: string;
+    profilePicture: string | null;
 }
 
-const CommentItem: FC<Props> = ({ id, content, authorUsername, createdAt, articleId}) => {
+const CommentItem: FC<Props> = ({ id, content, authorUsername, createdAt, articleId, profilePicture}) => {
     const handleDate = () => {
         const now = moment(new Date());
         const createdAtMoment = moment(createdAt).utc();
@@ -46,7 +47,7 @@ const CommentItem: FC<Props> = ({ id, content, authorUsername, createdAt, articl
                         justifyContent: "center",
                         alignItems: "center"
                     }}>
-                        <AccountCircleIcon sx={{transform: "scale(1.5)"}}/>
+                        <Avatar src={profilePicture || ""} />
                     </Grid>
                     
                     <Grid item xs={2}>

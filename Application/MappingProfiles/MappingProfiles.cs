@@ -35,7 +35,9 @@ public class MappingProfiles : Profile
             .ForMember(d => d.AuthorUsername, o => 
                 o.MapFrom(s => s.Author.UserName))
             .ForMember(d => d.ArticleId, o => 
-                o.MapFrom(x => x.Article.Id));
+                o.MapFrom(x => x.Article.Id))
+            .ForMember(d => d.AuthorProfilePicture, o 
+                => o.MapFrom(s => s.Author.ProfilePicture.Uri));
 
         CreateMap<User, UserProfileDto>()
             .ForMember(d => d.ProfilePicture, o 

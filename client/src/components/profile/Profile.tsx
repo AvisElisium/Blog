@@ -71,6 +71,7 @@ const Profile = () => {
                                 articleId={comment.articleId}
                                 content={comment.content}
                                 createdAt={comment.createdAt}
+                                profilePicture={comment.authorProfilePicture}
                             />)}
                         </ProfileTabPanel>
                         <ProfileTabPanel value={value} index={1}>
