@@ -1,4 +1,5 @@
 ﻿import {
+    Avatar, Box,
     Button, ButtonGroup,
     Container,
     Link,
@@ -81,14 +82,26 @@ const ArticlePost = () => {
                     <Typography variant={"h2"}>
                         {data!.headline} {currentUser?.isAdmin && !editMode && <Button onClick={handleClick}>Manage</Button>}
                     </Typography>
-                    <Typography>
-                        <Link component={RouterLink} to={`/profile/${data!.author.username}`} underline={"hover"}>
-                            {data!.author.username}
-                        </Link>
-                    </Typography>
-                    <Typography>
-                        {moment.utc(data!.createdAt).format("DD MMMM YYYY")}
-                    </Typography>
+                    <Stack direction={"row"} sx={{
+                        display: "flex",
+                        alignItems: "center",
+                    }}>
+                        
+                        <Avatar src={data.author.profilePicture || ""} />
+                        
+                        <Box sx={{
+                            marginLeft: ".4em",
+                        }}>
+                            <Typography>
+                                <Link component={RouterLink} to={`/profile/${data!.author.username}`} underline={"hover"}>
+                                    {data!.author.username}
+                                </Link>
+                            </Typography>
+                            <Typography>
+                                {moment.utc(data!.createdAt).format("DD MMMM YYYY")}
+                            </Typography>
+                        </Box>
+                    </Stack>
                 </header>
 
                 <Typography component={"div"}>

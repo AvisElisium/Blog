@@ -23,7 +23,9 @@ public class MappingProfiles : Profile
 
         CreateMap<CreateArticleDto, Article>();
 
-        CreateMap<User, AuthorDto>();
+        CreateMap<User, AuthorDto>()
+            .ForMember(d => d.ProfilePicture, o 
+                => o.MapFrom(s => s.ProfilePicture.Uri));
 
         CreateMap<Article, ArticleDto>();
 
