@@ -29,6 +29,7 @@ public class AuthenticateUserHandler : IRequestHandler<AuthenticateUser, UserDto
     {
         var user = await _userManager.Users
             .Include(x => x.RefreshTokens)
+            .Include(x => x.ProfilePicture)
             .FirstOrDefaultAsync(x => x.UserName == request.Dto.Username, cancellationToken);
 
         if (user is null) throw new NotFoundException($"User with username {request.Dto.Username} does not exist");

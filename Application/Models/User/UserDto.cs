@@ -6,4 +6,5 @@ public class UserDto
     public string JwtToken { get; set; }
     public bool IsAdmin { get; set; }
     public bool IsAuthor { get; set; }
+    public Uri ProfilePicture { get; set; }
 }

@@ -19,7 +19,9 @@ public class MappingProfiles : Profile
             .ForMember(d => d.IsAuthor, o =>
                 o.MapFrom(s => s.UserType == UserTypes.Author || s.UserType == UserTypes.Admin))
             .ForMember(d => d.IsAdmin, o => 
-                o.MapFrom(s => s.UserType == UserTypes.Admin));
+                o.MapFrom(s => s.UserType == UserTypes.Admin))
+            .ForMember(d => d.ProfilePicture, o 
+                => o.MapFrom(s => s.ProfilePicture.Uri));
 
         CreateMap<CreateArticleDto, Article>();
 

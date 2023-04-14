@@ -34,6 +34,7 @@ public class RefreshJwtHandler : IRequestHandler<RefreshJwt, UserDto>
 
         var user = await _userManager.Users
             .Include(x => x.RefreshTokens)
+            .Include(x => x.ProfilePicture)
             .FirstOrDefaultAsync(x => x.UserName == username, cancellationToken);
 
         if (user is null || refreshToken is null) throw new UnauthorizedException();

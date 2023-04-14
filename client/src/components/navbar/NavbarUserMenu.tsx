@@ -1,4 +1,5 @@
 ﻿import {
+    Avatar,
     Box,
     ClickAwayListener,
     Container,
@@ -49,7 +50,11 @@ const NavbarUserMenu = () => {
                     }
                 }}
             >
-                <AccountCircleIcon />
+                <Avatar
+                    sx={{
+                    width: 30,
+                    height: 30,
+                }} src={currentUser?.profilePicture || ""} />
                 <Typography padding={1}>
                     {currentUser?.username}
                 </Typography>

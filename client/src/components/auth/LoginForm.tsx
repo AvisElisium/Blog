@@ -15,6 +15,7 @@ export interface User {
     jwtToken: string;
     isAdmin: boolean;
     isAuthor: boolean;
+    profilePicture: string | null;
 }
 
 const loginUserSchema = z.object({
