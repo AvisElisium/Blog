@@ -2,6 +2,8 @@
 import {z} from "zod";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {
+    Box,
+    Button,
     Checkbox,
     Container,
     FormControl,
@@ -28,6 +30,8 @@ import "./styles.css";
 import {ImageUploadResult} from "../shared/TextEditorToolBar";
 import useTextEditorStore from "../../stores/textEditorStore";
 import UploadImageWidget from "../shared/UploadImageWidget";
+import {Crop} from "react-image-crop";
+import useUploadImageStore from "../../stores/uploadImageStore";
 
 
 export const createArticleSchema = z.object({
@@ -39,8 +43,20 @@ export const createArticleSchema = z.object({
 export type CreateArticleSchema = z.infer<typeof createArticleSchema>;
 
 const CreateArticleForm = () => {
+    const uploadedImage = useUploadImageStore((state) => state.uploadedImage);
+    const setUploadedImage = useUploadImageStore((state) => state.setImage);
+    const cropper = useUploadImageStore((state) => state.cropper);
+    
 
-    const [image, setImage] = useState<Blob>(new Blob());
+    const onCrop = () => {
+        console.log(cropper);
+        if (cropper) {
+            cropper.getCroppedCanvas().toBlob((blob) => {
+                setUploadedImage(blob);
+            })
+        }
+    }
+    
     
     const {control,
         handleSubmit,
@@ -72,7 +88,9 @@ const CreateArticleForm = () => {
             formData.append(k, v as string);
         }
         
-        formData.append("file", image);
+        if (uploadedImage !== null) {
+            formData.append("file", uploadedImage);
+        }
         
         return axios.post<string>("/article", formData);
     }, {
@@ -83,6 +101,7 @@ const CreateArticleForm = () => {
         onSuccess: async (response: AxiosResponse<string>) => {
             reset();
             editorRef.current?.clearContent();
+            setUploadedImage(null);
             
             enqueueSnackbar(`Created article ${response.data}`, {
                 variant: "success",
@@ -110,12 +129,8 @@ const CreateArticleForm = () => {
     }
 
     const onDrop = useCallback(async (acceptedFiles: Blob[]) => {
-        setImage(acceptedFiles[0]);
+        setUploadedImage(acceptedFiles[0]);
     }, [])
-    
-    useEffect(() => {
-        console.log(errors);
-    }, [errors])
     
     
     return (
@@ -129,6 +144,8 @@ const CreateArticleForm = () => {
                         Upload Article image
                     </Typography>
                     <UploadImageWidget onDrop={onDrop} />
+                    
+                    <Button variant={"contained"} onClick={onCrop}>Crop</Button>
                     
                     <Controller
                         name={"headline"}
@@ -155,11 +172,11 @@ const CreateArticleForm = () => {
                         )} 
                     
                     />
-
+                    
                     <LoadingButton type={"submit"} variant={"contained"} text={"Create"} isLoading={isSubmitting} disabled={!isValid && isDirty} />
                 </Stack>
             </form>
-
+            
         </Container>
     )
 }

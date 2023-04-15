@@ -1,7 +1,7 @@
 ﻿import {Controller, useForm} from "react-hook-form";
 import {createArticleSchema, CreateArticleSchema} from "../authorpanel/CreateArticleForm";
 import {zodResolver} from "@hookform/resolvers/zod";
-import React, {FC, useRef, useState} from "react";
+import React, {FC, useCallback, useRef, useState} from "react";
 import TextEditor, {TipTapMethods} from "../shared/TextEditor";
 import useValidationErrors from "../../hooks/UseValidationErrors";
 import {useSnackbar} from "notistack";
@@ -9,10 +9,12 @@ import {useMutation} from "react-query";
 import axios, {AxiosError, AxiosResponse} from "axios";
 import {ValidationErrorResponse} from "../../types/errors/validationErrorResponse";
 import {useParams} from "react-router-dom";
-import {Checkbox, Container, FormControlLabel, Stack, TextField} from "@mui/material";
+import {Button, Checkbox, Container, FormControlLabel, Stack, TextField, Typography} from "@mui/material";
 import LoadingButton from "../shared/LoadingButton";
 import useTextEditorStore from "../../stores/textEditorStore";
 import {ImageUploadResult} from "../shared/TextEditorToolBar";
+import UploadImageWidget from "../shared/UploadImageWidget";
+import useUploadImageStore from "../../stores/uploadImageStore";
 
 
 interface Props {
@@ -40,13 +42,28 @@ const ArticleEditForm: FC<Props> = ({initialHeadline, initialContent, initialIsF
         }
     });
 
+    const uploadedImage = useUploadImageStore((state) => state.uploadedImage);
+    const setUploadedImage = useUploadImageStore((state) => state.setImage);
+    const cropper = useUploadImageStore((state) => state.cropper);
+
     const editorRef = useRef<TipTapMethods>();
     const [isSubmitting, setIsSubmitting] = useState(false);
     const setValidationErrors = useValidationErrors<CreateArticleSchema>(setError);
     const {enqueueSnackbar} = useSnackbar();
 
     const mutation = useMutation((data: CreateArticleSchema) => {
-        return axios.put<string>(`/article/${id}`, data);
+        const formData = new FormData()
+        const values = getValues();
+
+        for (const [k, v] of Object.entries(values)) {
+            formData.append(k, v as string);
+        }
+
+        if (uploadedImage !== null) {
+            formData.append("file", uploadedImage);
+        }
+
+        return axios.post<string>("/article", formData);
     }, {
         mutationKey: ["article", id],
 
@@ -81,12 +98,35 @@ const ArticleEditForm: FC<Props> = ({initialHeadline, initialContent, initialIsF
         
         await mutation.mutateAsync(data);
     }
-    
+
+    const onDrop = useCallback(async (acceptedFiles: Blob[]) => {
+        setUploadedImage(acceptedFiles[0]);
+    }, [])
+
+    const onCrop = () => {
+        console.log(cropper);
+        if (cropper) {
+            cropper.getCroppedCanvas().toBlob((blob) => {
+                setUploadedImage(blob);
+            })
+        }
+    }
+
+
+
     return (
         <Container sx={{
             marginTop: 4,
         }}>
             <form onSubmit={handleSubmit(onSubmit)}>
+
+                <Typography>
+                    Upload Article image
+                </Typography>
+                <UploadImageWidget onDrop={onDrop} />
+
+                <Button variant={"contained"} onClick={onCrop}>Crop</Button>
+                
                 <Stack spacing={2}>
                     <Controller
                         name={"headline"}

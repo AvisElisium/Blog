@@ -51,7 +51,7 @@ public class ArticleController : ControllerBase
 
     [Authorize]
     [HttpPut("{id:guid}")]
-    public async Task<IActionResult> UpdateArticle([FromBody] CreateArticleDto dto, [FromRoute] Guid id)
+    public async Task<IActionResult> UpdateArticle([FromForm] CreateArticleDto dto, [FromRoute] Guid id)
     {
         await _mediator.Send(new UpdateArticle(dto, id));
         return Ok(id);
