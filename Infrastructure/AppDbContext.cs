@@ -14,6 +14,7 @@ public class AppDbContext : IdentityDbContext<User>
     public DbSet<MediaImage> MediaImages { get; set; }
     public DbSet<ArticleImage> ArticleImages { get; set; }
     public DbSet<Comment> Comments { get; set; }
+    public DbSet<Tag> Tags { get; set; }
 
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
     {

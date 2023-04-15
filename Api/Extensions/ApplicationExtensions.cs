@@ -3,6 +3,7 @@ using Api.Services;
 using Application;
 using Application.Models.Article;
 using Application.Models.Comments;
+using Application.Models.Tag;
 using Application.Models.User;
 using Application.Services;
 using Application.Validators;
@@ -25,6 +26,7 @@ public static class ApplicationExtensions
         services.AddTransient<IValidator<CreateUserDto>, CreateUserValidator>();
         services.AddTransient<IValidator<CreateArticleDto>, CreateArticleValidator>();
         services.AddTransient<IValidator<CreateCommentDto>, CreateCommentValidator>();
+        services.AddTransient<IValidator<CreateTagDto>, CreateTagValidator>();
         services.AddScoped<IUserService, UserService>();
         services.AddSignalR(options =>
         {

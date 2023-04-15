@@ -2,6 +2,7 @@
 using Application.Models.Comments;
 using Application.Models.Pagination;
 using Application.Models.Profile;
+using Application.Models.Tag;
 using Application.Models.User;
 using AutoMapper;
 using Domain.Entities;
@@ -46,5 +47,7 @@ public class MappingProfiles : Profile
         CreateMap<User, UserProfileDto>()
             .ForMember(d => d.ProfilePicture, o 
             => o.MapFrom(s => s.ProfilePicture.Uri));
+
+        CreateMap<CreateTagDto, Tag>();
     }
 }

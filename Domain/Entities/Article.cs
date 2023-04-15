@@ -10,4 +10,5 @@ public class Article
     public ICollection<Comment> Comments { get; set; }
     public ArticleImage ArticleImage { get; set; }
     public bool IsFeatured { get; set; } = false;
+    public ICollection<Tag> Tags { get; set; } = new List<Tag>();
 }

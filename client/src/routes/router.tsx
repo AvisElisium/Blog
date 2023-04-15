@@ -8,6 +8,8 @@ import AuthorPanel from "./AuthorPanel/AuthorPanel";
 import ArticlePage from "./articlePage/ArticlePage";
 import ArticlePost from "../components/article/ArticlePost";
 import ProfilePage from "./profilePage/ProfilePage";
+import CreateArticleForm from "../components/authorpanel/CreateArticleForm";
+import CreateTagForm from "../components/authorpanel/CreateTagForm";
 
 
 const router = createBrowserRouter([
@@ -22,7 +24,13 @@ const router = createBrowserRouter([
                 ]
             },
             {element: <HomePage />, path: "/"},
-            {element: <AuthorPanel />, path: "/authorPanel"},
+            {
+                element: <AuthorPanel />, 
+                path: "/authorPanel", 
+                children: [
+                    {element: <CreateArticleForm />, path: "createArticle"},
+                    {element: <CreateTagForm />, path: "createTag"}
+                ]},
             {
                 element: <ArticlePage />,
                 path: "/article",
