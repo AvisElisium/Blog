@@ -49,5 +49,7 @@ public class MappingProfiles : Profile
             => o.MapFrom(s => s.ProfilePicture.Uri));
 
         CreateMap<CreateTagDto, Tag>();
+
+        CreateMap<Tag, TagDto>();
     }
 }

@@ -2,21 +2,22 @@
 import {z} from "zod";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {
+    Autocomplete,
     Box,
     Button,
-    Checkbox,
+    Checkbox, Chip,
     Container,
     FormControl,
     FormControlLabel,
-    FormLabel, Radio,
-    RadioGroup,
+    FormLabel, InputLabel, MenuItem, OutlinedInput, Radio,
+    RadioGroup, Select, SelectChangeEvent,
     Stack,
     TextField,
     Typography
 } from "@mui/material";
 import 'react-quill/dist/quill.snow.css';
 import LoadingButton from "../shared/LoadingButton";
-import {useMutation, useQueryClient} from "react-query";
+import {useMutation, useQuery, useQueryClient} from "react-query";
 import axios, {AxiosError, AxiosResponse} from "axios";
 import {useSnackbar} from "notistack";
 import useValidationErrors from "../../hooks/UseValidationErrors";
@@ -38,9 +39,28 @@ export const createArticleSchema = z.object({
     headline: z.string(),
     content: z.string(),
     isFeatured: z.boolean(),
+    tagIds: z.array(z.string())
 })
 
 export type CreateArticleSchema = z.infer<typeof createArticleSchema>;
+
+
+export interface Tag {
+    id: string;
+    name: string;
+    isFeatured: boolean;
+}
+
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+    PaperProps: {
+        style: {
+            maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+            width: 250,
+        },
+    },
+};
 
 const CreateArticleForm = () => {
     const uploadedImage = useUploadImageStore((state) => state.uploadedImage);
@@ -56,7 +76,23 @@ const CreateArticleForm = () => {
             })
         }
     }
+
+    const [tags, setTags] = useState<Tag[]>([]);
     
+    const tagsQuery = useQuery({
+        queryKey: "tags",
+        queryFn: () => {
+            return axios.get<Tag[]>("/tag").then(res => res.data);
+        },
+        
+        onSuccess: (data: Tag[]) => {
+            setTags(data);
+        }
+    })
+
+    const handleChange = (event: SelectChangeEvent<Tag>) => {
+        const value = event.target.value;
+    };
     
     const {control,
         handleSubmit,
@@ -68,6 +104,7 @@ const CreateArticleForm = () => {
         resolver: zodResolver(createArticleSchema),
         defaultValues: {
             isFeatured: false,
+            tagIds: [],
         }
     });
     
@@ -85,7 +122,14 @@ const CreateArticleForm = () => {
         const values = getValues();
         
         for (const [k, v] of Object.entries(values)) {
-            formData.append(k, v as string);
+            if (Array.isArray(v)) {
+                v.forEach((tagId, i) => {
+                    // https://stackoverflow.com/questions/63837952/is-there-a-way-to-add-array-elements-to-a-formdata-object-so-net-core-fromform
+                    formData.append(`TagIds[${i}]`, tagId);
+                })
+            } else {
+                formData.append(k, v as string);
+            }
         }
         
         if (uploadedImage !== null) {
@@ -132,7 +176,6 @@ const CreateArticleForm = () => {
         setUploadedImage(acceptedFiles[0]);
     }, [])
     
-    
     return (
         <Container sx={{
             marginTop: 4,
@@ -171,6 +214,30 @@ const CreateArticleForm = () => {
                             }} />} label="Featured" />
                         )} 
                     
+                    />
+                    
+                    <Controller 
+                        control={control} 
+                        name={"tagIds"} 
+                        render={({...props}) => (
+                            <Autocomplete
+                                {...props}
+                                multiple
+                                id="tags-outlined"
+                                onChange={(e, values) => setValue("tagIds", values.map((tag) => tag.id))}
+                                options={tags}
+                                getOptionLabel={(option) => option.name}
+                                defaultValue={[]}
+                                filterSelectedOptions
+                                renderInput={(params) => (
+                                    <TextField
+                                        {...params}
+                                        label="Tags"
+                                        placeholder="Tags"
+                                    />
+                                )}
+                            />
+                        )}
                     />
                     
                     <LoadingButton type={"submit"} variant={"contained"} text={"Create"} isLoading={isSubmitting} disabled={!isValid && isDirty} />

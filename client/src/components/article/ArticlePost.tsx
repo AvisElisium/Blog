@@ -28,6 +28,7 @@ import LoadingButton from "../shared/LoadingButton";
 import ArticleDeleteModal from "./ArticleDeleteModal";
 import CreateCommentForm from "./comments/CreateCommentForm";
 import CommentsSection from "./comments/CommentsSection";
+import TagList from "../homepage/TagList";
 
 const ArticlePost = () => {
     
@@ -71,7 +72,12 @@ const ArticlePost = () => {
         setDeleteMode(false)
     }
     
-    if (editMode) return <ArticleEditForm initialIsFeatured={data.isFeatured} initialHeadline={data.headline} initialContent={data.content} id={id as string} closeEditMode={handleCloseEditMode} />
+    if (editMode) return <ArticleEditForm
+        initialTags={data.tags}
+        initialIsFeatured={data.isFeatured} 
+        initialHeadline={data.headline} 
+        initialContent={data.content} id={id as string} 
+        closeEditMode={handleCloseEditMode} />
     
     return (
         <>
@@ -107,6 +113,15 @@ const ArticlePost = () => {
                 <Typography component={"div"}>
                     <Interweave content={data.content} />
                 </Typography>
+
+                {data.tags.length > 0 &&
+                    <Stack>
+                        <Typography>
+                            Tags
+                        </Typography>
+                        <TagList tags={data.tags} />
+                    </Stack>
+                }
             </Stack>
             
             <Stack>

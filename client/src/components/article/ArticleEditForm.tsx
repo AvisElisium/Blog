@@ -1,15 +1,15 @@
 ﻿import {Controller, useForm} from "react-hook-form";
-import {createArticleSchema, CreateArticleSchema} from "../authorpanel/CreateArticleForm";
+import {createArticleSchema, CreateArticleSchema, Tag} from "../authorpanel/CreateArticleForm";
 import {zodResolver} from "@hookform/resolvers/zod";
-import React, {FC, useCallback, useRef, useState} from "react";
+import React, {FC, useCallback, useEffect, useRef, useState} from "react";
 import TextEditor, {TipTapMethods} from "../shared/TextEditor";
 import useValidationErrors from "../../hooks/UseValidationErrors";
 import {useSnackbar} from "notistack";
-import {useMutation} from "react-query";
+import {useMutation, useQuery, useQueryClient} from "react-query";
 import axios, {AxiosError, AxiosResponse} from "axios";
 import {ValidationErrorResponse} from "../../types/errors/validationErrorResponse";
 import {useParams} from "react-router-dom";
-import {Button, Checkbox, Container, FormControlLabel, Stack, TextField, Typography} from "@mui/material";
+import {Autocomplete, Button, Checkbox, Container, FormControlLabel, Stack, TextField, Typography} from "@mui/material";
 import LoadingButton from "../shared/LoadingButton";
 import useTextEditorStore from "../../stores/textEditorStore";
 import {ImageUploadResult} from "../shared/TextEditorToolBar";
@@ -20,13 +20,28 @@ import useUploadImageStore from "../../stores/uploadImageStore";
 interface Props {
     initialHeadline: string;
     initialContent: string;
+    initialTags: Tag[];
     id: string;
     initialIsFeatured: boolean;
     closeEditMode: () => void;
 }
 
-const ArticleEditForm: FC<Props> = ({initialHeadline, initialContent, initialIsFeatured, id, closeEditMode}) => {
+const ArticleEditForm: FC<Props> = ({initialHeadline, initialContent, initialTags, initialIsFeatured, id, closeEditMode}) => {
 
+    const [tags, setTags] = useState<Tag[]>([]);
+
+    const tagsQuery = useQuery({
+        queryKey: "tags",
+        queryFn: () => {
+            return axios.get<Tag[]>("/tag").then(res => res.data);
+        },
+
+        onSuccess: (data: Tag[]) => {
+            setTags(data);
+        }
+    })
+    
+    
     const {control,
         handleSubmit,
         formState: {errors, isDirty, isValid},
@@ -39,6 +54,7 @@ const ArticleEditForm: FC<Props> = ({initialHeadline, initialContent, initialIsF
             headline: initialHeadline,
             content: initialContent,
             isFeatured: initialIsFeatured,
+            tagIds: initialTags.map((tag) => tag.id)
         }
     });
 
@@ -50,20 +66,28 @@ const ArticleEditForm: FC<Props> = ({initialHeadline, initialContent, initialIsF
     const [isSubmitting, setIsSubmitting] = useState(false);
     const setValidationErrors = useValidationErrors<CreateArticleSchema>(setError);
     const {enqueueSnackbar} = useSnackbar();
+    const queryClient = useQueryClient();
 
     const mutation = useMutation((data: CreateArticleSchema) => {
         const formData = new FormData()
         const values = getValues();
 
         for (const [k, v] of Object.entries(values)) {
-            formData.append(k, v as string);
+            if (Array.isArray(v)) {
+                v.forEach((tagId, i) => {
+                    // https://stackoverflow.com/questions/63837952/is-there-a-way-to-add-array-elements-to-a-formdata-object-so-net-core-fromform
+                    formData.append(`TagIds[${i}]`, tagId);
+                })
+            } else {
+                formData.append(k, v as string);
+            }
         }
 
         if (uploadedImage !== null) {
             formData.append("file", uploadedImage);
         }
 
-        return axios.post<string>("/article", formData);
+        return axios.put<string>(`/article/${id}`, formData);
     }, {
         mutationKey: ["article", id],
 
@@ -73,6 +97,7 @@ const ArticleEditForm: FC<Props> = ({initialHeadline, initialContent, initialIsF
             reset();
             editorRef.current?.clearContent();
             closeEditMode()
+            await queryClient.invalidateQueries(["article", id]);
 
             enqueueSnackbar(`Edited article ${response.data}`, {
                 variant: "success",
@@ -152,6 +177,31 @@ const ArticleEditForm: FC<Props> = ({initialHeadline, initialContent, initialIsF
                             }} />} label="Featured" />
                         )}
 
+                    />
+
+                    <Controller
+                        control={control}
+                        name={"tagIds"}
+                        render={({field: {onChange, value}, ...props}) => (
+                            <Autocomplete
+                                {...props}
+                                multiple
+                                id="tags-outlined"
+                                onChange={(e, values) => setValue("tagIds", values.map((tag) => tag.id))}
+                                options={tags}
+                                getOptionLabel={(option) => option.name}
+                                defaultValue={initialTags}
+                                filterSelectedOptions
+                                renderInput={(params) => (
+                                    <TextField
+                                        {...params}
+                                        label="Tags"
+                                        placeholder="Tags"
+                                        onChange={onChange}
+                                    />
+                                )}
+                            />
+                        )}
                     />
 
                     <LoadingButton type={"submit"} variant={"contained"} text={"Create"} isLoading={isSubmitting} disabled={!isValid && isDirty} />

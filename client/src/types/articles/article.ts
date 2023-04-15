@@ -1,4 +1,5 @@
 ﻿import {Author} from "./author"
+import {Tag} from "../../components/authorpanel/CreateArticleForm";
 
 export interface Article {
     id: string;
@@ -8,4 +9,5 @@ export interface Article {
     author: Author;
     image: string | null;
     isFeatured: boolean;
+    tags: Tag[];
 }

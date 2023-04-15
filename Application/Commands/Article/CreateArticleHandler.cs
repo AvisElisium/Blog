@@ -58,6 +58,13 @@ public class CreateArticleHandler : IRequestHandler<CreateArticle, Guid>
 
         article.ArticleImage = articleImage;
 
+        if (request.Dto.TagIds is not null)
+        {
+            var tags = await _context.Tags.Where(x => request.Dto.TagIds.Contains(x.Id)).ToListAsync(cancellationToken);
+
+            article.Tags = tags;
+        }
+
         var result = await _userService.AuthorizeUserAsync(article, Operations.Create);
         
         if (!result) throw new ForbiddenException($"You don't have permission to create Article");

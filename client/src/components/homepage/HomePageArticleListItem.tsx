@@ -7,13 +7,14 @@ import {
     CardActions,
     CardContent,
     CardHeader,
-    CardMedia,
+    CardMedia, Chip,
     Grid,
     Link, Skeleton,
     Typography
 } from "@mui/material";
 import {Link as RouterLink} from "react-router-dom";
 import moment from "moment";
+import TagList from "./TagList";
 
 interface Props {
     article: Article;
@@ -38,9 +39,16 @@ const HomePageArticleListItem = ({article}: Props) => {
                 </CardMedia>
                 <CardHeader title={article.headline} subheader={`${article.author.username} at ${moment.utc(article.createdAt).format("DD MMM YYYY")}`} />
                 <CardActions disableSpacing>
-                    <Link component={RouterLink} to={`/article/${article.id}`}>
-                        Go to article
-                    </Link>
+                    <Grid container xs={12}>
+                        <Grid item xs={12}>
+                            <Link component={RouterLink} to={`/article/${article.id}`}>
+                                Go to article
+                            </Link>
+                        </Grid>
+                        <Grid item xs={12}>
+                            <TagList tags={article.tags} />
+                        </Grid>
+                    </Grid>
                 </CardActions>
             </Card>
         </Grid>
