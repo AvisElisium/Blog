@@ -1,4 +1,5 @@
 ﻿using Application.Commands.User;
+using Application.Models.Comments;
 using Application.Models.Profile;
 using Application.Models.User;
 using Application.Queries.Account;
@@ -56,5 +57,12 @@ public class AccountController : ControllerBase
         await _mediator.Send(new SetProfilePicture(file));
             
         return Ok();
+    }
+    
+    [HttpGet("lastComments")]
+    [Authorize(Roles = "Author,Admin")]
+    public async Task<ActionResult<List<CommentDto>>> GetLastComments()
+    {
+        return Ok(await _mediator.Send(new GetLastComments()));
     }
 }
