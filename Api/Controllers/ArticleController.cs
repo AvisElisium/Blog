@@ -64,4 +64,10 @@ public class ArticleController : ControllerBase
         await _mediator.Send(new DeleteArticle(id));
         return Ok(id);
     }
+
+    [HttpGet("authors")]
+    public async Task<ActionResult<List<AuthorDto>>> GetAuthors()
+    {
+        return Ok(await _mediator.Send(new AuthorsQuery()));
+    }
 }
