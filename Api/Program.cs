@@ -1,3 +1,4 @@
+using System.Reflection;
 using System.Text.Json;
 using Api.Configuration;
 using Api.Extensions;
@@ -8,6 +9,7 @@ using Application.Services;
 using Infrastructure;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -43,6 +45,19 @@ builder.Services.AddCors(options =>
             .WithExposedHeaders("Pagination")
             .WithOrigins("http://localhost:3000", "https://localhost:3000");
     });
+});
+
+builder.Services.AddSwaggerGen(options =>
+{
+    options.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Version = "v1",
+        Title = "Blog API",
+    });
+
+    // using System.Reflection;
+    var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
 });
 
 var app = builder.Build();

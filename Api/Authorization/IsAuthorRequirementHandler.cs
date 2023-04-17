@@ -6,6 +6,9 @@ using Microsoft.AspNetCore.Authorization.Infrastructure;
 
 namespace Api.Authorization;
 
+/// <summary>
+/// <see cref="IsAuthorRequirement"/> handler
+/// </summary>
 public class IsAuthorRequirementHandler : AuthorizationHandler<OperationAuthorizationRequirement, Article>
 {
     protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, OperationAuthorizationRequirement requirement,

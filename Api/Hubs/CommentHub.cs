@@ -8,7 +8,9 @@ using Api.Hubs.Filters;
 
 namespace Api.Hubs;
 
-
+/// <summary>
+/// Hub for realtime comment actions
+/// </summary>
 public class CommentHub : Hub
 {
     private readonly IMediator _mediator;
@@ -18,6 +20,10 @@ public class CommentHub : Hub
         _mediator = mediator;
     }
     
+    /// <summary>
+    /// Method for creating comment
+    /// </summary>
+    /// <param name="dto"><see cref="CreateCommentDto"/></param>
     public async Task CreateComment(CreateCommentDto dto)
     {
         var comment = await _mediator.Send(new CreateComment(dto));
@@ -25,6 +31,10 @@ public class CommentHub : Hub
         await Clients.Group(dto.ArticleId.ToString()).SendAsync("ReceiveComment", comment);
     }
 
+    /// <summary>
+    /// Method for deleting comment
+    /// </summary>
+    /// <param name="dto"><see cref="DeleteCommentDto"/></param>
     [Authorize]
     public async Task DeleteComment(DeleteCommentDto dto)
     {
@@ -33,6 +43,9 @@ public class CommentHub : Hub
         await Clients.Group(dto.ArticleId.ToString()).SendAsync("DeletedComment", id);
     }
 
+    /// <summary>
+    /// On connect automatically joins to group depending on query string articleId parameter
+    /// </summary>
     public override async Task OnConnectedAsync()
     {
         var httpContext = Context.GetHttpContext();

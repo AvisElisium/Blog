@@ -6,6 +6,9 @@ using Microsoft.AspNetCore.Authorization.Infrastructure;
 
 namespace Api.Authorization;
 
+/// <summary>
+/// <see cref="IsCommentAuthorRequirement"/> handler
+/// </summary>
 public class IsCommentAuthorRequirementHandler : AuthorizationHandler<OperationAuthorizationRequirement, Comment>
 {
     protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, OperationAuthorizationRequirement requirement,

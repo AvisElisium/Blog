@@ -4,6 +4,9 @@ using Microsoft.AspNetCore.Authorization.Infrastructure;
 
 namespace Api.Authorization;
 
+/// <summary>
+/// Is Comment Author Requirement
+/// </summary>
 public class IsCommentAuthorRequirement : OperationAuthorizationRequirement
 {
     

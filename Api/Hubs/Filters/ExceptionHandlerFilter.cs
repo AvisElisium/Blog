@@ -1,10 +1,14 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Net;
+using Api.Middleware;
 using Microsoft.AspNetCore.SignalR;
 using ValidationException = Application.Exceptions.ValidationException;
 
 namespace Api.Hubs.Filters;
 
+/// <summary>
+/// Alternative to <see cref="ErrorHandlingMiddleware"/> in Hub context
+/// </summary>
 public class ExceptionHandlerFilter : IHubFilter
 {
     private readonly IWebHostEnvironment _environment;
@@ -14,6 +18,12 @@ public class ExceptionHandlerFilter : IHubFilter
         _environment = environment;
     }
 
+    /// <summary>
+    /// Filter invoke method
+    /// </summary>
+    /// <param name="invocationContext"><see cref="HubInvocationContext"/></param>
+    /// <param name="next">Next delegate</param>
+    /// <returns></returns>
     public async ValueTask<object?> InvokeMethodAsync(HubInvocationContext invocationContext, Func<HubInvocationContext, ValueTask<object?>> next)
     {
         try
