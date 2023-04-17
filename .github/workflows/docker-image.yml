@@ -33,5 +33,5 @@ jobs:
           context: .
           file: ./Api/Dockerfile
           push: true
-          tags: ${{ secrets.DOCKER_REGISTRY_ADDRESS }}/Blog:latest
+          tags: ${{ secrets.DOCKER_REGISTRY_ADDRESS }}/blog:latest
           platforms: linux/arm64
