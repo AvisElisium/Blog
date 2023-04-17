@@ -1,13 +1,31 @@
-﻿import {FC} from "react";
+﻿import {ChangeEvent, FC, useEffect, useRef, useState} from "react";
 import {Editor} from "@tiptap/react";
-import {Button} from "@mui/material";
+import {Box, Button, Input, Modal, Typography} from "@mui/material";
+import {useMutation} from "react-query";
+import axios from "axios";
+import TextEditorUploadImageModal from "./TextEditorUploadImageModal";
 
 
 interface Props {
     editor: Editor
+    description: string;
 }
 
-const CreateArticleFormToolBar: FC<Props> = ({editor}) => {
+export interface ImageUploadResult {
+    publicId: string;
+    id: string;
+    alt: string;
+    uri: string;
+}
+
+const CreateArticleFormToolBar: FC<Props> = ({editor, description}) => {
+    
+    const [uploadMode, setUploadMode] = useState(false);
+    
+    const handleClose = () => {
+        setUploadMode(false);
+    }
+    
     if (!editor) {
         return null
     }
@@ -168,6 +186,14 @@ const CreateArticleFormToolBar: FC<Props> = ({editor}) => {
             >
                 redo
             </Button>
+            <Button variant={"outlined"}
+                component={"label"}
+                onClick={() => setUploadMode(true)}
+            >
+                Image
+            </Button>
+            
+            <TextEditorUploadImageModal handleClose={handleClose} open={uploadMode} editor={editor} />
         </>
     )
 }

@@ -2,6 +2,10 @@
 
 namespace Application.Models.Pagination;
 
+/// <summary>
+/// Implementation of <see cref="List{T}"/> for pagination
+/// </summary>
+/// <typeparam name="T">Type of resource</typeparam>
 public class PagedList<T> : List<T>
 {
     public int CurrentPage { get; private set; }

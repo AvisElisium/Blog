@@ -24,7 +24,11 @@ const HomePageFeaturedArticlesCarousel = () => {
     const {isLoading, isError, data, error} = useQuery<Article[], Error>({
         queryKey: "articles",
         queryFn: (): Promise<Article[]> => {
-            return axios.get<Article[]>("/article").then(res => res.data);
+            return axios.get<Article[]>("/article", {
+                params: {
+                    featured: true,
+                }
+            }).then(res => res.data);
         },
 
         onSuccess: (data) => {

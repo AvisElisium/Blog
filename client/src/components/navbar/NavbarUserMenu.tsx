@@ -1,4 +1,5 @@
 ﻿import {
+    Avatar,
     Box,
     ClickAwayListener,
     Container,
@@ -25,6 +26,8 @@ const NavbarUserMenu = () => {
     
     const open = Boolean(anchorEl);
     
+    const navigate = useNavigate();
+    
     const handleClick = (event: MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);
     };
@@ -38,6 +41,7 @@ const NavbarUserMenu = () => {
             <Box 
                 onClick={(e) => handleClick(e)}
                 display={"flex"}
+                zIndex={10}
                 justifyContent={"flex-end"}
                 alignItems={"center"}
                 sx={{
@@ -46,7 +50,11 @@ const NavbarUserMenu = () => {
                     }
                 }}
             >
-                <AccountCircleIcon />
+                <Avatar
+                    sx={{
+                    width: 30,
+                    height: 30,
+                }} src={currentUser?.profilePicture || ""} />
                 <Typography padding={1}>
                     {currentUser?.username}
                 </Typography>
@@ -55,6 +63,9 @@ const NavbarUserMenu = () => {
                 open={open}
                 anchorEl={anchorEl}
                 placement={"bottom-start"}
+                sx={{
+                    zIndex: 10
+                }}
                 transition
                 disablePortal
             >
@@ -72,18 +83,22 @@ const NavbarUserMenu = () => {
                                     onKeyDown={() => {}}
                                     autoFocusItem={open}
                                 >
+                                    <MenuItem tabIndex={0} onClick={() => {
+                                        navigate(`/profile/${currentUser?.username}`)
+                                    }}
+                                    >
+                                        Profile
+                                    </MenuItem>
                                     {[currentUser?.isAuthor, currentUser?.isAdmin].some((x) => x === true) &&
-                                        <MenuItem onClick={() => {
+                                        <MenuItem tabIndex={0} onClick={() => {
                                             if (authorPanelRef !== null) {
-                                                authorPanelRef.current?.click();
+                                                navigate("/authorPanel")
                                             }
                                         }}>
-                                            <Link ref={authorPanelRef} underline={"none"} color={"inherit"} component={RouterLink} to={"/authorPanel"}>
-                                                Author Panel
-                                            </Link>
+                                            AuthorPanel
                                         </MenuItem>
                                     }
-                                    <MenuItem onClick={() => {
+                                    <MenuItem tabIndex={0} onClick={() => {
                                         logout();
                                         handleClose();
                                     }}

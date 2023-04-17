@@ -1,4 +1,4 @@
-﻿import {AppBar, Box, Container, Divider, Grid, Link, Toolbar, Typography} from "@mui/material";
+﻿import {AppBar, Avatar, Box, Container, Divider, Grid, Link, Toolbar, Typography} from "@mui/material";
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import {Link as RouterLink} from "react-router-dom";
 import {useContext} from "react";
@@ -29,8 +29,11 @@ const Navbar = () => {
                     </Grid>
                     <Grid item xs={4} display={"flex"} justifyContent={"flex-end"} alignItems={"center"}>
                         {currentUser === null &&
-                            <Link component={RouterLink} to={"/login"} color={"inherit"} display={"flex"} underline={"hover"} padding={0.25}>
-                                <AccountCircleIcon />
+                            <Link component={RouterLink} to={"/login"} color={"inherit"} display={"flex"} alignItems={"center"} underline={"hover"} padding={0.25}>
+                                <Avatar sx={{
+                                    width: 30,
+                                    height: 30,
+                                }} />
                                 <Typography marginLeft={0.5}>
                                     Login
                                 </Typography>

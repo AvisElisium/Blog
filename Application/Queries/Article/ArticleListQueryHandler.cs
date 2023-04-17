@@ -7,6 +7,9 @@ using MediatR;
 
 namespace Application.Queries.Article;
 
+/// <summary>
+/// <see cref="ArticleListQuery"/> handler
+/// </summary>
 public class ArticleListQueryHandler : IRequestHandler<ArticleListQuery, PagedList<ArticleDto>>
 {
     private readonly AppDbContext _context;
@@ -26,6 +29,34 @@ public class ArticleListQueryHandler : IRequestHandler<ArticleListQuery, PagedLi
             .OrderByDescending(x => x.CreatedAt)
             .ProjectTo<ArticleDto>(_mapper.ConfigurationProvider)
             .AsQueryable();
+
+        if (request.ArticleListQueryParams?.CreatedBy is not null)
+        {
+            articles = articles.Where(x => request.ArticleListQueryParams.CreatedBy.Contains(x.Author.Username)).AsQueryable();
+        }
+
+        if (request.ArticleListQueryParams?.featured is not null)
+        {
+            articles = articles.Where(x => x.IsFeatured == request.ArticleListQueryParams.featured).AsQueryable();
+        }
+
+        if (request.ArticleListQueryParams?.Tags is not null)
+        {
+            articles = articles.Where(x => 
+                x.Tags.Any(t => 
+                    request.ArticleListQueryParams.Tags.Contains(t.Name)))
+                .AsQueryable();
+        }
+
+        if (request.ArticleListQueryParams?.CreatedAfter is not null)
+        {
+            articles = articles.Where(x => x.CreatedAt > request.ArticleListQueryParams.CreatedAfter);
+        }
+        
+        if (request.ArticleListQueryParams?.CreatedBefore is not null)
+        {
+            articles = articles.Where(x => x.CreatedAt < request.ArticleListQueryParams.CreatedBefore);
+        }
 
         var pagedArticles = await PagedList<ArticleDto>.CreateAsync(articles, pageNumber, pageSize);
 

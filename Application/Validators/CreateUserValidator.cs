@@ -4,6 +4,9 @@ using FluentValidation;
 
 namespace Application.Validators;
 
+/// <summary>
+/// Validator for <see cref="CreateUserValidator"/>
+/// </summary>
 public class CreateUserValidator : AbstractValidator<CreateUserDto>
 {
     public CreateUserValidator(IUserService userService)

@@ -3,6 +3,9 @@ using FluentValidation;
 
 namespace Application.Validators;
 
+/// <summary>
+/// Validator for <see cref="CreateArticleDto"/>
+/// </summary>
 public class CreateArticleValidator : AbstractValidator<CreateArticleDto>
 {
     public CreateArticleValidator()

@@ -8,6 +8,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Commands.Article;
 
+/// <summary>
+/// <see cref="UpdateArticle"/> handler
+/// </summary>
 public class UpdateArticleHandler : IRequestHandler<UpdateArticle>
 {
     private readonly AppDbContext _context;
@@ -23,7 +26,9 @@ public class UpdateArticleHandler : IRequestHandler<UpdateArticle>
     
     public async Task Handle(UpdateArticle request, CancellationToken cancellationToken)
     {
-        var article = await _context.Articles.SingleOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
+        var article = await _context.Articles
+            .Include(x => x.Tags)
+            .SingleOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
 
         if (article is null) throw new NotFoundException($"Article with {request.Id} was not found");
 
@@ -32,6 +37,27 @@ public class UpdateArticleHandler : IRequestHandler<UpdateArticle>
         if (!result) throw new ForbiddenException($"You don't have permission to delete Article {request.Id}");
 
         _mapper.Map<CreateArticleDto, Domain.Entities.Article>(request.Dto, article);
+
+        if (request.Dto.TagIds is not null)
+        {
+            var tags = _context.Tags.Where(x => request.Dto.TagIds.Contains(x.Id)).ToList();
+
+            var intersect = tags.Intersect(article.Tags).ToList();
+
+            var toAdd = tags.Except(intersect).ToList();
+            var toDelete = article.Tags.Except(intersect).ToList();
+
+            foreach (var tag in toAdd)
+            {
+                article.Tags.Add(tag);
+            }
+            
+            foreach (var tag in toDelete)
+            {
+                article.Tags.Remove(tag);
+            }
+
+        }
 
         await _context.SaveChangesAsync(cancellationToken);
     }

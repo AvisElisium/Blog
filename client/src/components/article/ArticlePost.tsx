@@ -1,4 +1,5 @@
 ﻿import {
+    Avatar, Box,
     Button, ButtonGroup,
     Container,
     Link,
@@ -25,6 +26,9 @@ import ArticlePostSkeleton from "./ArticlePostSkeleton";
 import ArticleEditForm from "./ArticleEditForm";
 import LoadingButton from "../shared/LoadingButton";
 import ArticleDeleteModal from "./ArticleDeleteModal";
+import CreateCommentForm from "./comments/CreateCommentForm";
+import CommentsSection from "./comments/CommentsSection";
+import TagList from "../homepage/TagList";
 
 const ArticlePost = () => {
     
@@ -68,29 +72,62 @@ const ArticlePost = () => {
         setDeleteMode(false)
     }
     
-    if (editMode) return <ArticleEditForm initialHeadline={data.headline} initialContent={data.content} id={id as string} closeEditMode={handleCloseEditMode} />
+    if (editMode) return <ArticleEditForm
+        initialTags={data.tags}
+        initialIsFeatured={data.isFeatured} 
+        initialHeadline={data.headline} 
+        initialContent={data.content} id={id as string} 
+        closeEditMode={handleCloseEditMode} />
     
     return (
-        <Stack spacing={2} component={"article"} sx={{
-            marginTop: "2em",
-        }}>
-            <header>
-                <Typography variant={"h2"}>
-                    {data!.headline} {currentUser?.isAdmin && !editMode && <Button onClick={handleClick}>Manage</Button>}
+        <>
+            <Stack spacing={2} component={"article"} sx={{
+                marginTop: "2em",
+            }}>
+                <header>
+                    <Typography variant={"h2"}>
+                        {data!.headline} {currentUser?.isAdmin && !editMode && <Button onClick={handleClick}>Manage</Button>}
+                    </Typography>
+                    <Stack direction={"row"} sx={{
+                        display: "flex",
+                        alignItems: "center",
+                    }}>
+                        
+                        <Avatar src={data.author.profilePicture || ""} />
+                        
+                        <Box sx={{
+                            marginLeft: ".4em",
+                        }}>
+                            <Typography>
+                                <Link component={RouterLink} to={`/profile/${data!.author.username}`} underline={"hover"}>
+                                    {data!.author.username}
+                                </Link>
+                            </Typography>
+                            <Typography>
+                                {moment.utc(data!.createdAt).format("DD MMMM YYYY")}
+                            </Typography>
+                        </Box>
+                    </Stack>
+                </header>
+
+                <Typography component={"div"}>
+                    <Interweave content={data.content} />
                 </Typography>
-                <Typography>
-                    <Link component={RouterLink} to={`/profile/${data!.author.username}`} underline={"hover"}>
-                        {data!.author.username}
-                    </Link>
-                </Typography>
-                <Typography>
-                    {moment.utc(data!.createdAt).format("DD MMMM YYYY")}
-                </Typography>
-            </header>
+
+                {data.tags.length > 0 &&
+                    <Stack>
+                        <Typography>
+                            Tags
+                        </Typography>
+                        <TagList tags={data.tags} />
+                    </Stack>
+                }
+            </Stack>
             
-            <Typography component={"div"}>
-                <Interweave content={data.content} />
-            </Typography>
+            <Stack>
+                <CommentsSection articleId={id as string} />
+            </Stack>
+
 
             <Popover
                 id={open ? id : undefined}
@@ -119,12 +156,12 @@ const ArticlePost = () => {
                     }}>
                         Delete
                     </MenuItem>
-                    
+
                 </MenuList>
             </Popover>
-            
+
             <ArticleDeleteModal open={deleteMode} id={id as string} handleClose={handleCloseDeleteMode} />
-        </Stack>
+        </>
     )
 }
 

@@ -9,6 +9,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Commands.User;
 
+/// <summary>
+/// <see cref="RefreshJwt"/> handler
+/// </summary>
 public class RefreshJwtHandler : IRequestHandler<RefreshJwt, UserDto>
 {
     private readonly ITokenService _tokenService;
@@ -34,6 +37,7 @@ public class RefreshJwtHandler : IRequestHandler<RefreshJwt, UserDto>
 
         var user = await _userManager.Users
             .Include(x => x.RefreshTokens)
+            .Include(x => x.ProfilePicture)
             .FirstOrDefaultAsync(x => x.UserName == username, cancellationToken);
 
         if (user is null || refreshToken is null) throw new UnauthorizedException();

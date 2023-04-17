@@ -2,6 +2,9 @@
 
 namespace Application.Models.Pagination;
 
+/// <summary>
+/// Pagination Query Parameters
+/// </summary>
 public class PaginationParams
 {
     private const int MaxPageSize = 50;

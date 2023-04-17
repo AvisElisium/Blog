@@ -1,4 +1,4 @@
-﻿import {Navigate, Outlet, useNavigate} from "react-router-dom";
+﻿import {Navigate, Outlet, useLocation, useNavigate} from "react-router-dom";
 import axios, {AxiosError, AxiosResponse} from "axios";
 import {useContext} from "react";
 import {AuthContext} from "./context/AuthContext";
@@ -21,6 +21,7 @@ const AppRoot = () => {
     const navigate = useNavigate();
     const {enqueueSnackbar} = useSnackbar();
     const queryClient = useQueryClient();
+    const location = useLocation();
     
     
     axios.interceptors.request.use((config) => {
@@ -52,13 +53,20 @@ const AppRoot = () => {
             
             await queryClient.invalidateQueries("login");
             
-            enqueueSnackbar(isErrorResponse(error) ? error.response.data.message : "Unauthorized", {
+            const message = isErrorResponse(error) ? error.response.data.message : "Session has expired";
+            
+            enqueueSnackbar(message, {
                 variant: "error",
                 preventDuplicate: true,
             })
-            
+            authContext.setHasError(true);
             authContext.logout();
-            return navigate("/login");
+            
+            navigate("/login", {
+                state: {
+                    from: location.pathname,
+                }
+            });
         }
 
         return Promise.reject(error);

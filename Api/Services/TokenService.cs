@@ -11,6 +11,9 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace Api.Services;
 
+/// <summary>
+/// <inheritdoc cref="ITokenService"/>
+/// </summary>
 public class TokenService : ITokenService
 {
     private readonly JwtConfiguration _jwtConfig;

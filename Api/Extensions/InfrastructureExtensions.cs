@@ -1,4 +1,5 @@
 ﻿using Infrastructure;
+using Infrastructure.services;
 using Microsoft.EntityFrameworkCore;
 
 namespace Api.Extensions;
@@ -11,6 +12,8 @@ public static class InfrastructureExtensions
         {
             options.UseNpgsql(config.GetConnectionString("Postgres"));
         });
+
+        services.AddSingleton<IImageService, ImageService>();
 
         return services;
     }

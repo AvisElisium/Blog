@@ -2,6 +2,9 @@
 
 namespace Application;
 
+/// <summary>
+/// Possible operations in resource based authorization
+/// </summary>
 public class Operations
 {
     public static OperationAuthorizationRequirement Create =

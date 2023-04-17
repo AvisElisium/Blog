@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Services;
 
+/// <inheritdoc cref="IUserService"/>
 public class UserService : IUserService
 {
     private readonly AppDbContext _context;

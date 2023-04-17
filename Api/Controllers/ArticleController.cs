@@ -23,18 +23,18 @@ public class ArticleController : ControllerBase
     }
     
     [HttpGet]
-    public async Task<ActionResult<PagedList<ArticleDto>>> GetArticleList([FromQuery] PaginationParams paginationParams)
+    public async Task<ActionResult<PagedList<ArticleDto>>> GetArticleList([FromQuery] PaginationParams paginationParams, [FromQuery] ArticleListQueryParams? articleListQueryParams)
     {
-        var list = await _mediator.Send(new ArticleListQuery(paginationParams));
+        var list = await _mediator.Send(new ArticleListQuery(paginationParams, articleListQueryParams));
         Response.AddPaginationHeader(list);
         return Ok(list);
     }
 
     [Authorize]
     [HttpPost]
-    public async Task<IActionResult> CreateArticle([FromBody] CreateArticleDto dto)
+    public async Task<IActionResult> CreateArticle([FromForm] CreateArticleDto dto, [FromForm] IFormFile file)
     {
-        var id = await _mediator.Send(new CreateArticle(dto));
+        var id = await _mediator.Send(new CreateArticle(dto, file));
 
         var url = $"{Request.Scheme}://{Request.Host}/api/article/{id}";
         
@@ -51,7 +51,7 @@ public class ArticleController : ControllerBase
 
     [Authorize]
     [HttpPut("{id:guid}")]
-    public async Task<IActionResult> UpdateArticle([FromBody] CreateArticleDto dto, [FromRoute] Guid id)
+    public async Task<IActionResult> UpdateArticle([FromForm] CreateArticleDto dto, [FromRoute] Guid id)
     {
         await _mediator.Send(new UpdateArticle(dto, id));
         return Ok(id);
@@ -63,5 +63,11 @@ public class ArticleController : ControllerBase
     {
         await _mediator.Send(new DeleteArticle(id));
         return Ok(id);
+    }
+
+    [HttpGet("authors")]
+    public async Task<ActionResult<List<AuthorDto>>> GetAuthors()
+    {
+        return Ok(await _mediator.Send(new AuthorsQuery()));
     }
 }

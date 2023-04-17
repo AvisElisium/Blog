@@ -13,9 +13,9 @@ const HomePage = () => {
             <Navbar />
             <Container maxWidth={"xl"}>
                 <Grid container item xs={12} rowSpacing={2}>
-                    {/*<HomePageSection name={"Featured Articles"}>*/}
-                    {/*    <HomePageFeaturedArticlesCarousel />*/}
-                    {/*</HomePageSection>*/}
+                    <HomePageSection name={"Featured Articles"}>
+                        <HomePageFeaturedArticlesCarousel />
+                    </HomePageSection>
                     <HomePageSection name={"Latest Articles"}>
                         <HomePageArticleList />
                     </HomePageSection>

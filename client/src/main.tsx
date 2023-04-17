@@ -8,19 +8,23 @@ import AuthContextProvider from "./context/AuthContext";
 import {ThemeProvider} from "@mui/material";
 import theme from "./theme";
 import {SnackbarProvider} from "notistack";
+import {LocalizationProvider} from "@mui/x-date-pickers";
+import {AdapterMoment} from "@mui/x-date-pickers/AdapterMoment";
 
 const queryClient = new QueryClient();
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
-    <ThemeProvider theme={theme}>
-        <SnackbarProvider>
-            <QueryClientProvider client={queryClient}>
-                <AuthContextProvider>
-                    <RouterProvider router={router} />
-                </AuthContextProvider>
-            </QueryClientProvider>
-        </SnackbarProvider>
-    </ThemeProvider>
+    <LocalizationProvider dateAdapter={AdapterMoment}>
+        <ThemeProvider theme={theme}>
+            <SnackbarProvider>
+                <QueryClientProvider client={queryClient}>
+                    <AuthContextProvider>
+                        <RouterProvider router={router} />
+                    </AuthContextProvider>
+                </QueryClientProvider>
+            </SnackbarProvider>
+        </ThemeProvider>
+    </LocalizationProvider>
   </React.StrictMode>,
 )

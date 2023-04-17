@@ -1,13 +1,33 @@
 ﻿import {Editor, EditorContent, PureEditorContent, useEditor} from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
-import TextEditorToolBar from "./TextEditorToolBar";
-import {ForwardedRef, forwardRef, MutableRefObject, SyntheticEvent, useImperativeHandle, useRef} from "react";
+import TextEditorToolBar, {ImageUploadResult} from "./TextEditorToolBar";
+import {
+    FC,
+    ForwardedRef,
+    forwardRef,
+    MutableRefObject,
+    SyntheticEvent,
+    useEffect,
+    useImperativeHandle,
+    useRef, useState
+} from "react";
+import Image from "@tiptap/extension-image";
+import {useMutation} from "react-query";
+import axios from "axios";
+import textEditorStore from "../../stores/textEditorStore";
+import useTextEditorStore from "../../stores/textEditorStore";
 
 export interface TipTapMethods {
     clearContent: () => void;
 }
 
-const TextEditor = forwardRef((props: {description: string, onChange: (e: any) => void}, ref: ForwardedRef<TipTapMethods>) => {
+interface Props {
+    description: string;
+    onChange: (e: any) => void;
+    id: string;
+}
+
+const TextEditor: FC<Props> = forwardRef(({ description, onChange }, ref: ForwardedRef<TipTapMethods>) => {
     const editor = useEditor({
         extensions: [
             StarterKit.configure({
@@ -20,13 +40,22 @@ const TextEditor = forwardRef((props: {description: string, onChange: (e: any) =
                     keepAttributes: false,
                 },
             }),
+            Image.configure({
+                inline: true,
+                HTMLAttributes: {
+                    class: "article-image"
+                }
+            })
         ],
-        content: props.description,
+        content: description,
         onUpdate({editor}) {
-            props.onChange(editor.getHTML())
+            onChange(editor.getHTML())
         },
     })
 
+    const images = useTextEditorStore((state) => state.images);
+    const deleteImage = useTextEditorStore((state) => state.deleteImage);
+    
     const editorRef: MutableRefObject<Editor | null> = useRef(null)
     
     useImperativeHandle(ref, () => ({
@@ -35,12 +64,23 @@ const TextEditor = forwardRef((props: {description: string, onChange: (e: any) =
         }
     }))
 
+    useEffect(() => {
+        images.forEach((image) => {
+
+            console.log(!description.includes(`title="${image.id}"`));
+
+            if (!description.includes(`title="${image.id}"`)) {
+                deleteImage(image);
+            }
+        })
+    }, [description])
+    
     if (!editor) return null
     editorRef.current = editor
 
     return (
         <div className={"editorContainer"}>
-            <TextEditorToolBar editor={editor as Editor} />
+            <TextEditorToolBar editor={editor as Editor} description={description} />
             <EditorContent editor={editor} />
         </div>
     )

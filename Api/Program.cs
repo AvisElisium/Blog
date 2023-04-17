@@ -1,20 +1,25 @@
+using System.Reflection;
 using System.Text.Json;
 using Api.Configuration;
 using Api.Extensions;
+using Api.Hubs;
 using Api.Middleware;
 using Api.Services;
 using Application.Services;
 using Infrastructure;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 var jwtConfig = new JwtConfiguration();
+var cloudinaryConfig = new CloudinaryConfiguration();
 
 builder.Configuration.GetSection("Jwt").Bind(jwtConfig);
+builder.Configuration.GetSection("Cloudinary").Bind(cloudinaryConfig);
 
 builder.Services.AddSingleton(jwtConfig);
 
@@ -25,6 +30,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddIdentity(jwtConfig);
+builder.Services.AddSingleton(cloudinaryConfig);
 builder.Services.AddTransient<ITokenService, TokenService>();
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddCustomMiddleware();
@@ -39,6 +45,19 @@ builder.Services.AddCors(options =>
             .WithExposedHeaders("Pagination")
             .WithOrigins("http://localhost:3000", "https://localhost:3000");
     });
+});
+
+builder.Services.AddSwaggerGen(options =>
+{
+    options.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Version = "v1",
+        Title = "Blog API",
+    });
+
+    // using System.Reflection;
+    var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
 });
 
 var app = builder.Build();
@@ -77,6 +96,8 @@ if (app.Environment.IsDevelopment())
 app.UseAuthentication();
 
 app.UseAuthorization();
+
+app.MapHub<CommentHub>("/comments");
 
 app.MapControllers();
 

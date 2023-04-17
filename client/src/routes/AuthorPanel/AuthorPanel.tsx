@@ -4,6 +4,7 @@ import {useContext, useEffect} from "react";
 import {AuthContext} from "../../context/AuthContext";
 import {Navigate, useNavigate} from "react-router-dom";
 import CreateArticleForm from "../../components/authorpanel/CreateArticleForm";
+import AuthorActions from "../../components/authorpanel/AuthorActions";
 
 
 const AuthorPanel = () => {
@@ -23,7 +24,7 @@ const AuthorPanel = () => {
         <>
             <Navbar />
             <Container maxWidth={"xl"}>
-                <CreateArticleForm />
+                <AuthorActions />
             </Container>
         </>
     )
