@@ -7,6 +7,9 @@ using MediatR;
 
 namespace Application.Queries.Article;
 
+/// <summary>
+/// <see cref="ArticleListQuery"/> handler
+/// </summary>
 public class ArticleListQueryHandler : IRequestHandler<ArticleListQuery, PagedList<ArticleDto>>
 {
     private readonly AppDbContext _context;

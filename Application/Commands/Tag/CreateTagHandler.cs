@@ -8,6 +8,9 @@ using ValidationException = Application.Exceptions.ValidationException;
 
 namespace Application.Commands.Tag;
 
+/// <summary>
+/// <see cref="CreateTag"/> handler
+/// </summary>
 public class CreateTagHandler : IRequestHandler<CreateTag, Guid>
 {
     private readonly AppDbContext _context;

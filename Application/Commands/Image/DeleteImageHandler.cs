@@ -6,6 +6,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Commands.Image;
 
+/// <summary>
+/// <see cref="DeleteImage"/> handler
+/// </summary>
 public class DeleteImageHandler: IRequestHandler<DeleteImage>
 {
     private readonly AppDbContext _context;

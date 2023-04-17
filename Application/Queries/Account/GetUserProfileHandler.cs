@@ -10,6 +10,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Queries.Account;
 
+/// <summary>
+/// <see cref="GetUserProfile"/> handler
+/// </summary>
 public class GetUserProfileHandler : IRequestHandler<GetUserProfile, UserProfileDto>
 {
     private readonly AppDbContext _context;

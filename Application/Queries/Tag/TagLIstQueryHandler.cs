@@ -7,6 +7,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Queries.Tag;
 
+/// <summary>
+/// <see cref="TagListQuery"/> handler
+/// </summary>
 public class TagLIstQueryHandler : IRequestHandler<TagListQuery, List<TagDto>>
 {
     private readonly AppDbContext _context;

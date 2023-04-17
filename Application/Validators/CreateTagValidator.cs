@@ -4,6 +4,9 @@ using Infrastructure;
 
 namespace Application.Validators;
 
+/// <summary>
+/// Validator for <see cref="CreateTagDto"/>
+/// </summary>
 public class CreateTagValidator : AbstractValidator<CreateTagDto>
 {
     public CreateTagValidator(AppDbContext dbContext)

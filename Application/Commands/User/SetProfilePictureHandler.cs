@@ -8,6 +8,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Commands.User;
 
+/// <summary>
+/// <see cref="SetProfilePicture"/> handler
+/// </summary>
 public class SetProfilePictureHandler : IRequestHandler<SetProfilePicture>
 {
     private readonly AppDbContext _context;

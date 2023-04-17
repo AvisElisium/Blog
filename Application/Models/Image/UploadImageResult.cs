@@ -1,5 +1,8 @@
 ﻿namespace Application.Models.Image;
 
+/// <summary>
+/// Result of image upload for the client 
+/// </summary>
 public class UploadImageResult
 {
     public Uri Uri { get; set; }

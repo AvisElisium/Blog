@@ -3,6 +3,9 @@ using MediatR;
 
 namespace Application.Queries.Article;
 
+/// <summary>
+/// Authors query
+/// </summary>
 public record AuthorsQuery: IRequest<List<AuthorDto>>
 {
     

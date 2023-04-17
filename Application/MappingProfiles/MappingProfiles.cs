@@ -10,6 +10,9 @@ using Domain.Enums;
 
 namespace Application.MappingProfiles;
 
+/// <summary>
+/// Class with mapping profiles for application
+/// </summary>
 public class MappingProfiles : Profile
 {
     public MappingProfiles()

@@ -8,6 +8,9 @@ using ValidationException = Application.Exceptions.ValidationException;
 
 namespace Application.Commands.User;
 
+/// <summary>
+/// <see cref="CreateNewUser"/> handler
+/// </summary>
 public class CreateNewUserHandler : IRequestHandler<CreateNewUser>
 {
     private readonly AppDbContext _context;

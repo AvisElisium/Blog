@@ -6,6 +6,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Commands.Comment;
 
+/// <summary>
+/// <see cref="DeleteComment"/> handler
+/// </summary>
 public class DeleteCommentHandler : IRequestHandler<DeleteComment, Guid>
 {
     private readonly AppDbContext _context;

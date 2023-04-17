@@ -9,6 +9,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Commands.User;
 
+/// <summary>
+/// <see cref="AuthenticateUser"/> handler
+/// </summary>
 public class AuthenticateUserHandler : IRequestHandler<AuthenticateUser, UserDto>
 {
     private readonly UserManager<Domain.Entities.User> _userManager;

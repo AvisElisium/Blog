@@ -9,6 +9,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Commands.Article;
 
+/// <summary>
+/// <see cref="DeleteArticle"/> handler
+/// </summary>
 public class DeleteArticleHandler : IRequestHandler<DeleteArticle>
 {
     private readonly AppDbContext _context;

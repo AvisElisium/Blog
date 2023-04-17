@@ -8,6 +8,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Commands.Image;
 
+
+/// <summary>
+/// <see cref="UploadImage"/> handler
+/// </summary>
 public class UploadImageHandler: IRequestHandler<UploadImage, UploadImageResult>
 {
     private readonly AppDbContext _context;

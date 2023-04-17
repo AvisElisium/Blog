@@ -7,6 +7,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Queries.Comment;
 
+/// <summary>
+/// <see cref="LoadArticleComments"/> handler
+/// </summary>
 public class LoadArticleCommentsHandler: IRequestHandler<LoadArticleComments, List<CommentDto>>
 {
     private readonly IMapper _mapper;

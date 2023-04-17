@@ -4,6 +4,9 @@ using Domain.Enums;
 
 namespace Application.Models.Profile;
 
+/// <summary>
+/// Dto for user profile
+/// </summary>
 public class UserProfileDto
 {
     public string Username { get; set; }

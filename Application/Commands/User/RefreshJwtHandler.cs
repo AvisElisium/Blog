@@ -9,6 +9,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Commands.User;
 
+/// <summary>
+/// <see cref="RefreshJwt"/> handler
+/// </summary>
 public class RefreshJwtHandler : IRequestHandler<RefreshJwt, UserDto>
 {
     private readonly ITokenService _tokenService;

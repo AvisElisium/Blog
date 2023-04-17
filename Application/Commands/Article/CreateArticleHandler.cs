@@ -13,6 +13,9 @@ using ValidationException = Application.Exceptions.ValidationException;
 
 namespace Application.Commands.Article;
 
+/// <summary>
+/// <see cref="CreateArticle"/> handler
+/// </summary>
 public class CreateArticleHandler : IRequestHandler<CreateArticle, Guid>
 {
     private readonly AppDbContext _context;

@@ -1,5 +1,8 @@
 ﻿namespace Application.Models.Article;
 
+/// <summary>
+/// Query Parameters for article list
+/// </summary>
 public class ArticleListQueryParams
 {
     public List<string>? CreatedBy { get; set; }

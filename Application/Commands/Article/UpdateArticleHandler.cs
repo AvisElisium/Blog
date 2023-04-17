@@ -8,6 +8,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Commands.Article;
 
+/// <summary>
+/// <see cref="UpdateArticle"/> handler
+/// </summary>
 public class UpdateArticleHandler : IRequestHandler<UpdateArticle>
 {
     private readonly AppDbContext _context;

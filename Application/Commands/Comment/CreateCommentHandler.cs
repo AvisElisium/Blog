@@ -10,6 +10,9 @@ using ValidationException = Application.Exceptions.ValidationException;
 
 namespace Application.Commands.Comment;
 
+/// <summary>
+/// <see cref="CreateCommentDto"/> handler
+/// </summary>
 public class CreateCommentHandler : IRequestHandler<CreateComment, CommentDto>
 {
     private readonly AppDbContext _context;

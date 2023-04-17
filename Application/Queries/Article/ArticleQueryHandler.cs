@@ -8,6 +8,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Queries.Article;
 
+/// <summary>
+/// <see cref="ArticleQuery"/> handler
+/// </summary>
 public class ArticleQueryHandler : IRequestHandler<ArticleQuery, ArticleDto?>
 {
     private readonly AppDbContext _context;

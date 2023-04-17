@@ -4,6 +4,9 @@ using HtmlAgilityPack;
 
 namespace Application.Validators;
 
+/// <summary>
+/// Validator for <see cref="CreateCommentDto"/>
+/// </summary>
 public class CreateCommentValidator : AbstractValidator<CreateCommentDto>
 {
     public CreateCommentValidator()

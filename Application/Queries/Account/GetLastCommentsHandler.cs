@@ -8,6 +8,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Queries.Account;
 
+/// <summary>
+/// <see cref="GetLastComments"/> handler
+/// </summary>
 public class GetLastCommentsHandler : IRequestHandler<GetLastComments, List<CommentDto>>
 {
     private readonly AppDbContext _context;

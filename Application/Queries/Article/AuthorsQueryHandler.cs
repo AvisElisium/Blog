@@ -7,6 +7,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Queries.Article;
 
+/// <summary>
+/// <see cref="AuthorsQuery"/> handler
+/// </summary>
 public class AuthorsQueryHandler : IRequestHandler<AuthorsQuery, List<AuthorDto>>
 {
     private readonly AppDbContext _context;
