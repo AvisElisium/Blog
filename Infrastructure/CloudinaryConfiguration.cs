@@ -1,5 +1,8 @@
 ﻿namespace Infrastructure;
 
+/// <summary>
+/// Class reflecting configuration for Cloudinary
+/// </summary>
 public class CloudinaryConfiguration
 {
     public string CloudName { get; set; }

@@ -5,6 +5,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure;
 
+/// <summary>
+/// Class for interaction with database
+/// </summary>
 public class AppDbContext : IdentityDbContext<User>
 {
     public DbSet<Article> Articles { get; set; }

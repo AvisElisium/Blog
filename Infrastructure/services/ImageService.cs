@@ -5,6 +5,9 @@ using Microsoft.AspNetCore.Http;
 
 namespace Infrastructure.services;
 
+/// <summary>
+/// <inheritdoc cref="IImageService"/>
+/// </summary>
 public class ImageService : IImageService
 {
     private readonly Cloudinary _cloudinary;
