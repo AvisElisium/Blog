@@ -13,12 +13,12 @@ public class CreateCommentValidator : AbstractValidator<CreateCommentDto>
             .Custom(((s, context) =>
             {
                 var htmlDoc = new HtmlDocument();
-                htmlDoc.LoadHtml($"<div>{s}</div>");
-                var innerText = htmlDoc.DocumentNode.SelectSingleNode("//div").InnerText;
+                htmlDoc.LoadHtml(s);
+                var innerText = htmlDoc.DocumentNode.InnerText;
                 var img = htmlDoc.DocumentNode.SelectNodes("//img");
                 
                 // check for text and presence of images
-                if (innerText?.Length == 0 && img?.Count == 0)
+                if (innerText?.Length == 0 && img?.Count == null)
                 {
                     context.AddFailure("Comment can't be empty");
                 }
