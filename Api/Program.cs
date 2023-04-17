@@ -97,8 +97,11 @@ app.UseAuthentication();
 
 app.UseAuthorization();
 
-app.MapHub<CommentHub>("/comments");
+app.UseDefaultFiles();
+app.UseStaticFiles();
 
+app.MapHub<CommentHub>("/comments");
 app.MapControllers();
+app.MapFallbackToController("Index", "Fallback");
 
 app.Run();

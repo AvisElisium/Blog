@@ -24,3 +24,5 @@ client/*.local
 
 # Production docker-compose
 docker-compose.yml
+
+/Api/wwwroot/*

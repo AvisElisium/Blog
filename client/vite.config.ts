@@ -9,4 +9,7 @@ export default defineConfig({
     port: 3000,
     https: true,
   },
+  build: {
+    outDir: "../Api/wwwroot"
+  },
 })
