@@ -35,6 +35,7 @@
       <_ContentIncludedByDefault Remove="wwwroot\assets\index-353fcf94.js" />
       <_ContentIncludedByDefault Remove="wwwroot\assets\index-4277712b.js" />
       <_ContentIncludedByDefault Remove="wwwroot\assets\index-feb14ab6.css" />
+      <_ContentIncludedByDefault Remove="wwwroot\assets\index-951d0efe.js" />
     </ItemGroup>
 
     <ItemGroup>
