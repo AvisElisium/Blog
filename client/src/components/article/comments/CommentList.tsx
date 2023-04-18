@@ -6,7 +6,7 @@ import {HubConnection} from "@microsoft/signalr";
 
 interface Props {
     comments: Comment[]
-    connection: HubConnection;
+    connection?: HubConnection;
 }
 
 const CommentList: FC<Props> = ({ comments, connection }) => {

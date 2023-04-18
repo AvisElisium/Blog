@@ -15,7 +15,7 @@ interface Props {
     content: string;
     createdAt: string;
     profilePicture: string | null;
-    connection: HubConnection
+    connection?: HubConnection
 }
 
 const CommentItem: FC<Props> = ({ id: commentId, content, authorUsername, createdAt, articleId, profilePicture, connection}) => {
@@ -43,10 +43,12 @@ const CommentItem: FC<Props> = ({ id: commentId, content, authorUsername, create
     }
     
     const handleDelete = async () => {
-        await connection.invoke("DeleteComment", {
-            commentId: commentId,
-            articleId: id,
-        });
+        if (connection) {
+            await connection.invoke("DeleteComment", {
+                commentId: commentId,
+                articleId: id,
+            });
+        }
     }
     
     const {currentUser} = useContext(AuthContext);
