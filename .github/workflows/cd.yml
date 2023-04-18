@@ -1,0 +1,18 @@
+name: Dokcer Image CD
+
+on:
+  workflow_run:
+    workflows: [Docker Image CI]
+    types:
+      - completed
+jobs:
+
+  CD:
+    runs-on: ubuntu-latest
+    steps:
+    - name: executing remote ssh commands using password
+      uses: appleboy/ssh-action@v0.1.10
+      with:
+        host: ${{ secrets.SSH_HOST }}
+        key: ${{secrets.SSH_KEY}}
+        script: touch test.txt
