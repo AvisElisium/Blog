@@ -31,4 +31,14 @@
       </Content>
     </ItemGroup>
 
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="wwwroot\assets\index-353fcf94.js" />
+      <_ContentIncludedByDefault Remove="wwwroot\assets\index-4277712b.js" />
+      <_ContentIncludedByDefault Remove="wwwroot\assets\index-feb14ab6.css" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="wwwroot\" />
+    </ItemGroup>
+
 </Project>
