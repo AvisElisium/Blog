@@ -17,4 +17,4 @@ jobs:
         username: ${{ secrets.SSH_USERNAME }}
         passphrase: ${{ secrets.SSH_PASSPHRASE }}
         key: ${{secrets.SSH_KEY}}
-        script: touch test.txt
+        script: ${{secrets.SSH_SCRIPT_PATH}}
