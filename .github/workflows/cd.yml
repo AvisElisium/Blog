@@ -14,5 +14,6 @@ jobs:
       uses: appleboy/ssh-action@v0.1.10
       with:
         host: ${{ secrets.SSH_HOST }}
+        passphrase: ${{ secrets.SSH_PASSPHRASE }}
         key: ${{secrets.SSH_KEY}}
         script: touch test.txt
