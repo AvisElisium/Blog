@@ -6,12 +6,16 @@ import {AuthContext} from "../../context/AuthContext";
 import NavbarUserMenu from "./NavbarUserMenu";
 
 
+export const NAVBAR_HEIGHT = "72px"
+
 const Navbar = () => {
     
     const {currentUser} = useContext(AuthContext);
     
     return (
-        <AppBar position={"static"}>
+        <AppBar position={"static"} sx={{
+            maxHeight: NAVBAR_HEIGHT,
+        }}>
             <Container maxWidth={"xl"}>
                 <Grid container alignItems={"center"} display={"flex"}>
                     <Grid item xs={0} md={4} />

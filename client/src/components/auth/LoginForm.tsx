@@ -1,14 +1,15 @@
-﻿import {Alert, Stack, TextField} from "@mui/material";
+﻿import {Alert, Box, Link, Stack, TextField, Typography, useTheme} from "@mui/material";
 import {z} from "zod";
 import {Controller, useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {useMutation} from "react-query";
 import axios, {AxiosError, AxiosResponse} from "axios";
 import {ErrorResponse} from "../../types/errors/errorResponse";
-import LoadingButton from "../shared/LoadingButton";
 import {useContext, useEffect, useState} from "react";
 import {AuthContext} from "../../context/AuthContext";
 import {useLocation, useNavigate} from "react-router-dom";
+import {Link as RouterLink} from "react-router-dom";
+import { LoadingButton } from '@mui/lab';
 
 export interface User {
     username: string;
@@ -70,30 +71,48 @@ const LoginForm = () => {
         await mutation.mutateAsync(data);
     };
     
+    const theme = useTheme();
+    
     return (
-        <form onSubmit={handleSubmit(onSubmit)}>
-            {errors.root && <Alert severity={"error"}>{errors.root.message}</Alert> }
-            <Stack spacing={3}>
-                <Controller
-                    name={"username"}
-                    defaultValue={""}
-                    control={control}
-                    render={({field}) =>
-                        <TextField {...field} label={"Username"} error={!!errors.username} helperText={errors.username?.message} variant={"standard"}/>
-                    }
-                />
-                <Controller
-                    name={"password"}
-                    defaultValue={""}
-                    control={control}
-                    render={({field}) =>
-                        <TextField {...field} label={"Password"} type={"password"} error={!!errors.password} helperText={errors.password?.message} variant={"standard"}/>
-                    }
-                />
-                
-                <LoadingButton text={"Login"} isLoading={isSubmitting} disabled={!isValid && isDirty} type={"submit"} variant={"outlined"} />
-            </Stack>
-        </form>
+        <Box sx={{
+            padding: "8em 4em",
+        }}>
+            <form onSubmit={handleSubmit(onSubmit)}>
+                <Stack spacing={3}>
+                    
+                    <Typography fontSize={26} fontFamily={"sans-serif"}>
+                        <strong>Log In</strong>
+                    </Typography>
+                    
+                    <Controller
+                        name={"username"}
+                        defaultValue={""}
+                        control={control}
+                        render={({field}) =>
+                            <TextField {...field} label={"Username"} error={!!errors.username || !!errors.root} helperText={errors.username?.message || errors.root?.message} variant={"standard"}/>
+                        }
+                    />
+                    <Controller
+                        name={"password"}
+                        defaultValue={""}
+                        control={control}
+                        render={({field}) =>
+                            <TextField {...field} label={"Password"} type={"password"} error={!!errors.password} helperText={errors.password?.message} variant={"standard"}/>
+                        }
+                    />
+                    
+                    <Link component={RouterLink} to={"/register"}>
+                        <Typography>
+                            Don't have an Account? Register now.
+                        </Typography>
+                    </Link>
+
+                    <LoadingButton loading={isSubmitting} disabled={!isValid && isDirty} type={"submit"} variant={"contained"}>
+                        Login
+                    </LoadingButton>
+                </Stack>
+            </form>
+        </Box>
     )
 }
 
