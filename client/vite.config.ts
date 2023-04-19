@@ -10,6 +10,9 @@ export default defineConfig({
     https: true,
   },
   build: {
-    outDir: "../Api/wwwroot"
+    outDir: "../Api/wwwroot",
+    watch: {
+      include: "src/**"
+    }
   },
 })
