@@ -37,7 +37,6 @@ public class CreateUserValidatorTests
     [InlineData("t", "testemail@test.com", "TestPa$$w0rd")] // username length < 5
     [InlineData("tasgasgasdsafasfasfasfasf", "testemail@test.com", "TestPa$$w0rd")] // username length > 14
     [InlineData("", "testemail@test.com", "TestPa$$w0rd")] // username empty
-    [InlineData("test username", "testemail@test.com", "TestPa$$w0rd")] // username with white space
     public async Task CreateUserValidator_Validation_Username_Failure(string username, string email, string password)
     {
         var dto = new CreateUserDto()
@@ -91,6 +90,10 @@ public class CreateUserValidatorTests
     [Theory]
     [InlineData("testUsername", "testemail@test.com", "")] // password is empty
     [InlineData("testUsername", "testemail@test.com", "123456")] // password length < 8
+    [InlineData("test username", "testemail@test.com", "TestPa$$w0rd")] // username with white space
+    [InlineData("test username", "testemail@test.com", "TestPassword1")] // no special character
+    [InlineData("test username", "testemail@test.com", "TestPaS4$sword")] // no number
+    [InlineData("test username", "testemail@test.com", "testpaS4$sword1")] // no uppercase letter
     public async Task CreateUserValidator_Validation_Password_Failure(string username, string email, string password)
     {
         var dto = new CreateUserDto()
