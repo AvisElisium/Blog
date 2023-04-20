@@ -42,6 +42,7 @@ const AuthContextProvider: FC<PropsWithChildren> = ({children}) => {
         localStorage.removeItem("user");
         await queryClient.invalidateQueries("login");
         setUser(null);
+        setHasError(false);
     }
 
     const handleSetHasError = (v: boolean) => {
@@ -51,7 +52,9 @@ const AuthContextProvider: FC<PropsWithChildren> = ({children}) => {
     const {} = useQuery({
         queryKey: "refresh",
         queryFn: async () => {
-            const res = await axios.get("/account/refreshJwt")
+            const res = await axios.get<User>("/account/refreshJwt", {
+                timeout: 60 * 1000
+            })
             return res.data;
         },
         onSuccess: (data: User) => {
@@ -62,11 +65,12 @@ const AuthContextProvider: FC<PropsWithChildren> = ({children}) => {
             setHasError(true);
         },
         
-        staleTime: 480000,
         cacheTime: 600000,
         enabled: !!user && !hasError,
         retry: false,
     })
+    
+    
     return (
         <AuthContext.Provider value={{
             currentUser: user,
