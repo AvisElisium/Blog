@@ -1,22 +1,22 @@
 ﻿.ProseMirror p {
-    margin: 1em .5em;
+  margin: 1em 0.5em;
 }
 
 .ProseMirror {
-    min-height: 20em;
-    padding: 0.2em;
+  min-height: 20em;
+  padding: 0.2em;
 }
 
 .ProseMirror-focused:focus-visible {
-    outline: none;
+  outline: none;
 }
 
 .editorContainer {
-    border: 2px black solid;
-    margin: 1em 0;
+  border: 2px black solid;
+  margin: 1em 0;
 }
 
 .article-image {
-    aspect-ratio: initial;
-    max-width: 900px;
+  aspect-ratio: initial;
+  max-width: 900px;
 }

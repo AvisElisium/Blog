@@ -1,108 +1,115 @@
-import {Avatar, Box, Button, Grid, Paper, Stack, Typography} from "@mui/material";
-import {FC, useContext} from "react";
-import {Interweave} from "interweave";
+import { Avatar, Box, Button, Grid, Paper, Stack, Typography } from '@mui/material';
+import { FC, useContext } from 'react';
+import { Interweave } from 'interweave';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import moment from "moment";
-import {HubConnection} from "@microsoft/signalr";
-import {AuthContext} from "../../../context/AuthContext";
-import {useParams} from "react-router-dom";
-
+import moment from 'moment';
+import { HubConnection } from '@microsoft/signalr';
+import { AuthContext } from '../../../context/AuthContext';
+import { useParams } from 'react-router-dom';
 
 interface Props {
-    id: string;
-    authorUsername: string;
-    articleId: string;
-    content: string;
-    createdAt: string;
-    profilePicture: string | null;
-    connection?: HubConnection
+  id: string;
+  authorUsername: string;
+  articleId: string;
+  content: string;
+  createdAt: string;
+  profilePicture: string | null;
+  connection?: HubConnection;
 }
 
-const CommentItem: FC<Props> = ({ id: commentId, content, authorUsername, createdAt, articleId, profilePicture, connection}) => {
-    const handleDate = () => {
-        const now = moment(new Date());
-        const createdAtMoment = moment(createdAt).utc();
-        
-        let timeDiff = now.diff(createdAtMoment, "hours");
-        let timespanString = "hours ago";
-        
-        if (timeDiff === 0) {
-            return "less than hour ago";
-        }
+const CommentItem: FC<Props> = ({
+  id: commentId,
+  content,
+  authorUsername,
+  createdAt,
+  articleId,
+  profilePicture,
+  connection
+}) => {
+  const handleDate = () => {
+    const now = moment(new Date());
+    const createdAtMoment = moment(createdAt).utc();
 
-        if (timeDiff > 48) {
-            timeDiff = createdAtMoment.diff(now, "days");
-            timespanString = "days ago";
-        }
-        
-        if (timeDiff > 24 * 30) {
-            return moment.utc(createdAt).format("DD MMMM YYYY")
-        }
-        
-        return `${timeDiff} ${timespanString}`
+    let timeDiff = now.diff(createdAtMoment, 'hours');
+    let timespanString = 'hours ago';
+
+    if (timeDiff === 0) {
+      return 'less than hour ago';
     }
-    
-    const handleDelete = async () => {
-        if (connection) {
-            await connection.invoke("DeleteComment", {
-                commentId: commentId,
-                articleId: id,
-            });
-        }
+
+    if (timeDiff > 48) {
+      timeDiff = createdAtMoment.diff(now, 'days');
+      timespanString = 'days ago';
     }
-    
-    const {currentUser} = useContext(AuthContext);
-    
-    const {id} = useParams();
-    
-    return (
-        <Paper sx={{margin: "2em 0", padding: ".5em .25em"}}>
-            <Paper elevation={0}>
-                <Grid container xs={12}>
-                    <Grid item xs={1} sx={{
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center"
-                    }}>
-                        <Avatar src={profilePicture || ""} />
-                    </Grid>
-                    
-                    <Grid item xs={11}>
-                        <Box sx={{
-                            display: "flex",
-                            justifyContent: "space-between",
-                        }}>
-                            <Stack>
-                                <Typography>
-                                    {authorUsername}
-                                </Typography>
 
-                                <Typography>
-                                    {handleDate()}
-                                </Typography>
-                            </Stack>
+    if (timeDiff > 24 * 30) {
+      return moment.utc(createdAt).format('DD MMMM YYYY');
+    }
 
-                            {currentUser?.username === authorUsername &&
-                                <Button onClick={handleDelete}>Delete</Button>
-                            }
-                        </Box>
-                    </Grid>
-                </Grid>
-                
-                <Grid container xs={12}>
-                    <Grid item xs={1}>
-                        
-                    </Grid>
+    return `${timeDiff} ${timespanString}`;
+  };
 
-                    <Grid item xs={11}>
-                        <Typography>
-                            <Interweave content={content} />
-                        </Typography>
-                    </Grid>
-                </Grid>
-            </Paper>
-        </Paper>
-    )
-}
+  const handleDelete = async () => {
+    if (connection) {
+      await connection.invoke('DeleteComment', {
+        commentId: commentId,
+        articleId: id
+      });
+    }
+  };
+
+  const { currentUser } = useContext(AuthContext);
+
+  const { id } = useParams();
+
+  return (
+    <Paper sx={{ margin: '2em 0', padding: '.5em .25em' }}>
+      <Paper elevation={0}>
+        <Grid container xs={12}>
+          <Grid
+            item
+            xs={1}
+            sx={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center'
+            }}
+          >
+            <Avatar src={profilePicture || ''} />
+          </Grid>
+
+          <Grid item xs={11}>
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: 'space-between'
+              }}
+            >
+              <Stack>
+                <Typography>{authorUsername}</Typography>
+
+                <Typography>{handleDate()}</Typography>
+              </Stack>
+
+              {currentUser?.username === authorUsername && (
+                <Button onClick={handleDelete}>Delete</Button>
+              )}
+            </Box>
+          </Grid>
+        </Grid>
+
+        <Grid container xs={12}>
+          <Grid item xs={1}></Grid>
+
+          <Grid item xs={11}>
+            <Typography>
+              <Interweave content={content} />
+            </Typography>
+          </Grid>
+        </Grid>
+      </Paper>
+    </Paper>
+  );
+};
 
 export default CommentItem;
