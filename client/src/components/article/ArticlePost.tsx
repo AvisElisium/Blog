@@ -2,7 +2,7 @@
   Avatar,
   Box,
   Button,
-  ButtonGroup,
+  ButtonGroup, Chip,
   Container,
   Link,
   MenuItem,
@@ -30,7 +30,7 @@ import LoadingButton from '../shared/LoadingButton';
 import ArticleDeleteModal from './ArticleDeleteModal';
 import CreateCommentForm from './comments/CreateCommentForm';
 import CommentsSection from './comments/CommentsSection';
-import TagList from '../homepage/TagList';
+
 
 const ArticlePost = () => {
   const { id } = useParams();
@@ -134,7 +134,19 @@ const ArticlePost = () => {
         {data.tags.length > 0 && (
           <Stack>
             <Typography>Tags</Typography>
-            <TagList tags={data.tags} />
+            {data.tags.map((tag) => (
+              <Link component={RouterLink} to={'/'}>
+                <Chip
+                  key={tag.id}
+                  label={tag.name}
+                  sx={{
+                    ':hover': {
+                      cursor: 'pointer'
+                    }
+                  }}
+                />
+              </Link>
+            ))}
           </Stack>
         )}
       </Stack>

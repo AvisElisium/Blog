@@ -27,7 +27,7 @@ const FeaturedArticlesSection = () => {
     <Box>
       <Grid container xs={12} justifyContent={'center'} alignItems={'top'}>
         <Grid container xs={12} lg={12}>
-          <Grid item xs={12} lg={4}>
+          <Grid item xs={12} lg={4} alignItems={"center"} display={"flex"}>
             <Typography
               variant={'h2'}
               sx={{

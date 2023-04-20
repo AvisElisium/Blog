@@ -13,12 +13,9 @@ interface AuthContext {
 
 export const AuthContext = createContext<AuthContext>({
   currentUser: null,
-  login: () => {
-  },
-  logout: () => {
-  },
-  setHasError: () => {
-  }
+  login: () => {},
+  logout: () => {},
+  setHasError: () => {}
 });
 
 const AuthContextProvider: FC<PropsWithChildren> = ({ children }) => {
