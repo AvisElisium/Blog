@@ -2,6 +2,7 @@
 import { User } from '../components/auth/LoginForm';
 import { useQuery, useQueryClient } from 'react-query';
 import axios from 'axios';
+import { isAsync } from 'zod';
 
 interface AuthContext {
   currentUser: User | null;
@@ -12,9 +13,12 @@ interface AuthContext {
 
 export const AuthContext = createContext<AuthContext>({
   currentUser: null,
-  login: () => {},
-  logout: () => {},
-  setHasError: () => {}
+  login: () => {
+  },
+  logout: () => {
+  },
+  setHasError: () => {
+  }
 });
 
 const AuthContextProvider: FC<PropsWithChildren> = ({ children }) => {
@@ -31,8 +35,9 @@ const AuthContextProvider: FC<PropsWithChildren> = ({ children }) => {
     return JSON.parse(user);
   }
 
-  const handleLogin = (userData: User) => {
+  const handleLogin = async (userData: User) => {
     localStorage.setItem('user', JSON.stringify(userData));
+    await queryClient.invalidateQueries('refresh');
     setUser(userData);
     setHasError(false);
   };
@@ -40,6 +45,7 @@ const AuthContextProvider: FC<PropsWithChildren> = ({ children }) => {
   const handleLogout = async () => {
     localStorage.removeItem('user');
     await queryClient.invalidateQueries('login');
+    await queryClient.invalidateQueries('refresh');
     setUser(null);
     setHasError(false);
   };
@@ -51,13 +57,11 @@ const AuthContextProvider: FC<PropsWithChildren> = ({ children }) => {
   const {} = useQuery({
     queryKey: 'refresh',
     queryFn: async () => {
-      const res = await axios.get<User>('/account/refreshJwt', {
-        timeout: 60 * 1000
-      });
+      const res = await axios.get<User>('/account/refreshJwt', {});
       return res.data;
     },
-    onSuccess: (data: User) => {
-      handleLogin(data);
+    onSuccess: async (data: User) => {
+      await handleLogin(data);
     },
 
     onError: () => {
@@ -65,6 +69,7 @@ const AuthContextProvider: FC<PropsWithChildren> = ({ children }) => {
     },
 
     cacheTime: 600000,
+    refetchInterval: 50000,
     enabled: !!user && !hasError,
     retry: false
   });
