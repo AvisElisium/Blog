@@ -25,8 +25,8 @@ public class TagController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<List<TagDto>>> GetTagList()
+    public async Task<ActionResult<List<TagDto>>> GetTagList([FromQuery] TagListQueryParams queryParams)
     {
-        return Ok(await _mediator.Send(new TagListQuery()));
+        return Ok(await _mediator.Send(new TagListQuery(queryParams)));
     }
 }

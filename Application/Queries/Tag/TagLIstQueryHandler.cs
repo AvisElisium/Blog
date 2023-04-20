@@ -3,6 +3,7 @@ using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Infrastructure;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.Queries.Tag;
@@ -23,8 +24,15 @@ public class TagLIstQueryHandler : IRequestHandler<TagListQuery, List<TagDto>>
     
     public async Task<List<TagDto>> Handle(TagListQuery request, CancellationToken cancellationToken)
     {
-        return await _context.Tags
+        var tags = _context.Tags
             .ProjectTo<TagDto>(_mapper.ConfigurationProvider)
-            .ToListAsync(cancellationToken);
+            .AsQueryable();
+
+        if (request.QueryParams.Featured is not null)
+        {
+            tags = tags.Where(x => x.IsFeatured == request.QueryParams.Featured);
+        }
+
+        return await tags.ToListAsync(cancellationToken);
     }
 }
