@@ -62,6 +62,8 @@ const CreateCommentForm: FC<Props> = ({ articleId, connection }) => {
             // @ts-ignore
             <TextEditor
               {...field}
+              // todo remove ts-ignore
+              // @ts-ignore
               ref={editorRef}
               description={field.value}
               onChange={field.onChange}

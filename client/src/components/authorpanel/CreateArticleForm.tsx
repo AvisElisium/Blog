@@ -225,6 +225,8 @@ const CreateArticleForm = () => {
             render={({ field }) => (
               <TextEditor
                 {...field}
+                // todo remove ts-ignore
+                // @ts-ignore
                 ref={editorRef}
                 description={field.value}
                 onChange={field.onChange}

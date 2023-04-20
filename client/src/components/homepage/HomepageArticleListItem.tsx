@@ -14,7 +14,6 @@
 import { Link as RouterLink } from 'react-router-dom';
 import moment from 'moment/moment';
 import { Interweave } from 'interweave';
-import TagList from './TagList';
 import React, { FC, ReactNode } from 'react';
 import { Article } from '../../types/articles/article';
 

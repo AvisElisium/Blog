@@ -3,7 +3,6 @@ import React, { useState } from 'react';
 import { Tag } from '../authorpanel/CreateArticleForm';
 import { useQuery } from 'react-query';
 import axios, { AxiosResponse } from 'axios';
-import TagList from './TagList';
 import { Article } from '../../types/articles/article';
 import HomepageArticleList from './HomepageArticleList';
 
