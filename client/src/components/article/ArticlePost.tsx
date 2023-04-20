@@ -2,7 +2,8 @@
   Avatar,
   Box,
   Button,
-  ButtonGroup, Chip,
+  ButtonGroup,
+  Chip,
   Container,
   Link,
   MenuItem,
@@ -12,7 +13,7 @@
   Popover,
   Skeleton,
   Stack,
-  Typography
+  Typography, useTheme
 } from '@mui/material';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useQuery } from 'react-query';
@@ -31,13 +32,14 @@ import ArticleDeleteModal from './ArticleDeleteModal';
 import CreateCommentForm from './comments/CreateCommentForm';
 import CommentsSection from './comments/CommentsSection';
 
-
 const ArticlePost = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
   const [editMode, setEditMode] = useState(false);
   const [deleteMode, setDeleteMode] = useState(false);
+  
+  const theme = useTheme();
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -91,9 +93,9 @@ const ArticlePost = () => {
         spacing={2}
         component={'article'}
         sx={{
-          marginTop: '2em'
-        }}
-      >
+          marginTop: theme.spacing(2),
+          marginBottom: theme.spacing(2),
+        }}>
         <header>
           <Typography variant={'h2'}>
             {data!.headline}{' '}
@@ -104,21 +106,18 @@ const ArticlePost = () => {
             sx={{
               display: 'flex',
               alignItems: 'center'
-            }}
-          >
+            }}>
             <Avatar src={data.author.profilePicture || ''} />
 
             <Box
               sx={{
-                marginLeft: '.4em'
-              }}
-            >
+                marginLeft: theme.spacing(0.4)
+              }}>
               <Typography>
                 <Link
                   component={RouterLink}
                   to={`/profile/${data!.author.username}`}
-                  underline={'hover'}
-                >
+                  underline={'hover'}>
                   {data!.author.username}
                 </Link>
               </Typography>
@@ -133,27 +132,29 @@ const ArticlePost = () => {
 
         {data.tags.length > 0 && (
           <Stack>
-            <Typography>Tags</Typography>
-            {data.tags.map((tag) => (
-              <Link component={RouterLink} to={'/'}>
-                <Chip
-                  key={tag.id}
-                  label={tag.name}
-                  sx={{
-                    ':hover': {
-                      cursor: 'pointer'
-                    }
-                  }}
-                />
-              </Link>
-            ))}
+            <Typography variant={'h4'} sx={{ margin: `0 ${theme.spacing(0.25)}` }}>
+              Tags
+            </Typography>
+            <Stack direction={'row'}>
+              {data.tags.map((tag) => (
+                <Link component={RouterLink} to={'/'} sx={{ display: 'flex', margin: '0 .25em' }}>
+                  <Chip
+                    key={tag.id}
+                    label={tag.name}
+                    sx={{
+                      ':hover': {
+                        cursor: 'pointer'
+                      }
+                    }}
+                  />
+                </Link>
+              ))}
+            </Stack>
           </Stack>
         )}
       </Stack>
 
-      <Stack>
-        <CommentsSection articleId={id as string} />
-      </Stack>
+      <CommentsSection articleId={id as string} />
 
       <Popover
         id={open ? id : undefined}
@@ -163,15 +164,13 @@ const ArticlePost = () => {
         anchorOrigin={{
           vertical: 'bottom',
           horizontal: 'left'
-        }}
-      >
+        }}>
         <MenuList onKeyDown={() => {}} autoFocusItem={open}>
           <MenuItem
             onClick={() => {
               handleClose();
               setEditMode(true);
-            }}
-          >
+            }}>
             Edit
           </MenuItem>
 
@@ -179,8 +178,7 @@ const ArticlePost = () => {
             onClick={() => {
               handleClose();
               setDeleteMode(true);
-            }}
-          >
+            }}>
             Delete
           </MenuItem>
         </MenuList>
