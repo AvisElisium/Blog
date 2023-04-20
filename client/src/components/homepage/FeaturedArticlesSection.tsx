@@ -2,8 +2,9 @@
 import { useQuery } from 'react-query';
 import axios from 'axios';
 import { Article } from '../../types/articles/article';
-import React from 'react';
+import React, { useMemo } from 'react';
 import HomepageArticleList from './HomepageArticleList';
+import HomePageArticleListItemSkeleton from './HomePageArticleListItemSkeleton';
 
 const FeaturedArticlesSection = () => {
   const { data } = useQuery({
@@ -22,6 +23,8 @@ const FeaturedArticlesSection = () => {
   });
 
   const theme = useTheme();
+  
+  const array = useMemo(() => [1, 1, 1, 1, 1], []);
 
   return (
     <Box>
@@ -38,6 +41,7 @@ const FeaturedArticlesSection = () => {
             </Typography>
           </Grid>
           {data && <HomepageArticleList articles={data} />}
+          {!data && array.map(() => <HomePageArticleListItemSkeleton />)}
         </Grid>
       </Grid>
     </Box>
