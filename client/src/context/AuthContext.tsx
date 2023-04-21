@@ -34,15 +34,12 @@ const AuthContextProvider: FC<PropsWithChildren> = ({ children }) => {
 
   const handleLogin = async (userData: User) => {
     localStorage.setItem('user', JSON.stringify(userData));
-    await queryClient.invalidateQueries('refresh');
     setUser(userData);
     setHasError(false);
   };
 
   const handleLogout = async () => {
     localStorage.removeItem('user');
-    await queryClient.invalidateQueries('login');
-    await queryClient.invalidateQueries('refresh');
     setUser(null);
     setHasError(false);
   };
@@ -51,10 +48,12 @@ const AuthContextProvider: FC<PropsWithChildren> = ({ children }) => {
     setHasError(v);
   };
 
-  const {} = useQuery({
+  const {data} = useQuery({
     queryKey: 'refresh',
     queryFn: async () => {
-      const res = await axios.get<User>('/account/refreshJwt', {});
+      const res = await axios.get<User>('/account/refreshJwt', {
+        timeout: 1000 * 60,
+      });
       return res.data;
     },
     onSuccess: async (data: User) => {
@@ -64,9 +63,7 @@ const AuthContextProvider: FC<PropsWithChildren> = ({ children }) => {
     onError: () => {
       setHasError(true);
     },
-
-    cacheTime: 600000,
-    refetchInterval: 50000,
+    staleTime: 60 * 1000,
     enabled: !!user && !hasError,
     retry: false
   });
