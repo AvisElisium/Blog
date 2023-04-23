@@ -4,8 +4,8 @@ import { useDropzone } from 'react-dropzone';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import axios from 'axios';
 import UploadImageWidget from '../shared/UploadImageWidget';
-import { AuthContext } from '../../context/AuthContext';
 import useUploadImageStore from '../../stores/uploadImageStore';
+import { useAuthStore } from '../../stores/authStore';
 
 interface Props {
   open: boolean;
@@ -13,7 +13,7 @@ interface Props {
 }
 
 const UpdateProfilePictureModal: FC<Props> = ({ open, handleClose }) => {
-  const { currentUser } = useContext(AuthContext);
+  const currentUser = useAuthStore((state) => state.currentUser);
   const client = useQueryClient();
   const setImage = useUploadImageStore((state) => state.setImage);
   const image = useUploadImageStore((state) => state.uploadedImage);

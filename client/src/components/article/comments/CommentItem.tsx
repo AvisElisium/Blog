@@ -4,8 +4,8 @@ import { Interweave } from 'interweave';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import moment from 'moment';
 import { HubConnection } from '@microsoft/signalr';
-import { AuthContext } from '../../../context/AuthContext';
 import { useParams } from 'react-router-dom';
+import { useAuthStore } from '../../../stores/authStore';
 
 interface Props {
   id: string;
@@ -58,7 +58,7 @@ const CommentItem: FC<Props> = ({
     }
   };
 
-  const { currentUser } = useContext(AuthContext);
+  const currentUser = useAuthStore((state) => state.currentUser);
 
   const { id } = useParams();
 

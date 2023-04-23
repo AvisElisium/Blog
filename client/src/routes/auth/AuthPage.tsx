@@ -1,12 +1,12 @@
 ﻿import { Navigate, Outlet } from 'react-router-dom';
 import { Container, Grid } from '@mui/material';
 import { useContext } from 'react';
-import { AuthContext } from '../../context/AuthContext';
 import Navbar, { NAVBAR_HEIGHT } from '../../components/navbar/Navbar';
 import AuthPageIcon from '../../components/auth/AuthPageIcon';
+import { useAuthStore } from '../../stores/authStore';
 
 const AuthPage = () => {
-  const { currentUser } = useContext(AuthContext);
+  const currentUser = useAuthStore((state) => state.currentUser);
 
   if (currentUser !== null) return <Navigate to={'/'} />;
 

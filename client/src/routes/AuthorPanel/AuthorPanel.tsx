@@ -1,13 +1,13 @@
 ﻿import { Container } from '@mui/material';
 import Navbar from '../../components/navbar/Navbar';
 import { useContext, useEffect } from 'react';
-import { AuthContext } from '../../context/AuthContext';
 import { Navigate, useNavigate } from 'react-router-dom';
 import CreateArticleForm from '../../components/authorpanel/CreateArticleForm';
 import AuthorActions from '../../components/authorpanel/AuthorActions';
+import { useAuthStore } from '../../stores/authStore';
 
 const AuthorPanel = () => {
-  const { currentUser } = useContext(AuthContext);
+  const currentUser = useAuthStore((state) => state.currentUser);
   const navigate = useNavigate();
 
   if (currentUser === null) {

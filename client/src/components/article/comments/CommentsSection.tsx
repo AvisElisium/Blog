@@ -5,13 +5,13 @@
   LogLevel
 } from '@microsoft/signalr';
 import { FC, useCallback, useContext, useEffect, useState } from 'react';
-import { AuthContext } from '../../../context/AuthContext';
 import { User } from '../../auth/LoginForm';
 import CreateCommentForm from './CreateCommentForm';
 import CommentItem from './CommentItem';
 import useComments from '../../../hooks/useComments';
 import { Box, Stack, Typography } from '@mui/material';
 import CommentList from './CommentList';
+import { useAuthStore } from '../../../stores/authStore';
 
 interface Props {
   articleId: string;
@@ -29,7 +29,7 @@ export interface Comment {
 const CommentsSection: FC<Props> = ({ articleId }) => {
   const { start, stop, connection, comments } = useComments(articleId);
 
-  const { currentUser } = useContext(AuthContext);
+  const currentUser = useAuthStore((state) => state.currentUser);
 
   const token = currentUser?.jwtToken;
 

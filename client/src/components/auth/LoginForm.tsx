@@ -6,10 +6,10 @@ import { useMutation } from 'react-query';
 import axios, { AxiosError, AxiosResponse } from 'axios';
 import { ErrorResponse } from '../../types/errors/errorResponse';
 import { useContext, useEffect, useState } from 'react';
-import { AuthContext } from '../../context/AuthContext';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Link as RouterLink } from 'react-router-dom';
 import { LoadingButton } from '@mui/lab';
+import { useAuthStore } from '../../stores/authStore';
 
 export interface User {
   username: string;
@@ -39,7 +39,7 @@ const LoginForm = () => {
     resolver: zodResolver(loginUserSchema)
   });
 
-  const { login } = useContext(AuthContext);
+  const login = useAuthStore((state) => state.login);
 
   const { state } = useLocation();
 
@@ -56,7 +56,7 @@ const LoginForm = () => {
 
       onSuccess: (response: AxiosResponse<User>) => {
         login(response.data);
-        navigate(state.from ?? '/');
+        navigate(state?.from ?? '/');
       },
 
       onError: (error: AxiosError<ErrorResponse>) => {
@@ -69,10 +69,6 @@ const LoginForm = () => {
       onSettled: () => setIsSubmitting(false)
     }
   );
-
-  useEffect(() => {
-    console.log(state);
-  }, []);
 
   const onSubmit = async (data: any) => {
     await mutation.mutateAsync(data);

@@ -24,13 +24,13 @@ import moment from 'moment/moment';
 import { Link as RouterLink } from 'react-router-dom';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { Interweave } from 'interweave';
-import { AuthContext } from '../../context/AuthContext';
 import ArticlePostSkeleton from './ArticlePostSkeleton';
 import ArticleEditForm from './ArticleEditForm';
 import LoadingButton from '../shared/LoadingButton';
 import ArticleDeleteModal from './ArticleDeleteModal';
 import CreateCommentForm from './comments/CreateCommentForm';
 import CommentsSection from './comments/CommentsSection';
+import { useAuthStore } from '../../stores/authStore';
 
 const ArticlePost = () => {
   const { id } = useParams();
@@ -63,7 +63,7 @@ const ArticlePost = () => {
     }
   });
 
-  const { currentUser } = useContext(AuthContext);
+  const currentUser = useAuthStore((state) => state.currentUser)
 
   if (isLoading || data === null || data === undefined) return <ArticlePostSkeleton />;
 

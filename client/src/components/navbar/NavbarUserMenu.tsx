@@ -14,12 +14,13 @@
   Typography
 } from '@mui/material';
 import { useContext, useState, MouseEvent, useRef } from 'react';
-import { AuthContext } from '../../context/AuthContext';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { useNavigate, Link as RouterLink } from 'react-router-dom';
+import { useAuthStore } from '../../stores/authStore';
 
 const NavbarUserMenu = () => {
-  const { currentUser, logout } = useContext(AuthContext);
+  const currentUser = useAuthStore((state) => state.currentUser);
+  const logout = useAuthStore((state) => state.logout);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const authorPanelRef = useRef<HTMLAnchorElement | null>(null);
 

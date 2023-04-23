@@ -12,13 +12,13 @@
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { Link as RouterLink } from 'react-router-dom';
 import { useContext } from 'react';
-import { AuthContext } from '../../context/AuthContext';
 import NavbarUserMenu from './NavbarUserMenu';
+import { useAuthStore } from '../../stores/authStore';
 
 export const NAVBAR_HEIGHT = '72px';
 
 const Navbar = () => {
-  const { currentUser } = useContext(AuthContext);
+  const currentUser = useAuthStore((state) => state.currentUser);
 
   return (
     <AppBar

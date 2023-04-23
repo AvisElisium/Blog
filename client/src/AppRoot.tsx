@@ -1,10 +1,11 @@
 ﻿import { Navigate, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import axios, { AxiosError, AxiosResponse } from 'axios';
-import { useContext } from 'react';
-import { AuthContext } from './context/AuthContext';
+import { useContext, useEffect } from 'react';
 import { SnackbarProvider, useSnackbar } from 'notistack';
 import { ErrorResponse, isErrorResponse } from './types/errors/errorResponse';
-import { useQueryClient } from 'react-query';
+import { useQuery, useQueryClient } from 'react-query';
+import { useAuthStore } from './stores/authStore';
+import { User } from './components/auth/LoginForm';
 
 axios.defaults.baseURL = import.meta.env.VITE_BASE_API_URL;
 axios.defaults.withCredentials = true;
@@ -15,22 +16,21 @@ const AppRoot = () => {
       setTimeout(resolve, delay);
     });
   };
-
-  const authContext = useContext(AuthContext);
+  
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
   const queryClient = useQueryClient();
   const location = useLocation();
+  const currentUser = useAuthStore((state) => state.currentUser);
+  const login = useAuthStore((state) => state.login);
+  const logout = useAuthStore((state) => state.logout);
 
-  axios.interceptors.request.use((config) => {
-    if (authContext.currentUser?.jwtToken) {
-      config.headers.Authorization = `Bearer ${authContext.currentUser?.jwtToken}`;
+  useEffect(() => {
+    if (localStorage.getItem("user") !== null) {
+      const user = JSON.parse(localStorage.getItem("user") as string);
+      login(user);
     }
-
-    config.withCredentials = true;
-
-    return config;
-  });
+  }, [])
 
   axios.interceptors.response.use(
     async (response) => {
@@ -47,7 +47,7 @@ const AppRoot = () => {
 
       if (!error.response) return Promise.reject(error);
 
-      if (error.response.status === 401 || error.response.status === 403) {
+      if (error.response.status === 401) {
         await queryClient.invalidateQueries('login');
 
         const message = isErrorResponse(error)
@@ -58,8 +58,7 @@ const AppRoot = () => {
           variant: 'error',
           preventDuplicate: true
         });
-        authContext.setHasError(true);
-        authContext.logout();
+        logout();
 
         navigate('/login', {
           state: {
@@ -71,6 +70,40 @@ const AppRoot = () => {
       return Promise.reject(error);
     }
   );
+  
+  useEffect(() => {
+    axios.interceptors.request.use((config) => {
+      if (currentUser?.jwtToken) {
+        config.headers.Authorization = `Bearer ${currentUser?.jwtToken}`;
+      }
+
+      config.withCredentials = true;
+
+      return config;
+    });
+  }, [currentUser?.jwtToken])
+
+  const {data} = useQuery({
+    queryKey: 'login',
+    queryFn: async () => {
+      const res = await axios.get<User>('/account/refreshJwt', {
+        timeout: 1000 * 60,
+        headers: {
+          "Authorization": "Bearer " + currentUser?.jwtToken,
+        }
+      });
+      return res.data;
+    },
+    onSuccess: async (data: User) => {
+      await login(data);
+    },
+    
+    staleTime: 60 * 1000,
+    enabled: !!currentUser,
+    retry: false
+  });
+  
+  
 
   return <Outlet />;
 };

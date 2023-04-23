@@ -5,15 +5,15 @@ import {
   HubConnectionBuilder,
   LogLevel
 } from '@microsoft/signalr';
-import { AuthContext } from '../context/AuthContext';
 import { Comment } from '../components/article/comments/CommentsSection';
 import { useSnackbar } from 'notistack';
+import { useAuthStore } from '../stores/authStore';
 
 const useComments = (articleId: string) => {
   const [comments, setComments] = useState<Comment[]>([]);
   const { enqueueSnackbar } = useSnackbar();
 
-  const { currentUser } = useContext(AuthContext);
+  const currentUser = useAuthStore((state) => state.currentUser);
 
   const [connection, setConnection] = useState(
     new HubConnectionBuilder()

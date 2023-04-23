@@ -3,8 +3,8 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import moment from 'moment/moment';
 import React, { FC, useContext, useState } from 'react';
 import { ProfileDto } from './Profile';
-import { AuthContext } from '../../context/AuthContext';
 import UpdateProfilePictureModal from './UpdateProfilePictureModal';
+import { useAuthStore } from '../../stores/authStore';
 
 interface Props {
   profile: ProfileDto;
@@ -22,7 +22,8 @@ const ProfileHeader: FC<Props> = ({ profile }) => {
     setUploadMode(false);
   };
 
-  const { currentUser } = useContext(AuthContext);
+  const currentUser = useAuthStore((state) => state.currentUser);
+
 
   return (
     <>
