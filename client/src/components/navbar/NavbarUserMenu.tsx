@@ -87,18 +87,6 @@ const NavbarUserMenu = () => {
                   >
                     Profile
                   </MenuItem>
-                  {[currentUser?.isAuthor, currentUser?.isAdmin].some((x) => x === true) && (
-                    <MenuItem
-                      tabIndex={0}
-                      onClick={() => {
-                        if (authorPanelRef !== null) {
-                          navigate('/authorPanel');
-                        }
-                      }}
-                    >
-                      AuthorPanel
-                    </MenuItem>
-                  )}
                   <MenuItem
                     tabIndex={0}
                     onClick={() => {
