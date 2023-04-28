@@ -38,7 +38,7 @@ const CommentItem: FC<Props> = ({
     }
 
     if (timeDiff > 48) {
-      timeDiff = createdAtMoment.diff(now, 'days');
+      timeDiff = now.diff(createdAtMoment, 'days');
       timespanString = 'days ago';
     }
 
