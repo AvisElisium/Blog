@@ -10,6 +10,7 @@ import ArticlePost from '../components/article/ArticlePost';
 import ProfilePage from './profilePage/ProfilePage';
 import CreateArticleForm from '../components/authorpanel/CreateArticleForm';
 import CreateTagForm from '../components/authorpanel/CreateTagForm';
+import AllArticlesPage from './allAtriclesPage/AllArticlesPage';
 
 const router = createBrowserRouter([
   {
@@ -36,7 +37,8 @@ const router = createBrowserRouter([
         path: '/article',
         children: [{ element: <ArticlePost />, path: ':id' }]
       },
-      { element: <ProfilePage />, path: '/profile/:username' }
+      { element: <ProfilePage />, path: '/profile/:username' },
+      { element: <AllArticlesPage />, path: "/articles"},
     ]
   }
 ]);
