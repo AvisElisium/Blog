@@ -1,10 +1,10 @@
 ﻿import { Icon, IconProps, SvgIcon, SvgIconProps } from '@mui/material';
-import AuthIcon from './authIcon.svg';
+import AuthImage from './authImage.svg';
 
 const AuthPageIcon = (props: IconProps) => {
   return (
     <>
-      <img src={AuthIcon} />
+      <img alt={'Authentication image'} src={AuthImage} />
     </>
   );
 };
