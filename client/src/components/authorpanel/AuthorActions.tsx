@@ -5,13 +5,16 @@ const AuthorActions = () => {
   const navigate = useNavigate();
 
   return (
-    <Box>
-      <ButtonGroup>
+    <Box sx={{
+      padding: 2
+    }}>
+      <ButtonGroup sx={{
+        display: "flex",
+        justifyContent: "center"
+      }}>
         <Button onClick={() => navigate('/authorPanel/createArticle')}>Create Article</Button>
         <Button onClick={() => navigate('/authorPanel/createTag')}>Create Tag</Button>
       </ButtonGroup>
-
-      <Outlet />
     </Box>
   );
 };
