@@ -6,7 +6,7 @@ const useValidationErrors = <T extends FieldValues>(
 ) => {
   return (validationErrorResponse: ValidationErrorResponse<T>) => {
     for (const [k, v] of Object.entries(validationErrorResponse.validationErrors)) {
-      const fieldKey = k.toLowerCase() as Path<T>;
+      const fieldKey = k.charAt(0).toLowerCase() + k.slice(1) as Path<T>;
       v.forEach((err) => {
         setErrorFn(fieldKey, {
           type: 'custom',
