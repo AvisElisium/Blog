@@ -99,7 +99,7 @@ const NavbarUserMenu = () => {
                   <MenuItem
                     tabIndex={0}
                     onClick={() => {
-                      navigate(`changePassword`);
+                      navigate(`/changePassword`);
                     }}
                   >
                     Change password
