@@ -14,6 +14,7 @@ import ArticlePost from '../article/ArticlePost';
 import { Link as RouterLink } from 'react-router-dom';
 import ProfileHeader from './ProfileHeader';
 import ArticleItem from '../allArticlesList/ArticleItem';
+import ProfileSkeleton from './ProfileSkeleton';
 
 export interface ProfileDto {
   username: string;
@@ -46,7 +47,7 @@ const Profile = () => {
     }
   });
 
-  if (data === undefined) return <Skeleton width={100} />;
+  if (data === undefined) return <ProfileSkeleton />
 
   return (
     <Box>
