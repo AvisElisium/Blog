@@ -5,10 +5,11 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from 'react-query';
 import axios, { AxiosError } from 'axios';
 import { ValidationErrorResponse } from '../../types/errors/validationErrorResponse';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { Link as RouterLink, Navigate, useNavigate } from 'react-router-dom';
 import useValidationErrors from '../../hooks/UseValidationErrors';
 import { useState } from 'react';
 import { LoadingButton } from '@mui/lab';
+import { useAuthStore } from '../../stores/authStore';
 
 const RegisterUserSchema = z
   .object({
@@ -28,6 +29,10 @@ const RegisterUserSchema = z
 type RegisterUserSchema = z.infer<typeof RegisterUserSchema>;
 
 const RegisterForm = () => {
+  const currentUser = useAuthStore((state) => state.currentUser);
+
+  if (currentUser !== null) return <Navigate to={'/'} />;
+
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const {
@@ -76,8 +81,7 @@ const RegisterForm = () => {
     <Box
       sx={{
         padding: '8em 4em'
-      }}
-    >
+      }}>
       <form onSubmit={handleSubmit(onSubmit)}>
         <Stack spacing={3}>
           <Typography fontSize={26} fontFamily={'sans-serif'}>
@@ -151,8 +155,7 @@ const RegisterForm = () => {
             loading={isSubmitting}
             disabled={!isValid && isDirty}
             type={'submit'}
-            variant={'contained'}
-          >
+            variant={'contained'}>
             Register
           </LoadingButton>
         </Stack>

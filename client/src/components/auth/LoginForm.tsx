@@ -6,7 +6,7 @@ import { useMutation } from 'react-query';
 import axios, { AxiosError, AxiosResponse } from 'axios';
 import { ErrorResponse } from '../../types/errors/errorResponse';
 import { useContext, useEffect, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { Link as RouterLink } from 'react-router-dom';
 import { LoadingButton } from '@mui/lab';
 import { useAuthStore } from '../../stores/authStore';
@@ -27,6 +27,10 @@ const loginUserSchema = z.object({
 type LoginUserSchema = z.infer<typeof loginUserSchema>;
 
 const LoginForm = () => {
+  const currentUser = useAuthStore((state) => state.currentUser);
+
+  if (currentUser !== null) return <Navigate to={'/'} />;
+
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const {
@@ -80,8 +84,7 @@ const LoginForm = () => {
     <Box
       sx={{
         padding: '8em 4em'
-      }}
-    >
+      }}>
       <form onSubmit={handleSubmit(onSubmit)}>
         <Stack spacing={3}>
           <Typography fontSize={26} fontFamily={'sans-serif'}>
@@ -126,8 +129,7 @@ const LoginForm = () => {
             loading={isSubmitting}
             disabled={!isValid && isDirty}
             type={'submit'}
-            variant={'contained'}
-          >
+            variant={'contained'}>
             Login
           </LoadingButton>
         </Stack>

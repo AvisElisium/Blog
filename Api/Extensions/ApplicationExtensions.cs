@@ -27,6 +27,7 @@ public static class ApplicationExtensions
         services.AddTransient<IValidator<CreateArticleDto>, CreateArticleValidator>();
         services.AddTransient<IValidator<CreateCommentDto>, CreateCommentValidator>();
         services.AddTransient<IValidator<CreateTagDto>, CreateTagValidator>();
+        services.AddTransient<IValidator<ChangePasswordDto>, ChangePasswordValidator>();
         services.AddScoped<IUserService, UserService>();
         services.AddSignalR(options =>
         {

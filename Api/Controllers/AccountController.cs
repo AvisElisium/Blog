@@ -117,4 +117,18 @@ public class AccountController : ControllerBase
     {
         return Ok(await _mediator.Send(new GetLastComments()));
     }
+
+    /// <summary>
+    /// Change current password to new one
+    /// </summary>
+    /// <param name="dto">Current and new password</param>
+    /// <returns>NoContent</returns>
+    [HttpPost("changePassword")]
+    [Authorize]
+    public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordDto dto)
+    {
+        await _mediator.Send(new ChangePassword(dto));
+        
+        return NoContent();
+    }
 }

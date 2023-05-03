@@ -96,6 +96,14 @@ const NavbarUserMenu = () => {
                   >
                     Logout
                   </MenuItem>
+                  <MenuItem
+                    tabIndex={0}
+                    onClick={() => {
+                      navigate(`changePassword`);
+                    }}
+                  >
+                    Change password
+                  </MenuItem>
                 </MenuList>
               </ClickAwayListener>
             </Paper>

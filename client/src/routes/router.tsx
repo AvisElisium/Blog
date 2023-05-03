@@ -11,6 +11,7 @@ import ProfilePage from './profilePage/ProfilePage';
 import CreateArticleForm from '../components/authorpanel/CreateArticleForm';
 import CreateTagForm from '../components/authorpanel/CreateTagForm';
 import AllArticlesPage from './allAtriclesPage/AllArticlesPage';
+import ChangePasswordForm from '../components/auth/ChangePasswordForm';
 
 const router = createBrowserRouter([
   {
@@ -20,7 +21,8 @@ const router = createBrowserRouter([
         element: <AuthPage />,
         children: [
           { path: '/login', element: <LoginForm /> },
-          { path: '/register', element: <RegisterForm /> }
+          { path: '/register', element: <RegisterForm /> },
+          { path: 'changePassword', element: <ChangePasswordForm /> }
         ]
       },
       { element: <HomePage />, path: '/' },
@@ -38,7 +40,7 @@ const router = createBrowserRouter([
         children: [{ element: <ArticlePost />, path: ':id' }]
       },
       { element: <ProfilePage />, path: '/profile/:username' },
-      { element: <AllArticlesPage />, path: "/articles"},
+      { element: <AllArticlesPage />, path: '/articles' }
     ]
   }
 ]);

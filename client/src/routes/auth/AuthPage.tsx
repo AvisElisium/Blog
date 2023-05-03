@@ -6,10 +6,6 @@ import AuthPageIcon from '../../components/auth/AuthPageIcon';
 import { useAuthStore } from '../../stores/authStore';
 
 const AuthPage = () => {
-  const currentUser = useAuthStore((state) => state.currentUser);
-
-  if (currentUser !== null) return <Navigate to={'/'} />;
-
   return (
     <>
       <Navbar />
