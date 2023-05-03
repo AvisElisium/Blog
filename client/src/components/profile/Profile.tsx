@@ -13,6 +13,7 @@ import CommentItem from '../article/comments/CommentItem';
 import ArticlePost from '../article/ArticlePost';
 import { Link as RouterLink } from 'react-router-dom';
 import ProfileHeader from './ProfileHeader';
+import ArticleItem from '../allArticlesList/ArticleItem';
 
 export interface ProfileDto {
   username: string;
@@ -84,27 +85,7 @@ const Profile = () => {
             <ProfileTabPanel value={value} index={1}>
               {data.lastArticles.map((article) => {
                 return (
-                  <Grid container xs={12}>
-                    <Grid item xs={4}>
-                      image
-                    </Grid>
-
-                    <Grid item xs={6}>
-                      <Stack>
-                        <Typography>{article.headline}</Typography>
-
-                        <Typography>
-                          {moment(article.createdAt).utc().format('DD MMMM YYYY HH:MM')}
-                        </Typography>
-                      </Stack>
-                    </Grid>
-
-                    <Grid item xs={2}>
-                      <Link component={RouterLink} to={`/article/${article.id}`}>
-                        Go to article
-                      </Link>
-                    </Grid>
-                  </Grid>
+                  <ArticleItem article={article} />
                 );
               })}
             </ProfileTabPanel>
