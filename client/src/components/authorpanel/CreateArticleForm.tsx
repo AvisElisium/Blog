@@ -2,6 +2,7 @@
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
+  Alert,
   Autocomplete,
   Box,
   Button,
@@ -23,7 +24,6 @@ import {
   Typography
 } from '@mui/material';
 import 'react-quill/dist/quill.snow.css';
-import LoadingButton from '../shared/LoadingButton';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import axios, { AxiosError, AxiosResponse } from 'axios';
 import { useSnackbar } from 'notistack';
@@ -40,12 +40,19 @@ import useTextEditorStore from '../../stores/textEditorStore';
 import UploadImageWidget from '../shared/UploadImageWidget';
 import { Crop } from 'react-image-crop';
 import useUploadImageStore from '../../stores/uploadImageStore';
+import { LoadingButton } from '@mui/lab';
+
+
+const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
+const MAX_FILE_SIZE = 500000;
 
 export const createArticleSchema = z.object({
   headline: z.string(),
   content: z.string(),
   isFeatured: z.boolean(),
-  tagIds: z.array(z.string())
+  tagIds: z.array(z.string()),
+  file: z
+    .any()
 });
 
 export type CreateArticleSchema = z.infer<typeof createArticleSchema>;
@@ -107,7 +114,7 @@ const CreateArticleForm = () => {
     setError,
     reset
   } = useForm<CreateArticleSchema>({
-    mode: 'onSubmit',
+    mode: 'onBlur',
     resolver: zodResolver(createArticleSchema),
     defaultValues: {
       isFeatured: false,
@@ -163,6 +170,10 @@ const CreateArticleForm = () => {
 
       onError: (error: AxiosError<ValidationErrorResponse<CreateArticleSchema>>) => {
         setValidationErrors(error.response!.data);
+        
+        if (error.response!.data.validationErrors["file"]) {
+          
+        }
       },
 
       onSettled: () => setIsSubmitting(true)
@@ -185,18 +196,20 @@ const CreateArticleForm = () => {
 
   const onDrop = useCallback(async (acceptedFiles: Blob[]) => {
     setUploadedImage(acceptedFiles[0]);
+    setValue("file", uploadedImage);
   }, []);
 
   return (
     <Container
       sx={{
-        marginTop: 4
-      }}
-    >
+        marginTop: 4,
+        marginBottom: 4
+      }}>
       <form onSubmit={handleSubmit(onSubmit)}>
         <Stack spacing={2}>
           <Typography>Upload Article image</Typography>
           <UploadImageWidget onDrop={onDrop} />
+          {errors.file && <Alert severity={"error"}>{errors.file?.message?.toString()}</Alert>}
 
           <Button variant={'contained'} onClick={onCrop}>
             Crop
@@ -276,12 +289,12 @@ const CreateArticleForm = () => {
           />
 
           <LoadingButton
-            type={'submit'}
+            loading={mutation.isLoading}
             variant={'contained'}
-            text={'Create'}
-            isLoading={isSubmitting}
-            disabled={!isValid && isDirty}
-          />
+            disabled={!isValid}
+            type={'submit'}>
+            Create
+          </LoadingButton>
         </Stack>
       </form>
     </Container>

@@ -3,12 +3,12 @@ import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button, Checkbox, Container, FormControlLabel, Stack, TextField } from '@mui/material';
 import React from 'react';
-import LoadingButton from '../shared/LoadingButton';
 import { useMutation } from 'react-query';
 import axios, { AxiosError, AxiosResponse } from 'axios';
 import { useSnackbar } from 'notistack';
 import useValidationErrors from '../../hooks/UseValidationErrors';
 import { ValidationErrorResponse } from '../../types/errors/validationErrorResponse';
+import {LoadingButton} from '@mui/lab';
 
 const createTagSchema = z.object({
   name: z.string(),
@@ -39,7 +39,7 @@ const CreateTagForm = () => {
 
   const { enqueueSnackbar } = useSnackbar();
 
-  const { mutateAsync } = useMutation({
+  const { mutateAsync, isLoading } = useMutation({
     mutationFn: (data: CreateTagSchema) => {
       return axios.post<string>('/tag', data);
     },
@@ -99,9 +99,13 @@ const CreateTagForm = () => {
             )}
           />
 
-          <Button type={'submit'} variant={'contained'} disabled={!isValid && isDirty}>
+          <LoadingButton
+            loading={isLoading}
+            variant={'contained'}
+            disabled={!isValid}
+            type={'submit'}>
             Create
-          </Button>
+          </LoadingButton>
         </Stack>
       </form>
     </Container>
