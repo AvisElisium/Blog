@@ -13,6 +13,7 @@ export default defineConfig({
     outDir: '../Api/wwwroot',
     watch: {
       include: 'src/**'
-    }
+    },
+    emptyOutDir: true
   }
 });
