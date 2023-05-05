@@ -46,10 +46,9 @@ const AppRoot = () => {
       }
 
       if (!error.response) return Promise.reject(error);
-
+      
       if (error.response.status === 401) {
-        await queryClient.invalidateQueries('login');
-
+        
         const message = isErrorResponse(error)
           ? error.response.data.message
           : 'Session has expired';
@@ -58,6 +57,7 @@ const AppRoot = () => {
           variant: 'error',
           preventDuplicate: true
         });
+        
         logout();
 
         navigate('/login', {
@@ -82,28 +82,23 @@ const AppRoot = () => {
       return config;
     });
   }, [currentUser?.jwtToken])
+  
+  
+  useEffect(() => {
+    if (!!currentUser) {
+      const interval = setInterval(() => {
+        axios.get<User>('/account/refreshJwt', {
+          headers: {
+            "Authorization": "Bearer " + currentUser?.jwtToken,
+          }
+        }).then(res => login(res.data));
+      }, 100000)
 
-  const {data} = useQuery({
-    queryKey: 'login',
-    queryFn: async () => {
-      const res = await axios.get<User>('/account/refreshJwt', {
-        timeout: 1000 * 60,
-        headers: {
-          "Authorization": "Bearer " + currentUser?.jwtToken,
-        }
-      });
-      return res.data;
-    },
-    onSuccess: async (data: User) => {
-      await login(data);
-    },
-    
-    staleTime: 60 * 1000,
-    enabled: !!currentUser,
-    retry: false
-  });
-  
-  
+      return () => {
+        clearInterval(interval);
+      }
+    }
+  }, [currentUser])
 
   return <Outlet />;
 };
