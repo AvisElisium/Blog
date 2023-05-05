@@ -105,7 +105,12 @@ const AllArticlesList = () => {
         <Grid item xs={12}>
           <Typography fontWeight={'bold'}>Filters</Typography>
         </Grid>
-        <Grid item xs={6}>
+        <Grid item xs={12} md={6} sx={{
+          order: {
+            xs: 1,
+            md: 1,
+          }
+        }}>
           <DatePicker
             sx={{ width: '100%' }}
             label={'Created Before'}
@@ -116,7 +121,12 @@ const AllArticlesList = () => {
             }}
           />
         </Grid>
-        <Grid item xs={6}>
+        <Grid item xs={12} md={6} sx={{
+          order: {
+            xs: 3,
+            md: 2,
+          }
+        }}>
           <Autocomplete
             multiple
             renderInput={(params) => <TextField {...params} label="Include tags" />}
@@ -129,7 +139,12 @@ const AllArticlesList = () => {
             }}
           />
         </Grid>
-        <Grid item xs={6}>
+        <Grid item xs={12} md={6} sx={{
+          order: {
+            xs: 2,
+            md: 3,
+          }
+        }}>
           <DatePicker
             sx={{ width: '100%' }}
             label={'Created After'}
@@ -140,7 +155,12 @@ const AllArticlesList = () => {
             }}
           />
         </Grid>
-        <Grid item xs={6}>
+        <Grid item xs={12} md={6} sx={{
+          order: {
+            xs: 4,
+            md: 4,
+          }
+        }}>
           <Autocomplete
             multiple
             renderInput={(params) => <TextField {...params} label="Include authors" />}
@@ -158,7 +178,8 @@ const AllArticlesList = () => {
           xs={12}
           sx={{
             display: 'flex',
-            justifyContent: 'flex-end'
+            justifyContent: 'flex-end',
+            order: 100,
           }}>
           <LoadingButton
             onClick={() => {
