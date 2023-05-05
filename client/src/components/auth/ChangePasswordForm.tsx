@@ -36,7 +36,7 @@ const ChangePasswordForm = () => {
     }
     
     setInitialRender(false);
-  }, [currentUser])
+  }, [currentUser, initialRender])
   
   const {
     control,
