@@ -1,10 +1,11 @@
-﻿import { Box, Grid, Typography, useTheme } from '@mui/material';
+﻿import { Box, Container, Grid, Typography, useTheme } from '@mui/material';
 import { useQuery } from 'react-query';
 import axios from 'axios';
 import { Article } from '../../types/articles/article';
 import React, { useMemo } from 'react';
 import HomepageArticleList from './HomepageArticleList';
 import HomePageArticleListItemSkeleton from './HomePageArticleListItemSkeleton';
+import { Masonry } from '@mui/lab';
 
 const FeaturedArticlesSection = () => {
   const { data } = useQuery({
@@ -28,22 +29,20 @@ const FeaturedArticlesSection = () => {
 
   return (
     <Box>
-      <Grid container xs={12} justifyContent={'center'} alignItems={'top'}>
-        <Grid container xs={12} lg={12}>
-          <Grid item xs={12} lg={4} alignItems={"center"} display={"flex"}>
-            <Typography
-              variant={'h2'}
-              sx={{
-                padding: theme.spacing(2),
-                margin: theme.spacing(1)
-              }}>
-              Featured Articles
-            </Typography>
-          </Grid>
+      <Typography
+        variant={'h2'}
+        sx={{
+          padding: theme.spacing(2),
+          margin: theme.spacing(1)
+        }}>
+        Featured Articles
+      </Typography>
+      <Box>
+        <Masonry columns={{xs: 1, md: 2, lg: 3}}>
           {data && <HomepageArticleList articles={data} />}
           {!data && array.map(() => <HomePageArticleListItemSkeleton />)}
-        </Grid>
-      </Grid>
+        </Masonry>
+      </Box>
     </Box>
   );
 };
