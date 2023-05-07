@@ -15,6 +15,8 @@ interface Props {
 }
 
 const TextEditorUploadImageModal: FC<Props> = ({ open, handleClose, editor }) => {
+  const [progress, setProgress] = useState<null | number>(null);
+  
   const { mutateAsync } = useMutation({
     mutationFn: (file: Blob) => {
       const formData = new FormData();
@@ -23,13 +25,23 @@ const TextEditorUploadImageModal: FC<Props> = ({ open, handleClose, editor }) =>
 
       return axios
         .post<ImageUploadResult>(`/image`, formData, {
-          headers: { 'Content-Type': 'multipart/form-data' }
+          headers: { 'Content-Type': 'multipart/form-data' },
+          onUploadProgress: (progressEvent) => {
+            const { loaded, total } = progressEvent;
+            if (total) {
+              setProgress(loaded / total);
+            }
+          }
         })
         .then((res) => res.data);
     },
 
     onSuccess: () => {
       handleClose();
+    },
+
+    onSettled: () => {
+      setProgress(null);
     }
   });
 
@@ -66,7 +78,7 @@ const TextEditorUploadImageModal: FC<Props> = ({ open, handleClose, editor }) =>
           justifyContent: 'center'
         }}
       >
-        <UploadImageWidget onDrop={onDrop} />
+        <UploadImageWidget onDrop={onDrop} progress={progress} />
       </Box>
     </Modal>
   );

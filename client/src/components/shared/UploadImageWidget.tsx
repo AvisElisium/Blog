@@ -1,4 +1,4 @@
-﻿import { Box, Grid, Typography } from '@mui/material';
+﻿import { Box, Grid, LinearProgress, Typography } from '@mui/material';
 import { useDropzone } from 'react-dropzone';
 import React, { FC, useCallback, useEffect, useRef, useState } from 'react';
 import ReactCrop, { Crop } from 'react-image-crop';
@@ -8,9 +8,10 @@ import useUploadImageStore from '../../stores/uploadImageStore';
 
 interface Props {
   onDrop: (files: Blob[]) => void;
+  progress?: null | number;
 }
 
-const UploadImageWidget: FC<Props> = ({ onDrop }) => {
+const UploadImageWidget: FC<Props> = ({ onDrop, progress }) => {
   const { getRootProps, getInputProps, isDragActive, acceptedFiles } = useDropzone({ onDrop });
   const uploadedImage = useUploadImageStore((state) => state.uploadedImage);
   const setCropper = useUploadImageStore((state) => state.setCropper);
@@ -45,10 +46,13 @@ const UploadImageWidget: FC<Props> = ({ onDrop }) => {
           {uploadedImage !== null && acceptedFiles.length > 0 ? (
             <Typography>{acceptedFiles[0].name} Uploaded</Typography>
           ) : (
-            <Typography>Click or drop file here to upload</Typography>
+            <Typography>
+              Click or drop file here to upload
+              {progress && <LinearProgress value={progress}  />}
+            </Typography>
           )}
         </Box>
-
+        
         <Box>
           {uploadedImage !== null && acceptedFiles.length > 0 && (
             <Grid
