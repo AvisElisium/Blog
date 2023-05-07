@@ -6,6 +6,7 @@ import React, { useMemo } from 'react';
 import HomepageArticleList from './HomepageArticleList';
 import HomePageArticleListItemSkeleton from './HomePageArticleListItemSkeleton';
 import { Masonry } from '@mui/lab';
+import HomepageNoItems from './HomepageNoItems';
 
 const FeaturedArticlesSection = () => {
   const { data } = useQuery({
@@ -38,11 +39,14 @@ const FeaturedArticlesSection = () => {
         Featured Articles
       </Typography>
       <Box>
-        <Masonry columns={{xs: 1, md: 2, lg: 3}}>
-          {data && <HomepageArticleList articles={data} />}
+        <Masonry columns={{xs: 1, md: 2, lg: 3}} sx={{
+          alignContent: "center",
+        }}>
+          {data &&  <HomepageArticleList articles={data} />}
           {!data && array.map(() => <HomePageArticleListItemSkeleton />)}
+          {data && data.length === 0 && <HomepageNoItems />}
         </Masonry>
-      </Box>
+      </Box>       
     </Box>
   );
 };
