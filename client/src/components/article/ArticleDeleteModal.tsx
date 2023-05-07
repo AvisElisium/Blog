@@ -1,10 +1,10 @@
 ﻿import { Button, ButtonGroup, Modal, Paper, Typography } from '@mui/material';
-import LoadingButton from '../shared/LoadingButton';
 import React, { FC, useState } from 'react';
 import { useMutation } from 'react-query';
 import axios, { AxiosResponse } from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
+import { LoadingButton } from '@mui/lab';
 
 interface Props {
   open: boolean;
@@ -51,12 +51,13 @@ const ArticleDeleteModal: FC<Props> = ({ open, id, handleClose }) => {
 
         <ButtonGroup sx={{ marginTop: '2em' }}>
           <LoadingButton
-            isLoading={isLoading}
+            loading={isLoading}
             onClick={() => mutateAsync()}
-            text={'Delete'}
             variant={'contained'}
             color={'error'}
-          />
+          >
+            Delete
+          </LoadingButton>
           <Button variant={'outlined'} onClick={handleClose} color={'secondary'}>
             Cancel
           </Button>

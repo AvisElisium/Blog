@@ -26,7 +26,6 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { Interweave } from 'interweave';
 import ArticlePostSkeleton from './ArticlePostSkeleton';
 import ArticleEditForm from './ArticleEditForm';
-import LoadingButton from '../shared/LoadingButton';
 import ArticleDeleteModal from './ArticleDeleteModal';
 import CreateCommentForm from './comments/CreateCommentForm';
 import CommentsSection from './comments/CommentsSection';

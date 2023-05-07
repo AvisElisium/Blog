@@ -19,11 +19,11 @@ import {
   TextField,
   Typography
 } from '@mui/material';
-import LoadingButton from '../shared/LoadingButton';
 import useTextEditorStore from '../../stores/textEditorStore';
 import { ImageUploadResult } from '../shared/TextEditorToolBar';
 import UploadImageWidget from '../shared/UploadImageWidget';
 import useUploadImageStore from '../../stores/uploadImageStore';
+import { LoadingButton } from '@mui/lab';
 
 interface Props {
   initialHeadline: string;
@@ -250,10 +250,11 @@ const ArticleEditForm: FC<Props> = ({
           <LoadingButton
             type={'submit'}
             variant={'contained'}
-            text={'Create'}
-            isLoading={isSubmitting}
+            loading={isSubmitting}
             disabled={!isValid && isDirty}
-          />
+          >
+            Create
+          </LoadingButton>
         </Stack>
       </form>
     </Container>
