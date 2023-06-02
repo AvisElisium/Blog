@@ -32,73 +32,69 @@ const AppRoot = () => {
     }
   }, [])
 
-  axios.interceptors.response.use(
-    async (response) => {
-      if (import.meta.env.DEV) {
-        await sleep(100);
+  useEffect(() => {
+    const interceptor = axios.interceptors.response.use(
+      async (response) => {
+        if (import.meta.env.DEV) {
+          await sleep(100);
+        }
+
+        return response;
+      },
+      async (error: AxiosError) => {
+        if (import.meta.env.DEV) {
+          await sleep(100);
+        }
+
+        if (!error.response) return Promise.reject(error);
+
+        if (error.response.status === 401) {
+
+          const message = isErrorResponse(error)
+            ? error.response.data.message
+            : 'Session has expired';
+
+          enqueueSnackbar(message, {
+            variant: 'error',
+            preventDuplicate: true
+          });
+
+          logout();
+
+          navigate('/login', {
+            state: {
+              from: location.pathname
+            }
+          });
+        }
+
+        return Promise.reject(error);
       }
-
-      return response;
-    },
-    async (error: AxiosError) => {
-      if (import.meta.env.DEV) {
-        await sleep(100);
-      }
-
-      if (!error.response) return Promise.reject(error);
-      
-      if (error.response.status === 401) {
-        
-        const message = isErrorResponse(error)
-          ? error.response.data.message
-          : 'Session has expired';
-
-        enqueueSnackbar(message, {
-          variant: 'error',
-          preventDuplicate: true
-        });
-        
-        logout();
-
-        navigate('/login', {
-          state: {
-            from: location.pathname
-          }
-        });
-      }
-
-      return Promise.reject(error);
-    }
-  );
+    );
+    
+    return () => axios.interceptors.response.eject(interceptor);
+  }, [])
   
   useEffect(() => {
-    axios.interceptors.request.use((config) => {
-      if (currentUser?.jwtToken) {
-        config.headers.Authorization = `Bearer ${currentUser?.jwtToken}`;
-      }
-
-      config.withCredentials = true;
+    const interceptor = axios.interceptors.request.use(config => {
+      config.headers.Authorization = "Bearer " + currentUser?.jwtToken
 
       return config;
-    });
-  }, [currentUser?.jwtToken])
-  
-  
-  useEffect(() => {
-    if (!!currentUser) {
-      const interval = setInterval(() => {
-        axios.get<User>('/account/refreshJwt', {
-          headers: {
-            "Authorization": "Bearer " + currentUser?.jwtToken,
-          }
-        }).then(res => login(res.data));
-      }, 100000)
-
-      return () => {
-        clearInterval(interval);
-      }
-    }
+    })
+    
+    return () => axios.interceptors.request.eject(interceptor)
   }, [currentUser])
+  
+  const {} = useQuery({
+    queryFn: () => {
+      return axios.get<User>('/account/refreshJwt').then(res => login(res.data));
+    },
+    
+    staleTime: 1000 * 60,
+    cacheTime: 1000 * 60,
+    
+    enabled: currentUser !== null,
+  })
 
   return <Outlet />;
 };

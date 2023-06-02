@@ -29,8 +29,6 @@ type LoginUserSchema = z.infer<typeof loginUserSchema>;
 const LoginForm = () => {
   const currentUser = useAuthStore((state) => state.currentUser);
 
-  if (currentUser !== null) return <Navigate to={'/'} />;
-
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const {
@@ -77,9 +75,11 @@ const LoginForm = () => {
   const onSubmit = async (data: any) => {
     await mutation.mutateAsync(data);
   };
-
+  
   const theme = useTheme();
 
+  if (currentUser !== null) return <Navigate to={'/'} />;
+  
   return (
     <Box
       sx={{
