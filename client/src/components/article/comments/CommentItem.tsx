@@ -1,4 +1,4 @@
-import { Avatar, Box, Button, Grid, Paper, Stack, Typography } from '@mui/material';
+import { Avatar, Box, Button, Grid, Link, Paper, Stack, Typography } from '@mui/material';
 import { FC, useContext } from 'react';
 import { Interweave } from 'interweave';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
@@ -6,6 +6,7 @@ import moment from 'moment';
 import { HubConnection } from '@microsoft/signalr';
 import { useParams } from 'react-router-dom';
 import { useAuthStore } from '../../../stores/authStore';
+import {Link as RouterLink} from "react-router-dom";
 
 interface Props {
   id: string;
@@ -86,12 +87,16 @@ const CommentItem: FC<Props> = ({
               }}
             >
               <Stack>
-                <Typography>{authorUsername}</Typography>
+                <Typography>
+                  <Link component={RouterLink} to={`/profile/${authorUsername}`} underline={"none"}>
+                    {authorUsername}
+                  </Link>
+                </Typography>
 
                 <Typography>{handleDate()}</Typography>
               </Stack>
 
-              {currentUser?.username === authorUsername && (
+              {currentUser?.username === authorUsername && connection && (
                 <Button onClick={handleDelete}>Delete</Button>
               )}
             </Box>
