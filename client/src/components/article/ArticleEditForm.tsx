@@ -10,7 +10,7 @@ import axios, { AxiosError, AxiosResponse } from 'axios';
 import { ValidationErrorResponse } from '../../types/errors/validationErrorResponse';
 import { useParams } from 'react-router-dom';
 import {
-  Autocomplete,
+  Autocomplete, Box,
   Button,
   Checkbox,
   Container,
@@ -24,6 +24,7 @@ import { ImageUploadResult } from '../shared/TextEditorToolBar';
 import UploadImageWidget from '../shared/UploadImageWidget';
 import useUploadImageStore from '../../stores/uploadImageStore';
 import { LoadingButton } from '@mui/lab';
+import Image from '@tiptap/extension-image';
 
 interface Props {
   initialHeadline: string;
@@ -32,6 +33,7 @@ interface Props {
   id: string;
   initialIsFeatured: boolean;
   closeEditMode: () => void;
+  initialImage: string | null;
 }
 
 const ArticleEditForm: FC<Props> = ({
@@ -39,10 +41,12 @@ const ArticleEditForm: FC<Props> = ({
   initialContent,
   initialTags,
   initialIsFeatured,
+  initialImage,
   id,
   closeEditMode
 }) => {
   const [tags, setTags] = useState<Tag[]>([]);
+  const [editImageMode, setEditImageMode] = useState(false);
 
   const tagsQuery = useQuery({
     queryKey: 'tags',
@@ -166,11 +170,30 @@ const ArticleEditForm: FC<Props> = ({
     >
       <form onSubmit={handleSubmit(onSubmit)}>
         <Typography>Upload Article image</Typography>
-        <UploadImageWidget onDrop={onDrop} />
 
-        <Button variant={'contained'} onClick={onCrop}>
-          Crop
-        </Button>
+        <Box>
+          {!editImageMode && initialImage &&
+            <Box sx={{
+              display: "flex",
+              justifyContent: "Center",
+              padding: ".25em",
+              margin: ".5em 0"
+            }}>
+              <Box component={"img"} src={initialImage} />
+              <Button onClick={() => setEditImageMode(true)} variant={"contained"}>Edit</Button>
+            </Box>
+          }
+
+          {editImageMode &&
+            <Box>
+              <UploadImageWidget onDrop={onDrop} />
+
+              <Button variant={'contained'} onClick={onCrop}>
+                Crop
+              </Button>
+            </Box>
+          }
+        </Box>
 
         <Stack spacing={2}>
           <Controller

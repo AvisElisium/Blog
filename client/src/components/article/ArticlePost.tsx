@@ -81,6 +81,7 @@ const ArticlePost = () => {
         initialIsFeatured={data.isFeatured}
         initialHeadline={data.headline}
         initialContent={data.content}
+        initialImage={data.image}
         id={id as string}
         closeEditMode={handleCloseEditMode}
       />
