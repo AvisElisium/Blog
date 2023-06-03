@@ -40,7 +40,7 @@ const FeaturedArticlesSection = () => {
       </Typography>
       <Box>
         <Masonry columns={{xs: 1, md: 2, lg: 3}} sx={{
-          alignContent: "center",
+          alignContent: "flex-start",
         }}>
           {data &&  <HomepageArticleList articles={data} />}
           {!data && array.map(() => <HomePageArticleListItemSkeleton />)}

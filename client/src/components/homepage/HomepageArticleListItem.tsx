@@ -25,7 +25,8 @@ const HomepageArticleListItem: FC<Props> = ({ article }) => {
   const theme = useTheme();
 
   const interweaveText = (node: HTMLElement, children: ReactNode[]): ReactNode => {
-    return <Typography noWrap>{children}</Typography>;
+    
+    return <Typography>{children}</Typography>;
   };
 
   return (
@@ -40,10 +41,9 @@ const HomepageArticleListItem: FC<Props> = ({ article }) => {
           title={
             <Typography
               sx={{
-                overflowWrap: 'break-word'
               }}
               fontWeight={'bold'}
-              textOverflow={'ellipsis'}>
+              >
               <Link sx={{padding: ".25em 0"}} component={RouterLink} to={`/article/${article.id}`} underline={"none"} color={"inherit"}>
                 {article.headline}
               </Link>
@@ -61,13 +61,25 @@ const HomepageArticleListItem: FC<Props> = ({ article }) => {
             </Typography>
           }
         />
-        <CardMedia component="img" height="194" image={article.image as string} />
-        <CardContent>
+        <CardMedia 
+          component="img" 
+          height="194"
+          sx={{
+            objectFit: "contain",
+          }}
+          image={article.image as string} />
+        <CardContent
+          sx={{
+            maxHeight: "200px",
+            overflowY: "hidden",
+            textOverflow: "ellipsis"
+          }}
+        
+        >
           <Interweave
             transform={interweaveText}
             content={article.content}
             blockList={['img']}
-            noWrap
           />
         </CardContent>
         <CardActions>
