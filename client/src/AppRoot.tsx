@@ -83,11 +83,12 @@ const AppRoot = () => {
     })
     
     return () => axios.interceptors.request.eject(interceptor)
-  }, [currentUser])
+  }, [currentUser?.jwtToken])
   
   const {} = useQuery({
     queryFn: () => {
-      return axios.get<User>('/account/refreshJwt').then(res => login(res.data));
+      return axios.get<User>('/account/refreshJwt', {
+      }).then(res => login(res.data));
     },
     
     staleTime: 1000 * 60,
